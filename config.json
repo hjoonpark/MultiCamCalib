@@ -1,0 +1,15 @@
+{
+    "image_paths_file": "image_paths.txt",
+    "output_dir": "output",
+
+    "checkerboard":
+    {
+        "n_cols": 11,
+        "n_rows": 8,
+        "sqr_size": 60
+    },
+    "cameras":
+    {
+        "n_cams": 16
+    }
+}
