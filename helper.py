@@ -34,30 +34,43 @@ def load_config(path):
 
 def output_log(path, strs):
     if path is not None:
-        if not os.path.exists(path):
-            with open(path, 'w+') as f:
-                f.write(strs)
-                f.close()
-        else:
-            with open(path, 'a+') as f:
-                f.write(strs)
-                f.close()
+        mode = "a+" if os.path.exists(path) else "w+"
+        with open(path, mode) as f:
+            f.write(strs)
+            f.close()
 
 def load_corner_txt(path):
     with open(path, 'r') as f:
         lines = f.readlines()
-        if int(lines[0]) == 1:
+        first_line = lines[0].split(" ")
+        is_detected = int(first_line[0])
+        if is_detected == 1:
             # chb detected
+            img_height = int(first_line[1])
+            img_width = int(first_line[2])
+
             corners = []
             for i in range(1, len(lines)):
                 line = lines[i].split(" ")
                 corners.append([float(line[0]), float(line[1])])
-            return np.float32(corners)
+            return np.float32(corners), (img_height, img_width)
         else:
-            return None
+            return None, None
 
 def convert_sec(seconds): 
     min, sec = divmod(seconds, 60) 
     hour, min = divmod(min, 60) 
     return "%d:%02d:%02d" % (hour, min, sec) 
 
+def create_chb_points(n_cols, n_rows, s):
+    #        columns
+    #   +z o -------- +y
+    # rows |
+    #      |
+    #      | +x
+
+    pts = []
+    for r in range(n_rows):
+        for c in range(n_cols):
+            pts.append([r*s, c*s, 0])
+    return np.float32(pts)

@@ -107,17 +107,16 @@ class VAE_ConvConv(nn.Module):
         x_recon = self.decode(z)
         return x_recon, mu, logvar
 
-
-
-
-
-
-
-
-
-
-
-
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 def __crop_corners(img, corners, crop_size=15):
     s = int(crop_size / 2)
     crops = []
@@ -139,9 +138,11 @@ def generate_crops_around_corners(img_paths, output_dir, crop_size=15):
     print(" * Generate crops around corners")
     save_folder = os.path.join(output_dir, "corner_crops")
     os.makedirs(save_folder, exist_ok=True)
+    save_path = os.path.join(save_folder, "crop_metadata.json")
 
-    crop_metadata = []
-    crop_metadata.append("# index image_name corner_idx_of_curr_camera corner_idx\n")
+    # index image_name corner_idx_of_curr_camera corner_idx
+    crop_metadata = {}
+    crop_idx = 0
 
     for cam_idx in sorted(list(img_paths.keys())):
         crops_gray = None # (M, H, W): M images (H x W pixels)
@@ -149,7 +150,7 @@ def generate_crops_around_corners(img_paths, output_dir, crop_size=15):
         for img_path in img_paths[cam_idx]:
             fname = os.path.split(img_path)[-1].split(".")[0]
             corner_path = os.path.join(output_dir, "corners", "cam_{}".format(cam_idx), "{}.txt".format(fname))
-            corners = load_corner_txt(corner_path)
+            corners, _ = load_corner_txt(corner_path)
 
             if corners is not None:
                 # load original image
@@ -176,7 +177,8 @@ def generate_crops_around_corners(img_paths, output_dir, crop_size=15):
 
                 # keep indices of corners to map back to the image
                 for corner_idx in range(len(crops_curr)):
-                    crop_metadata.append("{} {} {} {}\n".format(len(crop_metadata), fname, n_crops+corner_idx, corner_idx))
+                    crop_metadata[crop_idx] = {"img_name": fname, "camera_idx": cam_idx, "corner_idx": corner_idx, "idx_for_curr_cam": n_crops+corner_idx}
+                    crop_idx += 1
 
         # save crop
         save_path1 = os.path.join(save_folder, "{}_gray.npy".format(cam_idx))
@@ -187,9 +189,8 @@ def generate_crops_around_corners(img_paths, output_dir, crop_size=15):
         print("  - crop saved: (gray) {}\t(binary) {}".format(save_path1, save_path2))
         
     # save metadata
-    save_path = os.path.join(save_folder, "crop_metadata.txt")
     with open(save_path, "w+") as f:
-        f.writelines(crop_metadata)
+        json.dump(crop_metadata, f)
         print("  - metadata saved: {}".format(save_path))
 
 def __load_corner_crops(input_paths):
@@ -200,7 +201,7 @@ def __load_corner_crops(input_paths):
         if crops is None:
             crops = crop
         else:
-            crops = torch.vstack([crops, crop])
+            crops = torch.vstack((crops, crop))
     return crops
 
 def train_vae_outlier_detector(input_paths, output_dir, vae_configs):
@@ -237,9 +238,16 @@ def train_vae_outlier_detector(input_paths, output_dir, vae_configs):
     # initialize optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
+    # save hyper parameters
+    save_path = os.path.join(save_dir, "train_hyper_params.json")
+    with open(save_path, "w+") as f:
+        json.dump({"z_dim": z_dim, "kld_weight": kl_weight, "epochs": n_epochs, "n_batch": n_batch, "batch_size": batch_size, 'lr': lr},  f, indent=4)
+    print("  - Hyper parameters saved: {}".format(save_path))
+
     # save losses for monitoring
     losses = {"total": [], "kld": [], "recon": []}
     time_start = time.time()
+    
     for e in tqdm(range(n_epochs)):
         # shuffle
         indices = np.random.shuffle(np.arange(0, len(crops_trunc)))    
@@ -287,12 +295,12 @@ def train_vae_outlier_detector(input_paths, output_dir, vae_configs):
             # save model
             model_save_path = os.path.join(save_dir, "vae_model.pt")
             torch.save(model, model_save_path)
-            print("  - Model saved: {}".format(model_save_path))
+            print("\n\t- Model saved: {}".format(model_save_path))
 
             plt.figure()
             plt.plot(losses["total"], linewidth=3, label="total")
-            plt.plot(losses["recon"], label="recon")
-            plt.plot(losses["kld"], label="kld")
+            plt.plot(losses["recon"], linewidth=1, label="recon")
+            plt.plot(losses["kld"], linewidth=1, label="kld")
 
             plt.legend(loc="upper right")
             plt.title("Train loss (epoch={})\nfinal loss={:.4f} | recon={:.4f}, kld={:.4f}".format(e+1, losses["total"][-1], losses["recon"][-1], losses["kld"][-1]))
@@ -300,24 +308,24 @@ def train_vae_outlier_detector(input_paths, output_dir, vae_configs):
             plt.yscale("log")
             plt.xlabel("epoch")
             plt.ylabel("loss")
+            plt.xlim([0, n_epochs])
 
             save_path = os.path.join(save_dir, "train_loss_plot.png")
             plt.savefig(save_path, dpi=150)
-            print("  - Plot saved: {}".format(save_path))
+            print("\t- Plot saved: {}".format(save_path))
 
     model_save_path = os.path.join(save_dir, "vae_model.pt")
     torch.save(model, model_save_path)
-    print("  - Model saved: {}".format(model_save_path))
+    print("\t- Model saved: {}".format(model_save_path))
 
-    save_path = os.path.join(save_dir, "train_hyper_params.json")
-    with open(save_path, "w+") as f:
-        json.dump({"z_dim": z_dim, "kld_weight": kl_weight, "epochs": n_epochs, "n_batch": n_batch, "batch_size": batch_size, 'lr': lr},  f, indent=4)
-
-    print("  - Hyper parameters saved: {}".format(save_path))
 
 def run_vae_outlier_detector(input_paths, output_dir, model_path, vae_configs):
     batch_size = vae_configs["batch_size"]
     device = vae_configs["device"]
+
+    # save forward run reconstruction losses
+    output_path = os.path.join(output_dir, "vae_outlier_detector", "vae_forward_result.json")
+    result = {}
 
     crops = __load_corner_crops(input_paths)
     
@@ -340,9 +348,97 @@ def run_vae_outlier_detector(input_paths, output_dir, model_path, vae_configs):
 
         # losses
         l_kld = -0.5 * torch.sum(1 + logvar - mu ** 2 - logvar.exp())
-        l_recons = torch.sum(((input_crops-recons)**2))
+        l_recons = float(torch.sum(((input_crops-recons)**2)).detach().squeeze().cpu())
 
-        losses["recon"].append(l_recons.detach().squeeze().cpu().numpy())
+        losses["recon"].append(l_recons)
 
-        if i % 100 == 0:
+        # save losses
+        result[i] = l_recons
+
+        if i % vae_configs["batch_size"] == 0:
             tqdm.write("[{}/{}]\telapsed={}".format(i, len(crops-1), convert_sec(time.time()-time_start)))
+
+    with open(output_path, 'w+') as f:
+        json.dump(result, f)
+
+    print("VAE forward result saved to: {}".format(output_path))
+
+
+def determine_outliers(output_dir, save_path, thres_loss_percent=0.001, save_imgs=False):
+    # crop metadata
+    with open(os.path.join(output_dir, "corner_crops", "crop_metadata.json"), "r") as f:
+        crop_md = json.load(f)
+    
+    # recon loss from forward vae
+    with open(os.path.join(output_dir, "vae_outlier_detector", "vae_forward_result.json"), "r") as f:
+        vae_result = json.load(f)
+
+    recon_losses = np.array(list(vae_result.values()))
+    corner_indices = np.array(list(vae_result.keys()))
+
+    idx = np.argsort(recon_losses)[::-1]
+    sorted_losses = recon_losses[idx]
+    sorted_indices = corner_indices[idx]
+
+    n_items = len(corner_indices)
+    outliers_indices = sorted_indices[0:int(n_items*thres_loss_percent)]
+    outliers_losses = sorted_losses[0:int(n_items*thres_loss_percent)]
+
+    outliers = {}
+    for i in range(len(outliers_indices)):
+        crop_idx = str(outliers_indices[i])
+        loss = sorted_losses[i]
+        md = crop_md[crop_idx]
+        outliers[crop_idx] = {"recon_loss": loss, "img_name": md["img_name"], "camera_idx": md["camera_idx"], "corner_idx": md["corner_idx"], "idx_for_curr_cam": md["idx_for_curr_cam"]}
+
+    with open(save_path, "w+") as f:
+        json.dump(outliers, f, indent=4)
+    print("Outliers saved to: {}".format(save_path))
+
+    if save_imgs:
+        in_dir = os.path.join(output_dir, "corner_crops")
+        save_dir = os.path.join(output_dir, "vae_outlier_detector", "outlier_plots")
+        os.makedirs(save_dir, exist_ok=True)
+
+        mds = []
+        crops = []
+        for crop_idx, md in outliers.items():
+            cam_idx = md["camera_idx"]
+            idx_for_curr_cam = md["idx_for_curr_cam"]
+            crops_npy = np.load(os.path.join(in_dir, "{}_gray.npy".format(cam_idx)))
+            crop = crops_npy[idx_for_curr_cam]
+            mds.append(md)
+            crops.append(crop)
+        
+        n_crops = len(crops)
+        n_cols = 10
+        n_rows_max = 10
+
+        n_rows, rem = divmod(n_crops, n_cols)
+        n_plots, rem2 = divmod(n_rows, n_rows_max)
+
+        if rem2 > 0:
+            n_plots += 1
+        if rem > 0:
+            n_rows += 1
+        
+        for plot_idx in range(n_plots): 
+            save_path = os.path.join(save_dir, "outliers_{}.png".format(plot_idx))
+            s = 2
+            fig, ax = plt.subplots(nrows=n_rows_max, ncols=n_cols, squeeze=True, figsize=(s*n_cols, 1.2*s*n_rows_max))
+            ax = ax.ravel()
+            for i, a in enumerate(ax):
+                idx = (plot_idx*n_cols*n_rows_max) + i
+                if idx < len(crops):
+                    md = mds[idx]
+                    a.imshow(crops[idx], cmap="gray")
+                    a.set_title("{}. {}\n{:.4f}".format(idx, md["img_name"], md["recon_loss"]))
+                    a.set_xticks([])
+                    a.set_yticks([])
+                else:
+                    a.axis(False)
+            fig.subplots_adjust(top=0.95)
+            plt.suptitle("[{}/{}] {}/{} outlier corners (total={})".format(plot_idx+1,n_plots, (plot_idx+1)*n_cols*n_rows_max, len(crops), n_items))
+            plt.savefig(save_path, dpi=150, bbox_inches='tight')
+            plt.close()
+            print("Outlier plot saved: {}".format(save_path))

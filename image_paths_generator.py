@@ -18,7 +18,7 @@ for cam_idx, cam in enumerate(cams):
             if cam_idx not in img_paths:
                 img_paths[cam_idx] = [p]
             else:
-                if len(img_paths[cam_idx]) < 10:
+                if len(img_paths[cam_idx]) < 1000000000000000000000000000:
                     img_paths[cam_idx].append(p)
                 else:
                     break

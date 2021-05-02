@@ -1,7 +1,6 @@
 {
     "image_paths_file": "image_paths.txt",
     "output_dir": "output",
-
     "checkerboard":
     {
         "n_cols": 11,
@@ -11,5 +10,25 @@
     "cameras":
     {
         "n_cams": 16
+    },
+    "vae_outlier_detector":
+    {
+        "z_dim": 2,
+        "kl_weight": 0.001,
+        "lr": 0.001,
+        "n_epochs": 4000,
+        "batch_size": 1000,
+        "outlier_thres": 0.001
+    },
+    "calib_initial":
+    {
+        "center_cam_idx": 7,
+        "center_img_name": "00000",
+        "intrinsics": {
+           "n_max_imgs": 10
+        },
+        "extrinsics": {
+            "n_max_stereo_imgs": 20
+        }
     }
 }

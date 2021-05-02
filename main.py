@@ -3,11 +3,13 @@ from checkerboard import *
 import json
 import threading
 import os
+import time
 import glob
 from datetime import datetime
 from helper import load_img_paths, load_config, init_cameras
 from corner_detector import detect_corners, generate_detection_results
-from outlier_detector import generate_crops_around_corners, train_vae_outlier_detector, run_vae_outlier_detector
+from outlier_detector import generate_crops_around_corners, train_vae_outlier_detector, run_vae_outlier_detector, determine_outliers
+from calibrator import calib_initial_params
 
 if __name__ == "__main__":
     config = load_config("config.json")
@@ -30,7 +32,23 @@ if __name__ == "__main__":
         print("  - camera {}:\t{} images".format(cam_idx, len(path)))
 
     # detect corners
-    # detect_corners(chb, img_paths, config["output_dir"], use_threads=True, log=True)
+    lock = threading.Lock()
+    # shared_log_path = os.path.join(config["output_dir"], "cornerdetect_completion.json")
+    # detect_corners(lock, chb, img_paths, config["output_dir"], shared_log_path, use_threads=True, log=True)
+
+    # # wait until all corner detection threads are complete
+    # n_complete = 0
+    # while n_complete != len(cameras):
+    #     n_complete = 0
+    #     lock.acquire()
+    #     with open(shared_log_path, "r") as f:
+    #         completion = json.load(f)
+    #     lock.release()
+
+    #     for cam_idx, done in completion.items():
+    #         n_complete += int(done)
+    #     time.sleep(1) # check every 1000 ms
+
 
     # detection results
     # generate_detection_results(cameras, config["output_dir"])
@@ -40,11 +58,21 @@ if __name__ == "__main__":
 
     # train vae
     input_crop_paths = sorted(list(glob.glob(os.path.join(config["output_dir"], "corner_crops", "*_binary.npy"))))
-    vae_configs = {"device": "cuda", "lr": 1e-3, "n_epochs": 1000, "batch_size": 100, "z_dim": 2, "kl_weight": 0.01, "debug": False}
-    # train_vae_outlier_detector(input_crop_paths, config["output_dir"], vae_configs)
+    vae = config["vae_outlier_detector"]
+    vae_config = {"z_dim": vae["z_dim"], "kl_weight": vae["kl_weight"], "lr": vae["lr"], "n_epochs": vae["n_epochs"], "batch_size": vae["batch_size"], "device": "cuda", "debug": False}
+    print("### train_vae_outlier_detector ###")
+    # train_vae_outlier_detector(input_crop_paths, config["output_dir"], vae_config)
 
     # forward vae
     model_path = os.path.join(config["output_dir"], "vae_outlier_detector", "vae_model.pt")
-    run_vae_outlier_detector(input_crop_paths, config["output_dir"], model_path, vae_configs)
+    # run_vae_outlier_detector(input_crop_paths, config["output_dir"], model_path, vae_config)
+
+    # determine outliers
+    outlier_path = os.path.join(config["output_dir"], "vae_outlier_detector", "outliers.json")
+    # determine_outliers(config["output_dir"], save_path=outlier_path, thres_loss_percent=vae["outlier_thres"], save_imgs=True)
 
     # initial calibration (PnP)
+    center_cam_idx = config["calib_initial"]["center_cam_idx"]
+    center_img_name = config["calib_initial"]["center_img_name"]
+    calib_initial_params(config["output_dir"], config["checkerboard"], config["calib_initial"], center_cam_idx, center_img_name, outlier_path=outlier_path)
+
