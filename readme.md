@@ -133,46 +133,46 @@ Build:
     - Set input source code to `C:/Users/hjoon/ceres/ceres-solver`
     - Set output build directory to `C:/Users/hjoon/ceres/ceres-solver/ceres-build`
 
-<img src="readme_assets/1.png" width=50% style="margin-left: 80px">
+<img src="readme_assets/1.png" width=90% style="margin-left: 80px">
 
   - Click `Configure`, choose generator `Visual Studio 16 2019`, set platform to `x64`, then click `Finish`.
 
-<img src="readme_assets/2.png" width=50% style="margin-left: 70px">
+<img src="readme_assets/2.png" width=90% style="margin-left: 70px">
 
   - This will initially generate many errors.
   
   - Set output directory by setting `CMAKE_INSTALL_PREFIX` to `C:\Users\hjoon\ceres\ceres-install`
 
-<img src="readme_assets/3.png" width=50% style="margin-left: 80px">
+<img src="readme_assets/3.png" width=90% style="margin-left: 80px">
 
   - Uncheck `BUILD_EXAMPLES` and `BUILD_TESTING`
 
-<img src="readme_assets/7.png" width=30% style="margin-left: 80px">
+<img src="readme_assets/7.png" width=60% style="margin-left: 80px">
 
 
   - Click `Add Entry`, and add `SUITESPARSE_CHECK_INCLUDE_DIRS` as `PATH` to `C:/Users/hjoon/ceres/suitesparse/install/include`
 
-<img src="readme_assets/4a.png" width=30% style="margin-left: 80px">
+<img src="readme_assets/4a.png" width=60% style="margin-left: 80px">
 
   - Click `Add Entry`, and add `SUITESPARSE_CHECK_LIBRARY_DIRS` as `PATH` to `C:/Users/hjoon/ceres/suitesparse/install/lib`
 
-<img src="readme_assets/4b.png" width=30% style="margin-left: 80px">
+<img src="readme_assets/4b.png" width=60% style="margin-left: 80px">
 
   - Check `SUITESPARSE`
 
-<img src="readme_assets/7b.png" width=50% style="margin-left: 80px">
+<img src="readme_assets/7b.png" width=90% style="margin-left: 80px">
 
   - Click `Add Entry`, and add `BLAS_LIBRARIES` as `FILEPATH` to `C:/Users/hjoon/ceres/suitesparse/lapack_windows/x64/libblas.lib`
 
-<img src="readme_assets/6a.png" width=30% style="margin-left: 80px">
+<img src="readme_assets/6a.png" width=60% style="margin-left: 80px">
 
   - Click `Add Entry`, and add `LAPACK_LIBRARIES` as `FILEPATH` to `C:/Users/hjoon/ceres/suitesparse/lapack_windows/x64/liblapack.lib`
 
-<img src="readme_assets/6b.png" width=30% style="margin-left: 80px">
+<img src="readme_assets/6b.png" width=60% style="margin-left: 80px">
 
   - Set `Eigen3_DIR` to `C:/Users/hjoon/ceres/eigen/build` (where `Eigen3Config.cmake` is located)
 
-<img src="readme_assets/5.png" width=50% style="margin-left: 80px">
+<img src="readme_assets/5.png" width=90% style="margin-left: 80px">
 
   - Click `Configure` again then `Generate`.
 
