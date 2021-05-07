@@ -28,7 +28,7 @@
            "n_max_imgs": 10
         },
         "extrinsics": {
-            "n_max_stereo_imgs": 20
+            "n_max_stereo_imgs": 30
         }
     }
 }

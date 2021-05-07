@@ -9,6 +9,21 @@ import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 import pickle
 
+import math as m
+
+def Rx(theta):
+    return np.matrix([[ 1, 0           , 0           ],
+                    [ 0, m.cos(theta),-m.sin(theta)],
+                    [ 0, m.sin(theta), m.cos(theta)]])
+def Ry(theta):
+    return np.matrix([[ m.cos(theta), 0, m.sin(theta)],
+                    [ 0           , 1, 0           ],
+                    [-m.sin(theta), 0, m.cos(theta)]])
+
+def Rz(theta):
+    return np.matrix([[ m.cos(theta), -m.sin(theta), 0 ],
+                    [ m.sin(theta), m.cos(theta) , 0 ],
+                    [ 0           , 0            , 1 ]])
 def draw_camera(ax, cam_idx, rvec, tvec, color="k"):
     w = 1000
     h = w/2
@@ -140,60 +155,63 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
     cam_extrinsics[center_cam_idx]["rvec"] = rvec.flatten().tolist()
     cam_extrinsics[center_cam_idx]["tvec"] = tvec.flatten().tolist()
 
-    # 2. stereo calibration between the center camera and the rest
-    stereo_extrinsics = {}
-    center_corner_paths = glob.glob(os.path.join(os.path.join(corners_dir, "cam_{}".format(center_cam_idx)), "*.txt"))
-    for cam_folder in cam_folders:
-        cam_idx = int(cam_folder.split("_")[-1])
-        if cam_idx == center_cam_idx:
-            continue
-        
-        stereo_extrinsics[cam_idx] = {}
+    # 2. stereo calibration between the adjacent cameras
+    stereo_transformations = {}
+
+    n_cams = len(cam_folders)
+    adj_cam_indices = [i for i in range(center_cam_idx-1, -1, -1)]
+    adj_cam_indices.extend([i for i in range(center_cam_idx+1, n_cams)])
     
-        corners_A = []
-        corners_B = []
-        for corner_path_A in center_corner_paths:
-            img_name = os.path.basename(corner_path_A).split(".")[0].split("_")[-1]
-            fname_A = "{}_{}".format(center_cam_idx, img_name)
-            fname_B = "{}_{}".format(cam_idx, img_name)
-            if (fname_A in outliers) or (fname_B in outliers):
+    for cam_idx_2 in adj_cam_indices:
+        corner2_paths = glob.glob(os.path.join(os.path.join(corners_dir, "cam_{}".format(cam_idx_2)), "*.txt"))
+        cam_idx_1 = (cam_idx_2 + 1) if cam_idx_2 < center_cam_idx else cam_idx_2 - 1
+        stereo_transformations[cam_idx_2] = {}
+    
+        print("--from {} to {}".format(cam_idx_1, cam_idx_2))
+        corners_1 = []
+        corners_2 = []
+        for corner_path_2 in corner2_paths:
+            img_name = os.path.basename(corner_path_2).split(".")[0].split("_")[-1]
+            fname_1 = "{}_{}".format(cam_idx_1, img_name)
+            fname_2 = "{}_{}".format(cam_idx_2, img_name)
+            if (fname_1 in outliers) or (fname_2 in outliers):
                 # skip image that contains outlier corner
-                print("\tskipping outlier image for extrinsics: {}, {}".format(fname_A, fname_B))
+                print("\tskipping outlier image for extrinsics: {}, {}".format(fname_1, fname_2))
                 continue
 
-            corner_path_B = os.path.join(corners_dir, "cam_{}".format(cam_idx), "{}_{}.txt".format(cam_idx, img_name))
+            corner_path_1 = os.path.join(corners_dir, "cam_{}".format(cam_idx_1), "{}_{}.txt".format(cam_idx_1, img_name))
             
-            if not os.path.exists(corner_path_B):
+            if not os.path.exists(corner_path_1):
                 continue
 
-            pts_B, imageSize = load_corner_txt(corner_path_B)
-            if pts_B is None:
+            pts_1, imageSize = load_corner_txt(corner_path_1)
+            if pts_1 is None:
+                continue
+
+            pts_2, imageSize = load_corner_txt(corner_path_2)
+            if pts_2 is None:
                 continue
             
-            pts_A, imageSize = load_corner_txt(corner_path_A)
-            if pts_A is None:
-                continue
+            corners_1.append(pts_1)
+            corners_2.append(pts_2)
 
-            corners_A.append(pts_A)
-            corners_B.append(pts_B)
-
-            if len(corners_A) == calib_config["extrinsics"]["n_max_stereo_imgs"]:
+            if len(corners_1) == calib_config["extrinsics"]["n_max_stereo_imgs"]:
                 break
         
-        _2d_pts_A = np.float32(corners_A)
-        _2d_pts_B = np.float32(corners_B)
+        _2d_pts_1 = np.float32(corners_1)
+        _2d_pts_2 = np.float32(corners_2)
 
-        _3d_pts = np.float32([chb_pts for _ in range(len(corners_A))])
+        _3d_pts = np.float32([chb_pts for _ in range(len(corners_1))])
 
         flags = 0
         flags |= cv2.CALIB_FIX_INTRINSIC  # we already have intrinsics (initial values)
-        # flags |= cv2.CALIB_USE_INTRINSIC_GUESS # optmize intrinsics
+        flags |= cv2.CALIB_USE_INTRINSIC_GUESS # optmize intrinsics
         # flags |= cv2.CALIB_FIX_PRINCIPAL_POINT
         # flags |= cv2.CALIB_FIX_FOCAL_LENGTH
         flags |= cv2.CALIB_FIX_ASPECT_RATIO
         flags |= cv2.CALIB_ZERO_TANGENT_DIST
         # flags |= cv2.CALIB_RATIONAL_MODEL
-        # flags |= cv2.CALIB_SAME_FOCAL_LENGTH
+        flags |= cv2.CALIB_SAME_FOCAL_LENGTH
         # flags |= cv2.CALIB_FIX_K1
         # flags |= cv2.CALIB_FIX_K2
         # flags |= cv2.CALIB_FIX_K3
@@ -205,48 +223,70 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
         criteria = (cv2.TERM_CRITERIA_MAX_ITER + cv2.TERM_CRITERIA_EPS, 1000, 1e-5)
 
         # stereo calibrate
-        p = cam_intrinsics[cam_idx]
-        M_B = np.float32([[p["fx"], 0, p["cx"]], [0, p["fy"], p["cy"]], [0, 0, 1]])
-        d_B = np.float32([p["k1"], p["k2"], p["p1"], p["p2"], p["k3"]])
-        ret, mtx_A, dist_A, mtx_B, dist_B, R_BA, t_BA, E, F = cv2.stereoCalibrate(_3d_pts, _2d_pts_A, _2d_pts_B,
-                                                                        M, d, M_B, d_B,
+        p = cam_intrinsics[cam_idx_1]
+        M_1 = np.float32([[p["fx"], 0, p["cx"]], [0, p["fy"], p["cy"]], [0, 0, 1]])
+        d_1 = np.float32([p["k1"], p["k2"], p["p1"], p["p2"], p["k3"]])
+        p = cam_intrinsics[cam_idx_2]
+        M_2 = np.float32([[p["fx"], 0, p["cx"]], [0, p["fy"], p["cy"]], [0, 0, 1]])
+        d_2 = np.float32([p["k1"], p["k2"], p["p1"], p["p2"], p["k3"]])
+        ret, mtx_1, dist_1, mtx_2, dist_2, dR, dt, E, F = cv2.stereoCalibrate(_3d_pts, _2d_pts_1, _2d_pts_2,
+                                                                        M_1, d_1, M_2, d_2,
                                                                         imageSize, criteria=criteria, flags=flags)
 
         if ret:
-            stereo_extrinsics[cam_idx]["R"] = R_BA
-            stereo_extrinsics[cam_idx]["t"] = t_BA.flatten()
+            # R2 = dR@R1
+            # t2 = dR@t1 + dt
+            stereo_transformations[cam_idx_2]["R"] = dR
+            stereo_transformations[cam_idx_2]["t"] = dt.reshape(3, 1)
         else:
-            print("[ERROR] Stereo calibration between cam {} and cam {} FAILED!".format(center_cam_idx, cam_idx))
+            print("[ERROR] Stereo calibration between cam {} and cam {} FAILED!".format(cam_idx_1, cam_idx_2))
             print('\t- Perhaps try different values for configs["calib_initial"]["extrinsics"]["n_max_stereo_imgs"].')
             print("\t- Check checkerboard corners are valid for both cameras.")
             assert(0)
 
-    # convert stereo extrinsics to global extrinsics
-    R_wA, _ = cv2.Rodrigues(np.float32(cam_extrinsics[center_cam_idx]["rvec"]))
-    t_wA = np.float32(cam_extrinsics[center_cam_idx]["tvec"])
-    
-    for cam_folder in cam_folders:
-        cam_idx = int(cam_folder.split("_")[-1])
-        if cam_idx == center_cam_idx:
-            continue
-        R_BA = stereo_extrinsics[cam_idx]["R"]
-        t_BA = stereo_extrinsics[cam_idx]["t"]
+    with open(os.path.join(save_dir, "..", "stereo.json"), "w+") as f:
+        d = {}
+        for cam_idx, p in stereo_transformations.items():
+            d[cam_idx] = {}
+            for k, v in p.items():
+                d[cam_idx][k] = v.tolist()
+        json.dump(d, f, indent=4)
 
-        # SE3 of camera w.r.t. global coordinates
-        R_AB = R_BA.T
-        t_AB = -R_BA.T.dot(t_BA)
-        R_SE3 = R_wA.dot(R_AB)
-        t_SE3 = R_wA.dot(t_AB.reshape(3,)) + t_wA
+    # convert stereo extrinsics to global extrinsics
+    R, _ = cv2.Rodrigues(np.float32(cam_extrinsics[center_cam_idx]["rvec"]))
+    t = np.float32(cam_extrinsics[center_cam_idx]["tvec"]).reshape(3, 1)
+
+    for cam_idx in adj_cam_indices:
+        assert(cam_idx != center_cam_idx)
+        if cam_idx == center_cam_idx - 1 or cam_idx == center_cam_idx + 1:
+            R, _ = cv2.Rodrigues(np.float32(cam_extrinsics[center_cam_idx]["rvec"]))
+            t = np.float32(cam_extrinsics[center_cam_idx]["tvec"])
+
+            # R = R.T
+            # t = -R.T@t
+
+            R = np.float32(Rx(0*np.pi/180))
+            t = np.float32([0, 0, 0]).reshape(3, 1)
+            print("from {} to {}".format(center_cam_idx, cam_idx))
+        else:
+            print("to {}".format(cam_idx))
+
+        dR = stereo_transformations[cam_idx]["R"]
+        dt = stereo_transformations[cam_idx]["t"]
+
+        R = dR@R
+        t = dR@t + dt
 
         # SE3 to extrinsics
-        R_wB = R_SE3.T
-        t_wB = -R_SE3.T.dot(t_SE3)
+        R_ext = R.T
+        print(R.shape, t.shape, dt.shape)
+        t_ext = -R.T.dot(t)
 
-        rvec_B, _ = cv2.Rodrigues(R_wB)
-        tvec_B = t_wB
+        rvec_2, _ = cv2.Rodrigues(R_ext)
+        tvec_2 = t_ext
 
-        cam_extrinsics[cam_idx]["rvec"] = rvec_B.tolist()
-        cam_extrinsics[cam_idx]["tvec"] = tvec_B.tolist()
+        cam_extrinsics[cam_idx]["rvec"] = rvec_2.tolist()
+        cam_extrinsics[cam_idx]["tvec"] = tvec_2.tolist()
     
     cam_extrinsics_sorted = {}
     for cam_idx in sorted(list(cam_extrinsics.keys())):
@@ -255,7 +295,6 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
     with open(save_path_extrinsics, "w+") as f:
         json.dump(cam_extrinsics_sorted, f, indent=4)
     print("  - Initial extrinsics saved: {}".format(save_path_extrinsics))
-
 
     if save_plot:
         # draw 3d plot showing cameras
@@ -270,8 +309,8 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
 
         lim_val = -np.inf
         for cam_idx, v in cam_extrinsics_sorted.items():
-            tvec = np.float32(v["tvec"])
-            rvec = np.float32(v["rvec"])
+            tvec = np.float32(v["tvec"]).flatten()
+            rvec = np.float32(v["rvec"]).flatten()
             if cam_idx == center_cam_idx:
                 c = "r"
             else:
@@ -288,6 +327,7 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
         ax.set_ylabel("Y")
         ax.set_zlabel("Z")
         plt.title("Initial camera configuration")
-        plt.savefig(save_path, dpi=150)
+        plt.show()
+        # plt.savefig(save_path, dpi=150)
         plt.close()
         print("  - Plot saved: {}".format(save_path))

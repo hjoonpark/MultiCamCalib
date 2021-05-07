@@ -10,6 +10,7 @@ from helper import load_img_paths, load_config, init_cameras
 from corner_detector import detect_corners, generate_detection_results
 from outlier_detector import generate_crops_around_corners, train_vae_outlier_detector, run_vae_outlier_detector, determine_outliers
 from calibrator import calib_initial_params
+from bundle_adjustment import generate_bundle_adjustment_input
 
 if __name__ == "__main__":
     config = load_config("config.json")
@@ -76,3 +77,5 @@ if __name__ == "__main__":
     center_img_name = config["calib_initial"]["center_img_name"]
     calib_initial_params(config["output_dir"], config["checkerboard"], config["calib_initial"], center_cam_idx, center_img_name, outlier_path=outlier_path)
 
+    # generate inputs for bundle adjustment
+    # generate_bundle_adjustment_input(config["output_dir"])

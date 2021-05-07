@@ -1,2 +1,5 @@
 __pycache__/
 output/
+bundle_adjustment/
+ceres_project/
+jupyter/
