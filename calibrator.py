@@ -234,8 +234,9 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
                                                                         imageSize, criteria=criteria, flags=flags)
 
         if ret:
-            # R2 = dR@R1
-            # t2 = dR@t1 + dt
+            # dR, dt: brings points given in the first camera's coordinate system to points in the second camera's coordinate system
+            # R2 = dR@R1 
+            # t2 = dR@t1 + dt 
             stereo_transformations[cam_idx_2]["R"] = dR
             stereo_transformations[cam_idx_2]["t"] = dt.reshape(3, 1)
         else:
@@ -260,30 +261,17 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
         assert(cam_idx != center_cam_idx)
         if cam_idx == center_cam_idx - 1 or cam_idx == center_cam_idx + 1:
             R, _ = cv2.Rodrigues(np.float32(cam_extrinsics[center_cam_idx]["rvec"]))
-            t = np.float32(cam_extrinsics[center_cam_idx]["tvec"])
-
-            # R = R.T
-            # t = -R.T@t
-
-            R = np.float32(Rx(0*np.pi/180))
-            t = np.float32([0, 0, 0]).reshape(3, 1)
-            print("from {} to {}".format(center_cam_idx, cam_idx))
-        else:
-            print("to {}".format(cam_idx))
+            t = np.float32(cam_extrinsics[center_cam_idx]["tvec"]).reshape(3, 1)
 
         dR = stereo_transformations[cam_idx]["R"]
         dt = stereo_transformations[cam_idx]["t"]
 
+        # extrinsics
         R = dR@R
         t = dR@t + dt
 
-        # SE3 to extrinsics
-        R_ext = R.T
-        print(R.shape, t.shape, dt.shape)
-        t_ext = -R.T.dot(t)
-
-        rvec_2, _ = cv2.Rodrigues(R_ext)
-        tvec_2 = t_ext
+        rvec_2, _ = cv2.Rodrigues(R)
+        tvec_2 = t
 
         cam_extrinsics[cam_idx]["rvec"] = rvec_2.tolist()
         cam_extrinsics[cam_idx]["tvec"] = tvec_2.tolist()
