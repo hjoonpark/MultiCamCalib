@@ -24,9 +24,12 @@ def detect_corners(lock, chb, img_paths, output_dir, shared_log_path, use_thread
         time.sleep(0.01)
 
 def generate_detection_results(cameras, output_dir):
-    detections = {} # key: img_name, value: dict {cam_idx: 1/0}
+    detections_raw = {} # key: img_name, value: dict {cam_idx: 1/0}
     num_detections = {} # key: cam_idx, value: int
     for cam in cameras:
+        if cam.idx not in num_detections:
+            num_detections[cam.idx] = 0
+
         corner_dir = os.path.join(output_dir, "corners", "cam_{}".format(cam.idx))
         corner_paths = sorted(glob.glob(os.path.join(corner_dir, "*.txt")))
 
@@ -35,15 +38,20 @@ def generate_detection_results(cameras, output_dir):
             corners, _ = load_corner_txt(p) # (N, 2) where N is the number of checkerboard corners
 
             detected = int(corners is not None)
-            if img_name not in detections:
-                detections[img_name] = {cam.idx: detected}
+            if img_name not in detections_raw:
+                detections_raw[img_name] = {cam.idx: detected}
             else:
-                detections[img_name].update({cam.idx: detected})
+                detections_raw[img_name].update({cam.idx: detected})
 
-            if cam.idx not in num_detections:
-                num_detections[cam.idx] = 0
-            
-            num_detections[cam.idx] += detected
+
+    # delete frames with less than len(cameras) cameras
+    detections = {}
+    for img_name in sorted(list(detections_raw.keys())):
+        if len(detections_raw[img_name].keys()) == len(cameras):
+            detections[img_name] = detections_raw[img_name]
+
+            for cam_idx, detected in detections[img_name].items():
+                num_detections[cam_idx] += detected
 
     result = {
         "num_frames": len(detections.keys()),

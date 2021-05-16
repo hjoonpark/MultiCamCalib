@@ -9,7 +9,7 @@ from datetime import datetime
 from helper import load_img_paths, load_config, init_cameras
 from corner_detector import detect_corners, generate_detection_results
 from outlier_detector import generate_crops_around_corners, train_vae_outlier_detector, run_vae_outlier_detector, determine_outliers
-from calibrator import calib_initial_params
+from calibrator import calib_initial_params, estimate_initial_world_points
 from bundle_adjustment import generate_bundle_adjustment_input
 
 if __name__ == "__main__":
@@ -61,7 +61,6 @@ if __name__ == "__main__":
     input_crop_paths = sorted(list(glob.glob(os.path.join(config["output_dir"], "corner_crops", "*_binary.npy"))))
     vae = config["vae_outlier_detector"]
     vae_config = {"z_dim": vae["z_dim"], "kl_weight": vae["kl_weight"], "lr": vae["lr"], "n_epochs": vae["n_epochs"], "batch_size": vae["batch_size"], "device": "cuda", "debug": False}
-    print("### train_vae_outlier_detector ###")
     # train_vae_outlier_detector(input_crop_paths, config["output_dir"], vae_config)
 
     # forward vae
@@ -72,10 +71,11 @@ if __name__ == "__main__":
     outlier_path = os.path.join(config["output_dir"], "vae_outlier_detector", "outliers.json")
     # determine_outliers(config["output_dir"], save_path=outlier_path, thres_loss_percent=vae["outlier_thres"], save_imgs=True)
 
-    # initial calibration (PnP)
-    center_cam_idx = config["calib_initial"]["center_cam_idx"]
-    center_img_name = config["calib_initial"]["center_img_name"]
-    calib_initial_params(config["output_dir"], config["checkerboard"], config["calib_initial"], center_cam_idx, center_img_name, outlier_path=outlier_path)
+    # initial camera calibration (PnP)
+    # calib_initial_params(config["output_dir"], config["checkerboard"], config["calib_initial"], outlier_path=outlier_path)
+
+    # initial world points
+    estimate_initial_world_points(config["output_dir"], config["checkerboard"], config["calib_initial"])
 
     # generate inputs for bundle adjustment
     # generate_bundle_adjustment_input(config["output_dir"])

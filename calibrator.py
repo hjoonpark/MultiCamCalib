@@ -57,13 +57,18 @@ def draw_camera(ax, cam_idx, rvec, tvec, color="k"):
     # ax.plot([t_SE3[0], t_SE3[0]], [t_SE3[1], t_SE3[1]], [0, t_SE3[2]], linestyle=":", linewidth=1, c="k")
 
     ax.text(t_SE3[0], t_SE3[1], t_SE3[2]+L, cam_idx, fontsize=12)
-def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, center_img_name, outlier_path=None, save_plot=True):
+
+def calib_initial_params(output_dir, chb_config, calib_config, outlier_path=None, save_plot=True):
     random.seed(0)
+    
+    center_cam_idx = calib_config["center_cam_idx"]
+    center_img_name = calib_config["center_img_name"]
+
     # create rest pose checkerboard points
     chb_pts = create_chb_points(n_cols=chb_config["n_cols"], n_rows=chb_config["n_rows"], s=chb_config["sqr_size"])
 
     # create output directory
-    save_dir = os.path.join(output_dir, "cam_params", "initial")
+    save_dir = os.path.join(output_dir, "cam_params")
     os.makedirs(save_dir, exist_ok=True)
 
     outliers = []
@@ -78,17 +83,14 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
     corners_dir = os.path.join(output_dir, "corners")
 
     # output directory
-    save_path_intrinsics = os.path.join(save_dir, "intrinsics.json")
-    save_path_extrinsics = os.path.join(save_dir, "extrinsics.json")
-    cam_intrinsics = {}
-    cam_extrinsics = {}
+    save_path = os.path.join(save_dir, "cam_params_initial.json")
+    cam_params = {}
 
     cam_folders = [f.path for f in os.scandir(corners_dir) if f.is_dir()]
     
     for cam_folder in cam_folders:
         cam_idx = int(cam_folder.split("_")[-1])
-        cam_intrinsics[cam_idx] = {}
-        cam_extrinsics[cam_idx] = {}
+        cam_params[cam_idx] = {}
 
         # (2D) load image points randomly
         corner_paths = glob.glob(os.path.join(cam_folder, "*.txt"))
@@ -118,26 +120,18 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
         rms_err, M, d, _, _ = cv2.calibrateCamera(_3d_pts, _2d_pts, imageSize=imageSize, cameraMatrix=cameraMatrix, distCoeffs=distCoeffs)
 
         if rms_err:
-            cam_intrinsics[cam_idx]["fx"] = M[0, 0]
-            cam_intrinsics[cam_idx]["fy"] = M[1, 1]
-            cam_intrinsics[cam_idx]["cx"] = M[0, 2]
-            cam_intrinsics[cam_idx]["cy"] = M[1, 2]
-            cam_intrinsics[cam_idx]["k1"] = d[0, 0]
-            cam_intrinsics[cam_idx]["k2"] = d[0, 1]
-            cam_intrinsics[cam_idx]["p1"] = d[0, 2]
-            cam_intrinsics[cam_idx]["p2"] = d[0, 3]
-            cam_intrinsics[cam_idx]["k3"] = d[0, 4]
+            cam_params[cam_idx]["fx"] = M[0, 0]
+            cam_params[cam_idx]["fy"] = M[1, 1]
+            cam_params[cam_idx]["cx"] = M[0, 2]
+            cam_params[cam_idx]["cy"] = M[1, 2]
+            cam_params[cam_idx]["k1"] = d[0, 0]
+            cam_params[cam_idx]["k2"] = d[0, 1]
+            cam_params[cam_idx]["p1"] = d[0, 2]
+            cam_params[cam_idx]["p2"] = d[0, 3]
+            cam_params[cam_idx]["k3"] = d[0, 4]
         else:
-            cam_intrinsics[cam_idx] = None
+            cam_params[cam_idx] = None
             
-    cam_intrinsics_sorted = {}
-    for cam_idx in sorted(list(cam_intrinsics.keys())):
-        cam_intrinsics_sorted[cam_idx] = cam_intrinsics[cam_idx]
-
-    with open(save_path_intrinsics, "w+") as f:
-        json.dump(cam_intrinsics_sorted, f, indent=4)
-    print("  - Initial intrinsics saved: {}".format(save_path_intrinsics))
-
     # calibrate extrinsics
     # 1. pnp for the center image
     corner_path = os.path.join(corners_dir, "cam_{}".format(center_cam_idx), "{}_{}.txt".format(center_cam_idx, center_img_name))
@@ -148,12 +142,12 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
         assert(0)
     
     _3d_pts = chb_pts
-    p = cam_intrinsics[center_cam_idx]
+    p = cam_params[center_cam_idx]
     M = np.float32([[p["fx"], 0, p["cx"]], [0, p["fy"], p["cy"]], [0, 0, 1]])
     d = np.float32([p["k1"], p["k2"], p["p1"], p["p2"], p["k3"]])
     ret, rvec, tvec = cv2.solvePnP(_3d_pts, _2d_pts, M, d)
-    cam_extrinsics[center_cam_idx]["rvec"] = rvec.flatten().tolist()
-    cam_extrinsics[center_cam_idx]["tvec"] = tvec.flatten().tolist()
+    cam_params[center_cam_idx]["rvec"] = rvec.flatten().tolist()
+    cam_params[center_cam_idx]["tvec"] = tvec.flatten().tolist()
 
     # 2. stereo calibration between the adjacent cameras
     stereo_transformations = {}
@@ -167,7 +161,7 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
         cam_idx_1 = (cam_idx_2 + 1) if cam_idx_2 < center_cam_idx else cam_idx_2 - 1
         stereo_transformations[cam_idx_2] = {}
     
-        print("--from {} to {}".format(cam_idx_1, cam_idx_2))
+        print("Stereo calibration: camera {} & {}".format(cam_idx_1, cam_idx_2))
         corners_1 = []
         corners_2 = []
         for corner_path_2 in corner2_paths:
@@ -223,10 +217,10 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
         criteria = (cv2.TERM_CRITERIA_MAX_ITER + cv2.TERM_CRITERIA_EPS, 1000, 1e-5)
 
         # stereo calibrate
-        p = cam_intrinsics[cam_idx_1]
+        p = cam_params[cam_idx_1]
         M_1 = np.float32([[p["fx"], 0, p["cx"]], [0, p["fy"], p["cy"]], [0, 0, 1]])
         d_1 = np.float32([p["k1"], p["k2"], p["p1"], p["p2"], p["k3"]])
-        p = cam_intrinsics[cam_idx_2]
+        p = cam_params[cam_idx_2]
         M_2 = np.float32([[p["fx"], 0, p["cx"]], [0, p["fy"], p["cy"]], [0, 0, 1]])
         d_2 = np.float32([p["k1"], p["k2"], p["p1"], p["p2"], p["k3"]])
         ret, mtx_1, dist_1, mtx_2, dist_2, dR, dt, E, F = cv2.stereoCalibrate(_3d_pts, _2d_pts_1, _2d_pts_2,
@@ -245,48 +239,40 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
             print("\t- Check checkerboard corners are valid for both cameras.")
             assert(0)
 
-    with open(os.path.join(save_dir, "..", "stereo.json"), "w+") as f:
-        d = {}
-        for cam_idx, p in stereo_transformations.items():
-            d[cam_idx] = {}
-            for k, v in p.items():
-                d[cam_idx][k] = v.tolist()
-        json.dump(d, f, indent=4)
-
     # convert stereo extrinsics to global extrinsics
-    R, _ = cv2.Rodrigues(np.float32(cam_extrinsics[center_cam_idx]["rvec"]))
-    t = np.float32(cam_extrinsics[center_cam_idx]["tvec"]).reshape(3, 1)
+    R, _ = cv2.Rodrigues(np.float32(cam_params[center_cam_idx]["rvec"]))
+    t = np.float32(cam_params[center_cam_idx]["tvec"]).reshape(3, 1)
 
     for cam_idx in adj_cam_indices:
         assert(cam_idx != center_cam_idx)
         if cam_idx == center_cam_idx - 1 or cam_idx == center_cam_idx + 1:
-            R, _ = cv2.Rodrigues(np.float32(cam_extrinsics[center_cam_idx]["rvec"]))
-            t = np.float32(cam_extrinsics[center_cam_idx]["tvec"]).reshape(3, 1)
+            R, _ = cv2.Rodrigues(np.float32(cam_params[center_cam_idx]["rvec"]))
+            t = np.float32(cam_params[center_cam_idx]["tvec"]).reshape(3, 1)
 
         dR = stereo_transformations[cam_idx]["R"]
         dt = stereo_transformations[cam_idx]["t"]
 
-        # extrinsics
+        # extrinsics of current camera
         R = dR@R
         t = dR@t + dt
 
         rvec_2, _ = cv2.Rodrigues(R)
         tvec_2 = t
 
-        cam_extrinsics[cam_idx]["rvec"] = rvec_2.tolist()
-        cam_extrinsics[cam_idx]["tvec"] = tvec_2.tolist()
+        cam_params[cam_idx]["rvec"] = rvec_2.tolist()
+        cam_params[cam_idx]["tvec"] = tvec_2.tolist()
     
-    cam_extrinsics_sorted = {}
-    for cam_idx in sorted(list(cam_extrinsics.keys())):
-        cam_extrinsics_sorted[cam_idx] = cam_extrinsics[cam_idx]
+    cam_params_sorted = {}
+    for cam_idx in sorted(list(cam_params.keys())):
+        cam_params_sorted[cam_idx] = cam_params[cam_idx]
 
-    with open(save_path_extrinsics, "w+") as f:
-        json.dump(cam_extrinsics_sorted, f, indent=4)
-    print("  - Initial extrinsics saved: {}".format(save_path_extrinsics))
+    with open(save_path, "w+") as f:
+        json.dump(cam_params_sorted, f, indent=4)
+    print("  - Initial camera parameters saved: {}".format(save_path))
 
     if save_plot:
         # draw 3d plot showing cameras
-        save_path = os.path.join(save_dir, "initial_config.png")
+        save_path = os.path.join(save_dir, "config_initial.png")
 
         fig = plt.figure(figsize=(10, 8))
         ax = plt.axes(projection='3d')
@@ -296,7 +282,7 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
         ax.plot([0, 0], [0, 0], [0, L], c="b", linewidth=3)
 
         lim_val = -np.inf
-        for cam_idx, v in cam_extrinsics_sorted.items():
+        for cam_idx, v in cam_params_sorted.items():
             tvec = np.float32(v["tvec"]).flatten()
             rvec = np.float32(v["rvec"]).flatten()
             if cam_idx == center_cam_idx:
@@ -315,7 +301,133 @@ def calib_initial_params(output_dir, chb_config, calib_config, center_cam_idx, c
         ax.set_ylabel("Y")
         ax.set_zlabel("Z")
         plt.title("Initial camera configuration")
-        plt.show()
-        # plt.savefig(save_path, dpi=150)
+        plt.savefig(save_path, dpi=150)
+        # plt.show()
         plt.close()
         print("  - Plot saved: {}".format(save_path))
+
+def estimate_initial_world_points(output_dir, chb_config, calib_config):
+    center_cam_idx = calib_config["center_cam_idx"]
+
+    # rest pose checkerboard points
+    chb_pts = create_chb_points(n_cols=chb_config["n_cols"], n_rows=chb_config["n_rows"], s=chb_config["sqr_size"])
+
+    # load detection result
+    detect_path = os.path.join(output_dir, "detection_result.json")
+    with open(detect_path, "r") as f:
+        detections = json.load(f)["detections"]
+
+    img_names = sorted(list(detections.keys()))
+
+    # load initial camera parameters
+    in_path = os.path.join(output_dir, "cam_params", "cam_params_initial.json")
+    with open(in_path, "r") as f:
+        cam_params = json.load(f)
+
+    cam_indices = sorted([int(i) for i in cam_params.keys()])
+
+    world_pts = {}
+    for i, img_name in enumerate(img_names):
+        rvec_mean = np.float32([0, 0, 0]).reshape(3, )
+        tvec_mean = np.float32([0, 0, 0]).reshape(3, )
+        ang_mean = 0
+        n_cams = 0
+
+        for cam_idx in cam_indices:
+            if str(cam_idx) not in detections[img_name]:
+                print(img_name, cam_idx)
+            detected = detections[img_name][str(cam_idx)]
+            
+            if not detected:
+                continue
+
+            corner_path = os.path.join(output_dir, "corners", "cam_{}".format(cam_idx), "{}_{}.txt".format(cam_idx, img_name))
+            corners, _ = load_corner_txt(corner_path)
+            assert(corners is not None)
+            
+            R_ext, _ = cv2.Rodrigues(np.float32(cam_params[str(cam_idx)]["rvec"]))
+            t_ext = np.float32(cam_params[str(cam_idx)]["tvec"]).reshape(3, 1)
+
+            p = cam_params[str(cam_idx)]
+            
+            M = np.float32([[p["fx"], 0, p["cx"]], [0, p["fy"], p["cy"]], [0, 0, 1]])
+            d = np.float32([p["k1"], p["k2"], p["p1"], p["p2"], p["k3"]])
+            ret, rvec, tvec = cv2.solvePnP(chb_pts, corners, M, d) # brings points from the model coordinate system to the camera coordinate system.
+
+            tvec_norm = np.linalg.norm(tvec)
+            if tvec_norm > 1e5:
+                print("skipping large tvec: {}\timg={}".format(tvec_norm, img_name))
+            else:
+                R_ext_curr, _ = cv2.Rodrigues(rvec)
+                R_model2world = R_ext.T @ R_ext_curr
+                t_model2world = R_ext.T @ (tvec - t_ext)
+
+                rvec, _ = cv2.Rodrigues(R_model2world)
+                tvec = t_model2world
+                ang = np.linalg.norm(rvec)
+
+                if ang > 1e-5:
+                    rvec_mean += (rvec.reshape(3, ) / ang)
+                    ang_mean += ang
+                tvec_mean += tvec.reshape(3, )
+                n_cams += 1
+                    
+        # find average chb pose
+        if n_cams > 0:
+            tvec_mean /= n_cams
+            rvec_mean /= n_cams
+            ang_mean /= n_cams
+
+            rvec = rvec_mean * ang_mean
+            R, _ = cv2.Rodrigues(rvec)
+
+            # chb_pts: (N, 3), R: (3, 3), tvec: (3, N)
+            tvec_mean = tvec_mean.reshape(3, 1)
+            tvec = np.repeat(tvec_mean, chb_pts.shape[0], axis=1)
+            pts = (R @ chb_pts.T + tvec).T
+            world_pts[img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist(), "world_pts": pts.tolist()}
+        else:
+            world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1, "world_pts": -1}
+            print("  - [{}/{}]\tNo detection for image {}".format(i+1, len(img_names), img_name))
+
+
+    save_dir = os.path.join(output_dir, "world_points")
+    os.makedirs(save_dir, exist_ok=True)
+
+    save_path = os.path.join(save_dir, "world_points_initial.json")
+    with open(save_path, "w+") as f:
+        json.dump(world_pts, f, indent=4)
+    print("Initial world points saved to: {}".format(save_path))
+
+    fig = plt.figure(figsize=(10, 8))
+    ax = plt.axes(projection='3d')
+    L = 1000
+    ax.plot([0, L], [0, 0], [0, 0], c="r", linewidth=4)
+    ax.plot([0, 0], [0, L], [0, 0], c="g", linewidth=4)
+    ax.plot([0, 0], [0, 0], [0, L], c="b", linewidth=4)
+
+    k = 0
+    # render initial checkerboard points (world points)
+    for img_name, d in world_pts.items():
+        if d["n_detected"] > 0:
+            p = np.float32(d["world_pts"])
+            ax.scatter(p[:,0], p[:,1], p[:,2], c='lime', s=0.1)
+            k += 1
+    
+    # render initial camera configurations
+    for cam_idx, v in cam_params.items():
+        tvec = np.float32(v["tvec"]).flatten()
+        rvec = np.float32(v["rvec"]).flatten()
+        if int(cam_idx) == center_cam_idx:
+            c = "r"
+        else:
+            c = "k"
+        draw_camera(ax, cam_idx, rvec, tvec, color=c)
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    ax.set_zlabel("Z")
+    plt.title("Initial configuration")
+    save_path = os.path.join(save_dir, "intial_world_points.png")
+    plt.savefig(save_path, dpi=150)
+    plt.close()
+    print("  - Plot saved: {}".format(save_path))
