@@ -86,7 +86,9 @@ Build:
 
 # 5. Prepare [SuiteSparse](https://github.com/jlblancoc/suitesparse-metis-for-windows)
 
-    According to: https://www.jianshu.com/p/736e89aaf788, This is not a dependent library that must be installed. However, if installed, it will improve the computational performance of Ceres for sparse matrices, and provide more available optimization algorithms. So although the installation process of Ceres will be more complicated after adding this library, it is still recommended to install. 
+According to: https://www.jianshu.com/p/736e89aaf788, 
+    
+<i>This is not a dependent library that must be installed. However, if installed, it will improve the computational performance of Ceres for sparse matrices, and provide more available optimization algorithms. So although the installation process of Ceres will be more complicated after adding this library, it is still recommended to install. </i>
 
 ### a. Download
 
@@ -95,7 +97,7 @@ Build:
 
 Rename the folder name for convenience:
 
-    mv .\suitesparse-metis-for-windows\ .\suitesparse
+    move .\suitesparse-metis-for-windows\ .\suitesparse
 
 ### b. Configure and build
 
@@ -135,11 +137,9 @@ Build:
 
 <!--<img src="readme_assets/1.png" width=90% style="border: 1px solid black; margin-left: 80px">-->
 
-  - Click `Configure`, choose generator `Visual Studio 16 2019`, set platform to `x64`, then click `Finish`.
+  - Click `Configure`, choose generator `Visual Studio 16 2019`, set platform to `x64`, then click `Finish`. This will initially generate many errors.
 
 <!--<img src="readme_assets/2.png" width=90% style="border: 1px solid black; margin-left: 70px">-->
-
-  - This will initially generate many errors.
   
   - Set output directory by setting `CMAKE_INSTALL_PREFIX` to `C:\Users\hjoon\ceres\ceres-install`
 

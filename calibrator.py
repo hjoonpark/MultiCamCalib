@@ -334,8 +334,6 @@ def estimate_initial_world_points(output_dir, chb_config, calib_config):
         n_cams = 0
 
         for cam_idx in cam_indices:
-            if str(cam_idx) not in detections[img_name]:
-                print(img_name, cam_idx)
             detected = detections[img_name][str(cam_idx)]
             
             if not detected:
@@ -385,11 +383,12 @@ def estimate_initial_world_points(output_dir, chb_config, calib_config):
             tvec_mean = tvec_mean.reshape(3, 1)
             tvec = np.repeat(tvec_mean, chb_pts.shape[0], axis=1)
             pts = (R @ chb_pts.T + tvec).T
-            world_pts[img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist(), "world_pts": pts.tolist()}
+            # world_pts[img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist(), "world_pts": pts.tolist()}
+            world_pts[img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist()}
         else:
-            world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1, "world_pts": -1}
+            # world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1, "world_pts": -1}
+            world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1}
             print("  - [{}/{}]\tNo detection for image {}".format(i+1, len(img_names), img_name))
-
 
     save_dir = os.path.join(output_dir, "world_points")
     os.makedirs(save_dir, exist_ok=True)
@@ -397,7 +396,6 @@ def estimate_initial_world_points(output_dir, chb_config, calib_config):
     save_path = os.path.join(save_dir, "world_points_initial.json")
     with open(save_path, "w+") as f:
         json.dump(world_pts, f, indent=4)
-    print("Initial world points saved to: {}".format(save_path))
 
     fig = plt.figure(figsize=(10, 8))
     ax = plt.axes(projection='3d')
@@ -430,4 +428,5 @@ def estimate_initial_world_points(output_dir, chb_config, calib_config):
     save_path = os.path.join(save_dir, "intial_world_points.png")
     plt.savefig(save_path, dpi=150)
     plt.close()
+    print("  - Initial world points saved to: {}".format(save_path))
     print("  - Plot saved: {}".format(save_path))
