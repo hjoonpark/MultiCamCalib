@@ -6,6 +6,7 @@
 
 #include <ceres/ceres.h>
 #include <ceres/rotation.h>
+#include "parser.h"
 
 #define NUM_CAM_PARAMS 15
 class LossFunction {
@@ -130,12 +131,21 @@ public:
             return true;
         }
     };
+
+    int loadImagePoints(const char* json_path) {
+
+        return 0;
+    }
+    int loadInitialParameters(const char* json_path) {
+        return 0;
+    }
 };
 
 class BundAdj6Dof {
     void Run() {
         // load input
+
         BundAdj6Dof_Problem prob;
-        
+
     }
 };

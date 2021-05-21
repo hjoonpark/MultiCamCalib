@@ -18,6 +18,7 @@ add_executable(CeresMulticamCalib src/main.cpp)
 target_include_directories(CeresMulticamCalib PUBLIC
                             "${PROJECT_BINARY_DIR}"
                             )
+include_directories("include")
 
 # link external ceres library
 # find_package(Ceres REQUIRED)
