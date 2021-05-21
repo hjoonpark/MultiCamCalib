@@ -1,0 +1,3 @@
+// the configured options and settings
+#define CeresMulticamCalib_VERSION_MAJOR @CeresMulticamCalib_VERSION_MAJOR@
+#define CeresMulticamCalib_VERSION_MINOR @CeresMulticamCalib_VERSION_MINOR@

@@ -61,16 +61,3 @@ def convert_sec(seconds):
     min, sec = divmod(seconds, 60) 
     hour, min = divmod(min, 60) 
     return "%d:%02d:%02d" % (hour, min, sec) 
-
-def create_chb_points(n_cols, n_rows, s):
-    #        columns
-    #   +z o -------- +y
-    # rows |
-    #      |
-    #      | +x
-
-    pts = []
-    for r in range(n_rows):
-        for c in range(n_cols):
-            pts.append([r*s, c*s, 0])
-    return np.float32(pts)

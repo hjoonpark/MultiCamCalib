@@ -58,14 +58,11 @@ def draw_camera(ax, cam_idx, rvec, tvec, color="k"):
 
     ax.text(t_SE3[0], t_SE3[1], t_SE3[2]+L, cam_idx, fontsize=12)
 
-def calib_initial_params(output_dir, chb_config, calib_config, outlier_path=None, save_plot=True):
+def calib_initial_params(output_dir, chb_config, calib_config, chb, outlier_path=None, save_plot=True):
     random.seed(0)
     
     center_cam_idx = calib_config["center_cam_idx"]
     center_img_name = calib_config["center_img_name"]
-
-    # create rest pose checkerboard points
-    chb_pts = create_chb_points(n_cols=chb_config["n_cols"], n_rows=chb_config["n_rows"], s=chb_config["sqr_size"])
 
     # create output directory
     save_dir = os.path.join(output_dir, "cam_params")
@@ -112,7 +109,7 @@ def calib_initial_params(output_dir, chb_config, calib_config, outlier_path=None
         _2d_pts = np.float32(_2d_pts)
 
         # (3D) stack chb points
-        _3d_pts = np.float32([chb_pts for _ in range(len(_2d_pts))])
+        _3d_pts = np.float32([chb.chb_pts for _ in range(len(_2d_pts))])
 
         # calibrate intrinsics
         cameraMatrix = None
@@ -141,7 +138,7 @@ def calib_initial_params(output_dir, chb_config, calib_config, outlier_path=None
         print("Provide a different image name!")
         assert(0)
     
-    _3d_pts = chb_pts
+    _3d_pts = chb.chb_pts
     p = cam_params[center_cam_idx]
     M = np.float32([[p["fx"], 0, p["cx"]], [0, p["fy"], p["cy"]], [0, 0, 1]])
     d = np.float32([p["k1"], p["k2"], p["p1"], p["p2"], p["k3"]])
@@ -195,7 +192,7 @@ def calib_initial_params(output_dir, chb_config, calib_config, outlier_path=None
         _2d_pts_1 = np.float32(corners_1)
         _2d_pts_2 = np.float32(corners_2)
 
-        _3d_pts = np.float32([chb_pts for _ in range(len(corners_1))])
+        _3d_pts = np.float32([chb.chb_pts for _ in range(len(corners_1))])
 
         flags = 0
         flags |= cv2.CALIB_FIX_INTRINSIC  # we already have intrinsics (initial values)
@@ -306,11 +303,8 @@ def calib_initial_params(output_dir, chb_config, calib_config, outlier_path=None
         plt.close()
         print("  - Plot saved: {}".format(save_path))
 
-def estimate_initial_world_points(output_dir, chb_config, calib_config):
+def estimate_initial_world_points(output_dir, chb_config, calib_config, chb):
     center_cam_idx = calib_config["center_cam_idx"]
-
-    # rest pose checkerboard points
-    chb_pts = create_chb_points(n_cols=chb_config["n_cols"], n_rows=chb_config["n_rows"], s=chb_config["sqr_size"])
 
     # load detection result
     detect_path = os.path.join(output_dir, "detection_result.json")
@@ -350,7 +344,7 @@ def estimate_initial_world_points(output_dir, chb_config, calib_config):
             
             M = np.float32([[p["fx"], 0, p["cx"]], [0, p["fy"], p["cy"]], [0, 0, 1]])
             d = np.float32([p["k1"], p["k2"], p["p1"], p["p2"], p["k3"]])
-            ret, rvec, tvec = cv2.solvePnP(chb_pts, corners, M, d) # brings points from the model coordinate system to the camera coordinate system.
+            ret, rvec, tvec = cv2.solvePnP(chb.chb_pts, corners, M, d) # brings points from the model coordinate system to the camera coordinate system.
 
             tvec_norm = np.linalg.norm(tvec)
             if tvec_norm > 1e5:
@@ -381,13 +375,13 @@ def estimate_initial_world_points(output_dir, chb_config, calib_config):
 
             # chb_pts: (N, 3), R: (3, 3), tvec: (3, N)
             tvec_mean = tvec_mean.reshape(3, 1)
-            tvec = np.repeat(tvec_mean, chb_pts.shape[0], axis=1)
-            pts = (R @ chb_pts.T + tvec).T
-            # world_pts[img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist(), "world_pts": pts.tolist()}
-            world_pts[img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist()}
+            tvec = np.repeat(tvec_mean, chb.chb_pts.shape[0], axis=1)
+            pts = (R @ chb.chb_pts.T + tvec).T
+            world_pts[img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist(), "world_pts": pts.tolist()}
+            # world_pts[img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist()}
         else:
-            # world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1, "world_pts": -1}
-            world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1}
+            world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1, "world_pts": -1}
+            # world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1}
             print("  - [{}/{}]\tNo detection for image {}".format(i+1, len(img_names), img_name))
 
     save_dir = os.path.join(output_dir, "world_points")

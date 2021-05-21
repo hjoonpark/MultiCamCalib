@@ -1,0 +1,14 @@
+﻿  Triangulation.cpp
+D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\bundle_adjustment\Triangulation.cpp(166,51): warning C4018: '<': signed/unsigned mismatch
+D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\bundle_adjustment\Triangulation.cpp(184,47): warning C4018: '<': signed/unsigned mismatch
+  bundle_adjustment_6dof.cpp
+  main.cpp
+  parser.cpp
+D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\bundle_adjustment\parser.cpp(264,42): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  worker.cpp
+  Generating code
+  0 of 2589 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  bundle_adjustment.vcxproj -> D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\x64\Release\bundle_adjustment.exe
