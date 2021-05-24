@@ -256,8 +256,8 @@ def calib_initial_params(output_dir, chb_config, calib_config, chb, outlier_path
         rvec_2, _ = cv2.Rodrigues(R)
         tvec_2 = t
 
-        cam_params[cam_idx]["rvec"] = rvec_2.tolist()
-        cam_params[cam_idx]["tvec"] = tvec_2.tolist()
+        cam_params[cam_idx]["rvec"] = rvec_2.flatten().tolist()
+        cam_params[cam_idx]["tvec"] = tvec_2.flatten().tolist()
     
     cam_params_sorted = {}
     for cam_idx in sorted(list(cam_params.keys())):

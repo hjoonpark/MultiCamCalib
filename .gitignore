@@ -4,3 +4,4 @@ jupyter/
 .vs/
 .vscode/
 build/
+.ceres_project2/

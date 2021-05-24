@@ -72,10 +72,10 @@ if __name__ == "__main__":
     # determine_outliers(config["output_dir"], save_path=outlier_path, thres_loss_percent=vae["outlier_thres"], save_imgs=True)
 
     # initial camera calibration (PnP)
-    # calib_initial_params(config["output_dir"], config["checkerboard"], config["calib_initial"], chb, outlier_path=outlier_path)
+    calib_initial_params(config["output_dir"], config["checkerboard"], config["calib_initial"], chb, outlier_path=outlier_path)
 
     # initial world points
-    estimate_initial_world_points(config["output_dir"], config["checkerboard"], config["calib_initial"], chb)
+    # estimate_initial_world_points(config["output_dir"], config["checkerboard"], config["calib_initial"], chb)
 
     # generate inputs for bundle adjustment
     # generate_bundle_adjustment_input(config["output_dir"])

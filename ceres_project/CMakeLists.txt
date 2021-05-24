@@ -11,7 +11,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
-configure_file(src/Config.h.in Config.h)
+configure_file(src/Config.h.in ./../src/Config.h)
 
 add_executable(CeresMulticamCalib src/main.cpp)
 
@@ -22,7 +22,7 @@ include_directories("include")
 
 # link external ceres library
 # find_package(Ceres REQUIRED)
-find_package(Ceres REQUIRED PATHS "C:/Users/hjoon/ceres/ceres-install")
+find_package(Ceres REQUIRED PATHS "C:/Users/hjoon/ceres")
 
 target_include_directories(CeresMulticamCalib
     PRIVATE
@@ -33,3 +33,10 @@ target_link_libraries(CeresMulticamCalib
     PRIVATE
     ${CERES_LIBRARIES}
 )
+
+
+message("-------------------")
+message( ${CMAKE_CURRENT_SOURCE_DIR} )
+message(${PROJECT_BINARY_DIR})
+message(${CERES_LIBRARIES})
+message("-------------------")

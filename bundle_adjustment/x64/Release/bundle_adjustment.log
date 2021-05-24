@@ -1,14 +1,7 @@
-﻿  Triangulation.cpp
-D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\bundle_adjustment\Triangulation.cpp(166,51): warning C4018: '<': signed/unsigned mismatch
-D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\bundle_adjustment\Triangulation.cpp(184,47): warning C4018: '<': signed/unsigned mismatch
-  bundle_adjustment_6dof.cpp
-  main.cpp
-  parser.cpp
-D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\bundle_adjustment\parser.cpp(264,42): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  worker.cpp
-  Generating code
-  0 of 2589 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-  bundle_adjustment.vcxproj -> D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\x64\Release\bundle_adjustment.exe
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(507,5): error MSB6003: The specified task executable "CL.exe" could not be run. System.IO.IOException: The process cannot access the file 'D:\ONEDRIVE - UNIVERSITY OF UTAH\HJ\PHD\RESEARCH\190817_FULLBODYCAPTURE\CODES\210410_MULTICAMCALIB\PYTHON\BUNDLE_ADJUSTMENT\X64\RELEASE\BUNDLE_ADJUSTMENT_6DOF.OBJ' because it is being used by another process.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(507,5): error MSB6003:    at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(507,5): error MSB6003:    at System.IO.FileInfo.Delete()
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(507,5): error MSB6003:    at Microsoft.Build.CPPTasks.TrackedVCToolTask.DeleteFiles(ITaskItem[] filesToDelete)
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(507,5): error MSB6003:    at Microsoft.Build.CPPTasks.CL.ComputeOutOfDateSources()
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(507,5): error MSB6003:    at Microsoft.Build.CPPTasks.TrackedVCToolTask.SkipTaskExecution()
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(507,5): error MSB6003:    at Microsoft.Build.Utilities.ToolTask.Execute()

@@ -1272,7 +1272,7 @@ int BundleAdjustment6Dof::DoWork(std::string work_path) {
 					params.push_back(chb_rvec);
 					params.push_back(chb_tvec);
 
-					//ceres_prob.AddResidualBlock(cost_func, loss, cam_params, chb_rvec, chb_tvec);
+					ceres_prob.AddResidualBlock(cost_func, loss, cam_params, chb_rvec, chb_tvec);
 					// ====================================== //
 					// distortion coeff. regularization
 					// ====================================== //
