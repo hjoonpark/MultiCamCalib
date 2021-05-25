@@ -1,12 +1,11 @@
 from helper import *
+from plotter import render_camera_config, render_camera_and_worldpoints
 import cv2
 import glob
 import numpy as np
 import os
 import json
 import random
-import matplotlib.pyplot as plt
-from mpl_toolkits import mplot3d
 import pickle
 
 import math as m
@@ -24,39 +23,6 @@ def Rz(theta):
     return np.matrix([[ m.cos(theta), -m.sin(theta), 0 ],
                     [ m.sin(theta), m.cos(theta) , 0 ],
                     [ 0           , 0            , 1 ]])
-def draw_camera(ax, cam_idx, rvec, tvec, color="k"):
-    w = 1000
-    h = w/2
-    rect0 = np.float32([[-w/2, -h/2, 0], [-w/2, h/2, 0], [w/2, h/2, 0], [w/2, -h/2, 0], [0, 0, -w*2/3]])
-    R, _ = cv2.Rodrigues(rvec)
-    R_SE3 = R.T
-    t_SE3 = -R.T.dot(tvec)
-    
-    rect = []
-    for r in rect0:
-        rect.append(R_SE3@r + t_SE3)
-    rect = np.float32(rect)
-    ax.plot([rect[0, 0], rect[1,0]], [rect[0, 1], rect[1,1]], [rect[0, 2], rect[1,2]], c=color)
-    ax.plot([rect[1, 0], rect[2,0]], [rect[1, 1], rect[2,1]], [rect[1, 2], rect[2,2]], c=color)
-    ax.plot([rect[2, 0], rect[3,0]], [rect[2, 1], rect[3,1]], [rect[2, 2], rect[3,2]], c=color)
-    ax.plot([rect[3, 0], rect[0,0]], [rect[3, 1], rect[0,1]], [rect[3, 2], rect[0,2]], c=color)
-
-    ax.plot([rect[0, 0], rect[4,0]], [rect[0, 1], rect[4,1]], [rect[0, 2], rect[4,2]], c=color)
-    ax.plot([rect[1, 0], rect[4,0]], [rect[1, 1], rect[4,1]], [rect[1, 2], rect[4,2]], c=color)
-    ax.plot([rect[2, 0], rect[4,0]], [rect[2, 1], rect[4,1]], [rect[2, 2], rect[4,2]], c=color)
-    ax.plot([rect[3, 0], rect[4,0]], [rect[3, 1], rect[4,1]], [rect[3, 2], rect[4,2]], c=color)
-
-    L = 1000
-    x = R_SE3@np.float32([L, 0, 0]) + t_SE3
-    y = R_SE3@np.float32([0, L, 0]) + t_SE3
-    z = R_SE3@np.float32([0, 0, L]) + t_SE3
-    ax.plot([t_SE3[0], x[0]], [t_SE3[1], x[1]], [t_SE3[2], x[2]], c="r")
-    ax.plot([t_SE3[0], y[0]], [t_SE3[1], y[1]], [t_SE3[2], y[2]], c="g")
-    ax.plot([t_SE3[0], z[0]], [t_SE3[1], z[1]], [t_SE3[2], z[2]], c="b")
-
-    # ax.plot([t_SE3[0], t_SE3[0]], [t_SE3[1], t_SE3[1]], [0, t_SE3[2]], linestyle=":", linewidth=1, c="k")
-
-    ax.text(t_SE3[0], t_SE3[1], t_SE3[2]+L, cam_idx, fontsize=12)
 
 def calib_initial_params(output_dir, chb_config, calib_config, chb, outlier_path=None, save_plot=True):
     random.seed(0)
@@ -80,7 +46,7 @@ def calib_initial_params(output_dir, chb_config, calib_config, chb, outlier_path
     corners_dir = os.path.join(output_dir, "corners")
 
     # output directory
-    save_path = os.path.join(save_dir, "cam_params_initial.json")
+    cam_param_save_path = os.path.join(save_dir, "cam_params_initial.json")
     cam_params = {}
 
     cam_folders = [f.path for f in os.scandir(corners_dir) if f.is_dir()]
@@ -263,45 +229,13 @@ def calib_initial_params(output_dir, chb_config, calib_config, chb, outlier_path
     for cam_idx in sorted(list(cam_params.keys())):
         cam_params_sorted[cam_idx] = cam_params[cam_idx]
 
-    with open(save_path, "w+") as f:
+    with open(cam_param_save_path, "w+") as f:
         json.dump(cam_params_sorted, f, indent=4)
-    print("  - Initial camera parameters saved: {}".format(save_path))
+    print("  - Initial camera parameters saved: {}".format(cam_param_save_path))
 
     if save_plot:
-        # draw 3d plot showing cameras
-        save_path = os.path.join(save_dir, "config_initial.png")
-
-        fig = plt.figure(figsize=(10, 8))
-        ax = plt.axes(projection='3d')
-        L = 1000
-        ax.plot([0, L], [0, 0], [0, 0], c="r", linewidth=3)
-        ax.plot([0, 0], [0, L], [0, 0], c="g", linewidth=3)
-        ax.plot([0, 0], [0, 0], [0, L], c="b", linewidth=3)
-
-        lim_val = -np.inf
-        for cam_idx, v in cam_params_sorted.items():
-            tvec = np.float32(v["tvec"]).flatten()
-            rvec = np.float32(v["rvec"]).flatten()
-            if cam_idx == center_cam_idx:
-                c = "r"
-            else:
-                c = "k"
-            draw_camera(ax, cam_idx, rvec, tvec, color=c)
-
-            lim_val = max(lim_val, abs(tvec[0]))
-            lim_val = max(lim_val, abs(tvec[1]))
-            lim_val = max(lim_val, abs(tvec[2]))
-        ax.set_xlim([-lim_val, lim_val])
-        ax.set_ylim([-lim_val, lim_val])
-        ax.set_zlim([-lim_val, lim_val])
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.set_zlabel("Z")
-        plt.title("Initial camera configuration")
-        plt.savefig(save_path, dpi=150)
-        # plt.show()
-        plt.close()
-        print("  - Plot saved: {}".format(save_path))
+        plot_save_path = os.path.join(save_dir, "config_initial.png")
+        render_camera_config(cam_param_save_path, plot_save_path, "Initial configuration")
 
 def estimate_initial_world_points(output_dir, chb_config, calib_config, chb):
     center_cam_idx = calib_config["center_cam_idx"]
@@ -314,8 +248,8 @@ def estimate_initial_world_points(output_dir, chb_config, calib_config, chb):
     img_names = sorted(list(detections.keys()))
 
     # load initial camera parameters
-    in_path = os.path.join(output_dir, "cam_params", "cam_params_initial.json")
-    with open(in_path, "r") as f:
+    in_cam_param_path = os.path.join(output_dir, "cam_params", "cam_params_initial.json")
+    with open(in_cam_param_path, "r") as f:
         cam_params = json.load(f)
 
     cam_indices = sorted([int(i) for i in cam_params.keys()])
@@ -387,40 +321,9 @@ def estimate_initial_world_points(output_dir, chb_config, calib_config, chb):
     save_dir = os.path.join(output_dir, "world_points")
     os.makedirs(save_dir, exist_ok=True)
 
-    save_path = os.path.join(save_dir, "world_points_initial.json")
-    with open(save_path, "w+") as f:
+    world_points_save_path = os.path.join(save_dir, "world_points_initial.json")
+    with open(world_points_save_path, "w+") as f:
         json.dump(world_pts, f, indent=4)
 
-    fig = plt.figure(figsize=(10, 8))
-    ax = plt.axes(projection='3d')
-    L = 1000
-    ax.plot([0, L], [0, 0], [0, 0], c="r", linewidth=4)
-    ax.plot([0, 0], [0, L], [0, 0], c="g", linewidth=4)
-    ax.plot([0, 0], [0, 0], [0, L], c="b", linewidth=4)
-
-    k = 0
-    # render initial checkerboard points (world points)
-    for img_name, d in world_pts.items():
-        if d["n_detected"] > 0:
-            p = np.float32(d["world_pts"])
-            ax.scatter(p[:,0], p[:,1], p[:,2], c='lime', s=0.1)
-            k += 1
-    
-    # render initial camera configurations
-    for cam_idx, v in cam_params.items():
-        tvec = np.float32(v["tvec"]).flatten()
-        rvec = np.float32(v["rvec"]).flatten()
-        if int(cam_idx) == center_cam_idx:
-            c = "r"
-        else:
-            c = "k"
-        draw_camera(ax, cam_idx, rvec, tvec, color=c)
-    ax.set_xlabel("X")
-    ax.set_ylabel("Y")
-    ax.set_zlabel("Z")
-    plt.title("Initial configuration")
-    save_path = os.path.join(save_dir, "intial_world_points.png")
-    plt.savefig(save_path, dpi=150)
-    plt.close()
-    print("  - Initial world points saved to: {}".format(save_path))
-    print("  - Plot saved: {}".format(save_path))
+    plot_save_path = os.path.join(save_dir, "intial_world_points.png")
+    render_camera_and_worldpoints(in_cam_param_path, world_points_save_path, plot_save_path, "Initial configuration")

@@ -10,7 +10,6 @@ from helper import load_img_paths, load_config, init_cameras
 from corner_detector import detect_corners, generate_detection_results
 from outlier_detector import generate_crops_around_corners, train_vae_outlier_detector, run_vae_outlier_detector, determine_outliers
 from calibrator import calib_initial_params, estimate_initial_world_points
-from bundle_adjustment import generate_bundle_adjustment_input
 
 if __name__ == "__main__":
     config = load_config("config.json")
@@ -75,7 +74,4 @@ if __name__ == "__main__":
     calib_initial_params(config["output_dir"], config["checkerboard"], config["calib_initial"], chb, outlier_path=outlier_path)
 
     # initial world points
-    # estimate_initial_world_points(config["output_dir"], config["checkerboard"], config["calib_initial"], chb)
-
-    # generate inputs for bundle adjustment
-    # generate_bundle_adjustment_input(config["output_dir"])
+    estimate_initial_world_points(config["output_dir"], config["checkerboard"], config["calib_initial"], chb)

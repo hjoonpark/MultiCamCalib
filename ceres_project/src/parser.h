@@ -18,12 +18,13 @@
 #include "Config.h"
 #include "camera.h"
 #include "frame.h"
+#include "checkerboard.h"
 
 #define MAX_BUF 65536
 namespace Parser {
     rapidjson::Document readJson(const char*path) {
         FILE *fp;
-        fp = fopen(path, READ_MODE);
+        errno_t err = fopen_s(&fp, path, READ_MODE);
         
         char read_buf[MAX_BUF];
         rapidjson::FileReadStream fs(fp, read_buf, sizeof(read_buf));
@@ -32,6 +33,19 @@ namespace Parser {
         doc.ParseStream(fs);
 
         return doc;
+    }
+    void writeJson(const char* out_path, const rapidjson::StringBuffer &writer_buf) {
+        rapidjson::Document doc;
+        doc.Parse(writer_buf.GetString());
+
+        FILE* fp;
+        errno_t err = fopen_s(&fp, out_path, WRITE_MODE);
+        
+        char json_buf[MAX_BUF];
+        rapidjson::FileWriteStream json_os(fp, json_buf, sizeof(json_buf));
+        rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer_fs(json_os);
+        doc.Accept(writer_fs);
+        fclose(fp);
     }
     void loadConfig(const char* config_path, std::string &output_dir, int &n_rows, int &n_cols, float &sqr_size, int &n_cams) {
         rapidjson::Document doc = Parser::readJson(config_path);
@@ -78,11 +92,28 @@ namespace Parser {
         }
     }
 
-    void loadDetectionResult(const char* json_path, std::vector<Frame> &frames, const int n_cams) {
-        rapidjson::Document doc = Parser::readJson(json_path);
+    void loadDetectionResult(const char* outlier_path, const char* detection_result_path, std::vector<Frame> &frames, const int n_cams) {
+        // load outliers
+        std::vector<std::string> outliers;
+        if (outlier_path != NULL) {
+            rapidjson::Document doc_outliers = Parser::readJson(outlier_path);
+            for (auto key = doc_outliers.MemberBegin(); key != doc_outliers.MemberEnd(); key++) {
+                const char* corner_id = key->name.GetString();
+                const rapidjson::Value &res = doc_outliers[corner_id];
+                std::string cam_img_name = res["img_name"].GetString();
 
+                // push_back if not exists
+                if (std::find(outliers.begin(), outliers.end(), cam_img_name) == outliers.end()) outliers.push_back(cam_img_name);
+            }
+        }
+        // sort for fast look-up
+        std::sort(outliers.begin(), outliers.end());
+        std::vector<std::string>img_names2;
+        rapidjson::Document doc = Parser::readJson(detection_result_path);
         frames.clear();
         const rapidjson::Value& det = doc["detections"];
+        int outlier_idx = 0;
+        std::cout << ">> Skipping images with outlier corners:" << std::endl;
         for (auto f = det.MemberBegin(); f != det.MemberEnd(); f++) {
             std::string img_name = f->name.GetString();
             
@@ -90,29 +121,51 @@ namespace Parser {
             const rapidjson::Value &res = det[img_name.c_str()];
 
             for(int cam_idx = 0; cam_idx < n_cams; cam_idx++) {
+                std::string cam_img_name = std::to_string(cam_idx) + "_" + img_name;
                 int detected = res[std::to_string(cam_idx).c_str()].GetInt();
+
+                // mark as undetected if it's an outlier
+                bool is_outlier = std::binary_search(outliers.begin(), outliers.end(), cam_img_name);
+                if (is_outlier) {
+                    outlier_idx += 1;
+                    detected = 0;
+                    img_names2.push_back(cam_img_name);
+                    std::cout << cam_img_name << "  ";
+                }
                 frame.setDetected(cam_idx, (bool) detected);
             }
+
             if (frame.n_detected > 2) {
                 frames.push_back(frame);
             }
         }
+        std::cout << std::endl << ">> " << outlier_idx << " images skipped." << std::endl << std::endl;
+        std::sort(img_names2.begin(), img_names2.end());
     }
 
-    void loadInitialCheckerboardPoses(const char* json_path, const std::vector<Frame> &frames, std::vector<std::array<double, 6>> &chb_poses) {
+    void loadInitialCheckerboardPoses(const char* json_path, const std::vector<Frame> &frames, std::vector<Checkerboard> &checkerboards) {
         rapidjson::Document doc = Parser::readJson(json_path);
 
-        chb_poses.clear();
-        chb_poses.reserve(frames.size());
+        checkerboards.clear();
+        checkerboards.reserve(frames.size());
         for(int frame_idx = 0; frame_idx < frames.size(); frame_idx++) {
+            Checkerboard chb(frame_idx, frames[frame_idx].img_name);
+
             const char* img_name = frames[frame_idx].img_name.c_str();
 
             const rapidjson::Value &chb_data = doc[img_name];
             const rapidjson::Value &rvec = chb_data["rvec"];
             const rapidjson::Value &tvec = chb_data["tvec"];
 
-            std::array<double, 6> pose = {rvec[0].GetDouble(), rvec[1].GetDouble(), rvec[2].GetDouble(), tvec[0].GetDouble(), tvec[1].GetDouble(), tvec[2].GetDouble()};
-            chb_poses.push_back(pose);
+            chb.rvec[0] = rvec[0].GetDouble();
+            chb.rvec[1] = rvec[1].GetDouble();
+            chb.rvec[2] = rvec[2].GetDouble();
+
+            chb.tvec[0] = tvec[0].GetDouble();
+            chb.tvec[1] = tvec[1].GetDouble();
+            chb.tvec[2] = tvec[2].GetDouble();
+
+            checkerboards.push_back(chb);
         }
     }
     int loadImagePoints(const char* txt_path, double* img_pts) {

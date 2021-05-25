@@ -1,6 +1,4 @@
 // A simple program that computes the square root of a number
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <cmath>
 #include <cstdlib>
 #include <iostream>

@@ -11,6 +11,7 @@
     // Windows (32-bit and 64-bit, this part is common)
     #define OS_WINDOWS
     #define READ_MODE "rb"
+    #define WRITE_MODE "wb"
 
     #ifdef _WIN64
     // Windows (64-bit only)
@@ -27,6 +28,7 @@
         // Other kinds of Mac OS
         #define OS_MACOS
         #define READ_MODE "r"
+        #define WRITE_MODE "w"
     #else
     #   error "Unknown Apple platform"
     #endif
@@ -34,6 +36,7 @@
     // linux
     #define OS_LINUX
     #define READ_MODE "r"
+    #define WRITE_MODE "w"
 #elif __unix__ // all unices not caught above
     // Unix
 #elif defined(_POSIX_VERSION)

@@ -11,11 +11,19 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
+IF(MSVC_VERSION EQUAL 1400 OR MSVC_VERSION GREATER 1400)
+    ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE
+    -D_CRT_SECURE_NO_WARNINGS)
+    ADD_DEFINITIONS(-D_SCL_SECURE_NO_DEPRECATE -D_SCL_SECURE_NO_WARNINGS)
+ENDIF(MSVC_VERSION EQUAL 1400 OR MSVC_VERSION GREATER 1400)
+
 configure_file(src/Config.h.in ./../src/Config.h)
 
-add_executable(CeresMulticamCalib src/main.cpp)
+set(TARGET_NAME CeresMulticamCalib)
 
-target_include_directories(CeresMulticamCalib PUBLIC
+add_executable(${TARGET_NAME} src/main.cpp)
+
+target_include_directories(${TARGET_NAME} PUBLIC
                             "${PROJECT_BINARY_DIR}"
                             )
 include_directories("include")
@@ -24,12 +32,12 @@ include_directories("include")
 # find_package(Ceres REQUIRED)
 find_package(Ceres REQUIRED PATHS "C:/Users/hjoon/ceres/ceres-install")
 
-target_include_directories(CeresMulticamCalib
+target_include_directories(${TARGET_NAME}
     PRIVATE
     ${CERES_INCLUDE_DIRS}
 )
 
-target_link_libraries(CeresMulticamCalib
+target_link_libraries(${TARGET_NAME}
     PRIVATE
     ${CERES_LIBRARIES}
 )
@@ -37,67 +45,5 @@ message("-------------------")
 message( ${CMAKE_CURRENT_SOURCE_DIR} )
 message(${PROJECT_BINARY_DIR})
 message(${CERES_LIBRARIES})
+message(${RUNTIME_OUTPUT_DIRECTORY})
 message("-------------------")
-
-
-################################################################################
-# Global compiler options
-################################################################################
-if(MSVC)
-    # remove default flags provided with CMake for MSVC
-    set(CMAKE_CXX_FLAGS "")
-    set(CMAKE_CXX_FLAGS_DEBUG "")
-    set(CMAKE_CXX_FLAGS_RELEASE "")
-endif()
-################################################################################
-# Global linker options
-################################################################################
-if(MSVC)
-    # remove default flags provided with CMake for MSVC
-    set(CMAKE_EXE_LINKER_FLAGS "")
-    set(CMAKE_MODULE_LINKER_FLAGS "")
-    set(CMAKE_SHARED_LINKER_FLAGS "")
-    set(CMAKE_STATIC_LINKER_FLAGS "")
-    set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS}")
-    set(CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS}")
-    set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "${CMAKE_SHARED_LINKER_FLAGS}")
-    set(CMAKE_STATIC_LINKER_FLAGS_DEBUG "${CMAKE_STATIC_LINKER_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS}")
-    set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS}")
-    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS}")
-    set(CMAKE_STATIC_LINKER_FLAGS_RELEASE "${CMAKE_STATIC_LINKER_FLAGS}")
-endif()
-
-################################################################################
-# Nuget packages function stub.
-################################################################################
-function(use_package TARGET PACKAGE VERSION)
-    message(WARNING "No implementation of use_package. Create yours. "
-                    "Package \"${PACKAGE}\" with version \"${VERSION}\" "
-                    "for target \"${TARGET}\" is ignored!")
-endfunction()
-
-################################################################################
-# Use solution folders feature
-################################################################################
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-################################################################################
-# Sub-projects
-################################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
