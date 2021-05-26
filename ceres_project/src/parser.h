@@ -71,7 +71,7 @@ namespace Parser {
         cameras.reserve(n_cams);
         for (int cam_idx = 0; cam_idx < n_cams; cam_idx++) {
             const rapidjson::Value &p = doc[std::to_string(cam_idx).c_str()];
-            Camera cam(cam_idx, NUM_CAM_PARAMS);
+            Camera *cam = new Camera(cam_idx, NUM_CAM_PARAMS);
             double fx = p["fx"].GetDouble();
             double fy = p["fy"].GetDouble();
             double cx = p["cx"].GetDouble();
@@ -87,8 +87,8 @@ namespace Parser {
             const rapidjson::Value &tvec_ = p["tvec"];
             double tvec[3] = {tvec_[0].GetDouble(), tvec_[1].GetDouble(), tvec_[2].GetDouble()};
 
-            cam.setCameraParameters(rvec, tvec, fx, fy, cx, cy, k1, k2, p1, p2, k3);
-            cameras.push_back(cam);
+            cam->setCameraParameters(rvec, tvec, fx, fy, cx, cy, k1, k2, p1, p2, k3);
+            cameras.push_back(*cam);
         }
     }
 
@@ -117,7 +117,7 @@ namespace Parser {
         for (auto f = det.MemberBegin(); f != det.MemberEnd(); f++) {
             std::string img_name = f->name.GetString();
             
-            Frame frame(img_name.c_str(), n_cams);
+            Frame *frame = new Frame(img_name.c_str(), n_cams);
             const rapidjson::Value &res = det[img_name.c_str()];
 
             for(int cam_idx = 0; cam_idx < n_cams; cam_idx++) {
@@ -132,11 +132,11 @@ namespace Parser {
                     img_names2.push_back(cam_img_name);
                     std::cout << cam_img_name << "  ";
                 }
-                frame.setDetected(cam_idx, (bool) detected);
+                frame->setDetected(cam_idx, (bool) detected);
             }
 
-            if (frame.n_detected > 2) {
-                frames.push_back(frame);
+            if (frame->n_detected > 2) {
+                frames.push_back(*frame);
             }
         }
         std::cout << std::endl << ">> " << outlier_idx << " images skipped." << std::endl << std::endl;
@@ -149,7 +149,7 @@ namespace Parser {
         checkerboards.clear();
         checkerboards.reserve(frames.size());
         for(int frame_idx = 0; frame_idx < frames.size(); frame_idx++) {
-            Checkerboard chb(frame_idx, frames[frame_idx].img_name);
+            Checkerboard *chb = new Checkerboard(frame_idx, frames[frame_idx].img_name);
 
             const char* img_name = frames[frame_idx].img_name.c_str();
 
@@ -157,15 +157,14 @@ namespace Parser {
             const rapidjson::Value &rvec = chb_data["rvec"];
             const rapidjson::Value &tvec = chb_data["tvec"];
 
-            chb.rvec[0] = rvec[0].GetDouble();
-            chb.rvec[1] = rvec[1].GetDouble();
-            chb.rvec[2] = rvec[2].GetDouble();
+            chb->rvec[0] = rvec[0].GetDouble();
+            chb->rvec[1] = rvec[1].GetDouble();
+            chb->rvec[2] = rvec[2].GetDouble();
 
-            chb.tvec[0] = tvec[0].GetDouble();
-            chb.tvec[1] = tvec[1].GetDouble();
-            chb.tvec[2] = tvec[2].GetDouble();
-
-            checkerboards.push_back(chb);
+            chb->tvec[0] = tvec[0].GetDouble();
+            chb->tvec[1] = tvec[1].GetDouble();
+            chb->tvec[2] = tvec[2].GetDouble();
+            checkerboards.push_back(*chb);
         }
     }
     int loadImagePoints(const char* txt_path, double* img_pts) {

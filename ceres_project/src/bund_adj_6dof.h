@@ -43,10 +43,12 @@ public:
     }
 
     void run(const char* output_dir) {
+        std::cout << ">> Run" << std::endl;
         // loss function
         ceres::LossFunction *loss = NULL; 
 
         int n_cams = cameras.size();
+        int n_residual_blocks = 0;
         ceres::Problem ceres_prob;
         for (int frame_idx = 0; frame_idx < frames.size(); frame_idx++) {
             Frame *frame = &frames[frame_idx];
@@ -57,16 +59,32 @@ public:
                     std::stringstream imgpts_path;
                     imgpts_path << output_dir << OS_SEP << "corners" << OS_SEP << "cam_" << std::to_string(cam_idx) << OS_SEP << std::to_string(cam_idx) << "_" << frame->img_name.c_str() << ".txt";
 
-                    ceres::CostFunction *cost_func = BundAdj6Dof::CreateReprojectionError(imgpts_path.str().c_str(), chb, frame->n_detected);
-                    ceres_prob.AddResidualBlock(cost_func, loss, cameras[cam_idx].params, chb->rvec, chb->tvec);
+                    // ceres::CostFunction *cost_func = BundAdj6Dof::ReprojectionError::Create(imgpts_path.str().c_str(), chb, frame->n_detected);
+                    BundAdj6Dof::ReprojectionError::ReprojectionErrorCostFunc *cost_func = BundAdj6Dof::ReprojectionError::Create(imgpts_path.str().c_str(), chb, frame->n_detected);
+
+                    std::vector<double*> parameter_blocks;
+                    parameter_blocks.push_back(cameras[cam_idx].params);
+                    parameter_blocks.push_back(chb->rvec);
+                    parameter_blocks.push_back(chb->tvec);
+                    ceres_prob.AddResidualBlock(cost_func, loss, parameter_blocks);
+                    n_residual_blocks += 1;
                 }
             }
         }
         
+        // regularization
+        double lens_coeffs_weights[5] = {0.1};
+        for (int cam_idx = 0; cam_idx < n_cams; cam_idx++) {
+            ceres::CostFunction *reg_func = BundAdj6Dof::LensDistortionRegularization::Create(lens_coeffs_weights);
+            ceres_prob.AddResidualBlock(reg_func, NULL, cameras[cam_idx].params);
+            n_residual_blocks += 1;
+        }
+
+        std::cout << ">> " << n_residual_blocks << " residual blocks." << std::endl;
         ceres::Solver::Options options;
         options.linear_solver_type = ceres::DENSE_SCHUR;
         options.minimizer_progress_to_stdout = 1;
-        options.max_num_iterations = 100000;
+        options.max_num_iterations = 10000;
         options.num_threads = 16;
         options.function_tolerance = 1e-12;
         options.parameter_tolerance = 1e-12;
@@ -193,13 +211,33 @@ public:
 
     }
 
-    static ceres::CostFunction* CreateReprojectionError(const char* imgpts_path_, Checkerboard *chb_, const int n_cams_used_) {
-        constexpr int kChbRvecDim = 3;
-        constexpr int kChbTvecDim = 3;
-        constexpr int kNumResiduals = 2;
-        ReprojectionError *re = new BundAdj6Dof::ReprojectionError(imgpts_path_, chb_, n_cams_used_);
-        return (new ceres::AutoDiffCostFunction<ReprojectionError, kNumResiduals, NUM_CAM_PARAMS, kChbRvecDim, kChbTvecDim>(re));
-    }
+    struct LensDistortionRegularization {
+        double *weights;
+        LensDistortionRegularization(double (&weights_)[5]) {
+            weights = weights_;
+        }
+        static ceres::CostFunction* Create(double (&weights_)[5]) {
+            constexpr int kResidualDim = 5;
+            constexpr int kNumCamParams = NUM_CAM_PARAMS;
+            LensDistortionRegularization* re = new BundAdj6Dof::LensDistortionRegularization(weights_);
+            return (new ceres::AutoDiffCostFunction<LensDistortionRegularization, kResidualDim, kNumCamParams>(re));
+        }
+        ~LensDistortionRegularization() {
+            delete[] weights;
+        }
+        
+		template<typename T>
+		bool operator()(const T* const cam_params, T* residuals) const {
+            residuals[0] = weights[0]*cam_params[K1];
+            residuals[1] = weights[1]*cam_params[K2];
+            residuals[2] = weights[2]*cam_params[P1];
+            residuals[3] = weights[3]*cam_params[P2];
+            residuals[4] = weights[4]*cam_params[K3];
+            return true;
+        }
+    };
+
+    #define CERES_STRIDE 4
     struct ReprojectionError {
         Checkerboard *chb;
         double *img_pts;
@@ -209,34 +247,53 @@ public:
             n_cams_used = n_cams_used_;
             chb = chb_;
             img_pts = new double[2*chb->n_pts];
-            int res = Parser::loadImagePoints(imgpts_path_, img_pts);
-            assert(res == 0);
+            Parser::loadImagePoints(imgpts_path_, img_pts);
         }
+
+        typedef ceres::DynamicAutoDiffCostFunction<ReprojectionError, CERES_STRIDE> ReprojectionErrorCostFunc;
+        static ReprojectionErrorCostFunc* Create(const char* imgpts_path_, Checkerboard *chb_, const int n_cams_used_) {
+            ReprojectionError* re = new BundAdj6Dof::ReprojectionError(imgpts_path_, chb_, n_cams_used_);
+            ReprojectionErrorCostFunc* cost_func = new ReprojectionErrorCostFunc(re);
+            
+            constexpr int kNumCamParams = NUM_CAM_PARAMS;
+            constexpr int kChbRvecDim = 3;
+            constexpr int kChbTvecDim = 3;
+            cost_func->AddParameterBlock(kNumCamParams);
+            cost_func->AddParameterBlock(kChbRvecDim);
+            cost_func->AddParameterBlock(kChbTvecDim);
+            cost_func->SetNumResiduals(2*chb_->n_pts);
+            return cost_func;
+        }
+
+        /*
+        static ceres::CostFunction* Create(const char* imgpts_path_, Checkerboard *chb_, const int n_cams_used_) {
+            constexpr int kChbRvecDim = 3;
+            constexpr int kChbTvecDim = 3;
+            constexpr int kNumResiduals = 2;
+            ReprojectionError *re = new BundAdj6Dof::ReprojectionError(imgpts_path_, chb_, n_cams_used_);
+            return (new ceres::DynamicAutoDiffCostFunction<ReprojectionError, 176, NUM_CAM_PARAMS, kChbRvecDim, kChbTvecDim>(re));
+        }
+        */
 
         ~ReprojectionError() {
             delete[] img_pts;
         }
 
-
 		template<typename T>
-		bool operator()(const T* const camera, const T* const chbR, const T* const chbT, T* residuals) const {
-            // residuals
-            residuals[0] = T(0);
-            residuals[1] = T(0);
-
+		bool operator()(T const* const* params, T* residuals) const {
             // camera parameters
-			const T extrinsics_rvec[3] = { camera[RVEC], camera[RVEC+1], camera[RVEC+2] };
-			const T extrinsics_tvec[3] = { camera[TVEC], camera[TVEC+1], camera[TVEC+2] };
-			const T f[2] = { camera[FX], camera[FY] };
-			const T c[2] = { camera[CX], camera[CY] };
-            const T k[3] = { camera[K1], camera[K2], camera[K3]};
-            const T p[2] = { camera[P1], camera[P2]};
+			T extrinsics_rvec[3] = { params[0][RVEC], params[0][RVEC+1], params[0][RVEC+2] };
+			T extrinsics_tvec[3] = { params[0][TVEC], params[0][TVEC+1], params[0][TVEC+2] };
+			T f[2] = { params[0][FX], params[0][FY] };
+			T c[2] = { params[0][CX], params[0][CY] };
+            T k[3] = { params[0][K1], params[0][K2], params[0][K3]};
+            T p[2] = { params[0][P1], params[0][P2]};
 
             // checkerboard
-            const T chb_ang_axis[3] = {chbR[0], chbR[1], chbR[2]};
-            const T chb_trans[3] = {chbT[0], chbT[1], chbT[2]};
+            T chb_ang_axis[3] = {params[1][0], params[1][1], params[1][2]};
+            T chb_trans[3] = {params[2][0], params[2][1], params[2][2]};
 
-            for ( size_t i = 0; i < chb->n_pts; i++) {
+            for (size_t i = 0; i < chb->n_pts; i++) {
                 // update checkerboard points (6 dof)
                 const T chb_point[3] = {T(chb->chb_pts[i*3]), T(chb->chb_pts[i*3+1]), T(chb->chb_pts[i*3+2])};
 
@@ -276,8 +333,8 @@ public:
                 T dy = y_pred - img_pts[i*2 + 1];
 
                 // output
-                residuals[0] += dx / T(n_cams_used);
-                residuals[1] += dy / T(n_cams_used);
+                residuals[2*i] = dx / T(n_cams_used);
+                residuals[2*i + 1] = dy / T(n_cams_used);
             }
             return true;
         }

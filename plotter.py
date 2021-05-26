@@ -37,45 +37,8 @@ def _draw_camera(ax, cam_idx, rvec, tvec, color="k"):
     # ax.plot([t_SE3[0], t_SE3[0]], [t_SE3[1], t_SE3[1]], [0, t_SE3[2]], linestyle=":", linewidth=1, c="k")
     ax.text(t_SE3[0], t_SE3[1], t_SE3[2]+L, cam_idx, fontsize=12)
 
-def render_camera_config(in_cam_param_path, save_path, title):
-    # draw 3d plot showing cameras
-    with open(in_cam_param_path, "r") as f:
-        params = json.load(f)
 
-        fig = plt.figure(figsize=(10, 8))
-        ax = plt.axes(projection='3d')
-        L = 1000
-        ax.plot([0, L], [0, 0], [0, 0], c="r", linewidth=3)
-        ax.plot([0, 0], [0, L], [0, 0], c="g", linewidth=3)
-        ax.plot([0, 0], [0, 0], [0, L], c="b", linewidth=3)
-
-        lim_val = -np.inf
-        for cam_idx, v in params.items():
-            tvec = np.float32(v["tvec"]).flatten()
-            rvec = np.float32(v["rvec"]).flatten()
-            _draw_camera(ax, cam_idx, rvec, tvec, color="k")
-
-            lim_val = max(lim_val, abs(tvec[0]))
-            lim_val = max(lim_val, abs(tvec[1]))
-            lim_val = max(lim_val, abs(tvec[2]))
-        ax.set_xlim([-lim_val, lim_val])
-        ax.set_ylim([-lim_val, lim_val])
-        ax.set_zlim([-lim_val, lim_val])
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.set_zlabel("Z")
-        plt.title(title)
-        if save_path is not None:
-            plt.savefig(save_path, dpi=150)
-            plt.close()
-        else:
-            plt.show()
-        print("  - Plot saved: {}".format(save_path))
-
-def render_camera_and_worldpoints(in_cam_param_path, in_world_points_path, save_path, title):
-    with open(in_world_points_path, "r") as f:
-        world_pts = json.load(f)
-    
+def render_config(in_cam_param_path, in_world_points_path=None, save_path=r"output\undefined_config.png", title="Configuration"):
     with open(in_cam_param_path, "r") as f:
         cam_params = json.load(f)
 
@@ -86,13 +49,17 @@ def render_camera_and_worldpoints(in_cam_param_path, in_world_points_path, save_
     ax.plot([0, 0], [0, L], [0, 0], c="g", linewidth=4)
     ax.plot([0, 0], [0, 0], [0, L], c="b", linewidth=4)
 
-    k = 0
-    # render initial checkerboard points (world points)
-    for img_name, d in world_pts.items():
-        if d["n_detected"] > 0:
-            p = np.float32(d["world_pts"])
-            ax.scatter(p[:,0], p[:,1], p[:,2], c='lime', s=0.1)
-            k += 1
+
+    if in_world_points_path is not None:
+        with open(in_world_points_path, "r") as f:
+            world_pts = json.load(f)
+        k = 0
+        # render initial checkerboard points (world points)
+        for img_name, d in world_pts.items():
+            if d["n_detected"] > 0:
+                p = np.float32(d["world_pts"])
+                ax.scatter(p[:,0], p[:,1], p[:,2], c='lime', s=0.1)
+                k += 1
     
     # render initial camera configurations
     for cam_idx, v in cam_params.items():

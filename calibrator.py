@@ -1,5 +1,5 @@
 from helper import *
-from plotter import render_camera_config, render_camera_and_worldpoints
+from plotter import render_config
 import cv2
 import glob
 import numpy as np
@@ -235,7 +235,7 @@ def calib_initial_params(output_dir, chb_config, calib_config, chb, outlier_path
 
     if save_plot:
         plot_save_path = os.path.join(save_dir, "config_initial.png")
-        render_camera_config(cam_param_save_path, plot_save_path, "Initial configuration")
+        render_config(cam_param_save_path, None, plot_save_path, "Initial configuration")
 
 def estimate_initial_world_points(output_dir, chb_config, calib_config, chb):
     center_cam_idx = calib_config["center_cam_idx"]
@@ -326,4 +326,4 @@ def estimate_initial_world_points(output_dir, chb_config, calib_config, chb):
         json.dump(world_pts, f, indent=4)
 
     plot_save_path = os.path.join(save_dir, "intial_world_points.png")
-    render_camera_and_worldpoints(in_cam_param_path, world_points_save_path, plot_save_path, "Initial configuration")
+    render_config(in_cam_param_path, world_points_save_path, plot_save_path, "Initial configuration")
