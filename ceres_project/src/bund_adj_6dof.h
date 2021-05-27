@@ -19,21 +19,22 @@ public:
     std::vector<Camera> cameras;
     std::vector<Frame> frames;
     std::vector<Checkerboard> checkerboards;
-
-    void init(const char* output_dir, const int n_cams, const int n_rows, const int n_cols, const float sqr_size) {
-        Checkerboard::initGlobalProperties(n_rows, n_cols, sqr_size);
+    BundAdj6Dof::Config config;
+    void init(const char* output_dir, const Config &config_) {
+        config = config_;
+        Checkerboard::initGlobalProperties(config.chb_n_rows, config.chb_n_cols, config.chb_sqr_size);
 
         std::stringstream cam_path;
         cam_path << output_dir << OS_SEP << "cam_params" << OS_SEP << "cam_params_initial.json";
         std::cout << "Read: " << cam_path.str() << std::endl;
-        Parser::loadInitialCamParams(cam_path.str().c_str(), n_cams, cameras);
+        Parser::loadInitialCamParams(cam_path.str().c_str(), config.n_cams, cameras);
         std::cout << "  - " << cameras.size() << " cameras loaded" << std::endl;
 
         std::stringstream detect_res_path;
         detect_res_path << output_dir << OS_SEP << "detection_result.json";
         std::stringstream outlier_path;
         outlier_path << output_dir << OS_SEP << "vae_outlier_detector" << OS_SEP << "outliers.json";
-        Parser::loadDetectionResult(outlier_path.str().c_str(), detect_res_path.str().c_str(), frames, n_cams);
+        Parser::loadDetectionResult(outlier_path.str().c_str(), detect_res_path.str().c_str(), frames, config.n_cams);
         std::cout << "  - " << frames.size() << " vaild frames loaded" << std::endl;
         
         std::stringstream world_point_path;
@@ -84,12 +85,13 @@ public:
         ceres::Solver::Options options;
         options.linear_solver_type = ceres::DENSE_SCHUR;
         options.minimizer_progress_to_stdout = 1;
-        options.max_num_iterations = 10000;
-        options.num_threads = 16;
-        options.function_tolerance = 1e-12;
-        options.parameter_tolerance = 1e-12;
-        options.gradient_tolerance = 1e-12;
-        options.inner_iteration_tolerance = 1e-12;
+        options.max_num_iterations = config.max_iter;
+        options.num_threads = config.num_thread;
+        options.function_tolerance = config.function_tolerance;
+        options.parameter_tolerance = config.parameter_tolerance;
+        options.gradient_tolerance = config.gradient_tolerance;
+        options.inner_iteration_tolerance = config.inner_iteration_tolerance;
+        std::cout << config.function_tolerance << std::endl;
         ceres::Solver::Summary summary;
         ceres::Solve(options, &ceres_prob, &summary);
         std::cout << summary.FullReport() << std::endl;

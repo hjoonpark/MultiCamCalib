@@ -5,7 +5,7 @@ import json
 import cv2
 
 def _draw_camera(ax, cam_idx, rvec, tvec, color="k"):
-    w = 1000
+    w = 700
     h = w/2
     rect0 = np.float32([[-w/2, -h/2, 0], [-w/2, h/2, 0], [w/2, h/2, 0], [w/2, -h/2, 0], [0, 0, -w*2/3]])
     R, _ = cv2.Rodrigues(rvec)
@@ -35,10 +35,10 @@ def _draw_camera(ax, cam_idx, rvec, tvec, color="k"):
     ax.plot([t_SE3[0], z[0]], [t_SE3[1], z[1]], [t_SE3[2], z[2]], c="b")
 
     # ax.plot([t_SE3[0], t_SE3[0]], [t_SE3[1], t_SE3[1]], [0, t_SE3[2]], linestyle=":", linewidth=1, c="k")
-    ax.text(t_SE3[0], t_SE3[1], t_SE3[2]+L, cam_idx, fontsize=12)
+    ax.text(t_SE3[0], t_SE3[1], t_SE3[2]+L/2, cam_idx, fontsize=12)
 
 
-def render_config(in_cam_param_path, in_world_points_path=None, save_path=r"output\undefined_config.png", title="Configuration"):
+def render_config(in_cam_param_path, in_world_points_path=None, title="Configuration", save_path=None):
     with open(in_cam_param_path, "r") as f:
         cam_params = json.load(f)
 

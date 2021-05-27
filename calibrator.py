@@ -161,7 +161,7 @@ def calib_initial_params(output_dir, chb_config, calib_config, chb, outlier_path
         _3d_pts = np.float32([chb.chb_pts for _ in range(len(corners_1))])
 
         flags = 0
-        flags |= cv2.CALIB_FIX_INTRINSIC  # we already have intrinsics (initial values)
+        # flags |= cv2.CALIB_FIX_INTRINSIC  # we already have intrinsics (initial values)
         flags |= cv2.CALIB_USE_INTRINSIC_GUESS # optmize intrinsics
         # flags |= cv2.CALIB_FIX_PRINCIPAL_POINT
         # flags |= cv2.CALIB_FIX_FOCAL_LENGTH
@@ -235,7 +235,7 @@ def calib_initial_params(output_dir, chb_config, calib_config, chb, outlier_path
 
     if save_plot:
         plot_save_path = os.path.join(save_dir, "config_initial.png")
-        render_config(cam_param_save_path, None, plot_save_path, "Initial configuration")
+        render_config(cam_param_save_path, None, "Initial configuration", plot_save_path)
 
 def estimate_initial_world_points(output_dir, chb_config, calib_config, chb):
     center_cam_idx = calib_config["center_cam_idx"]
@@ -326,4 +326,4 @@ def estimate_initial_world_points(output_dir, chb_config, calib_config, chb):
         json.dump(world_pts, f, indent=4)
 
     plot_save_path = os.path.join(save_dir, "intial_world_points.png")
-    render_config(in_cam_param_path, world_points_save_path, plot_save_path, "Initial configuration")
+    render_config(in_cam_param_path, world_points_save_path, "Initial configuration", plot_save_path)

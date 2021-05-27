@@ -1,4 +1,5 @@
 // the configured options and settings
+#pragma once
 #define CeresMulticamCalib_VERSION_MAJOR 1
 #define CeresMulticamCalib_VERSION_MINOR 0
 
@@ -51,3 +52,10 @@
 #else
 #define OS_SEP "/"
 #endif
+
+struct Config {
+    int max_iter, num_thread;
+    double function_tolerance, parameter_tolerance, gradient_tolerance, inner_iteration_tolerance;
+    int chb_n_rows, chb_n_cols, chb_sqr_size;
+    int n_cams;
+};

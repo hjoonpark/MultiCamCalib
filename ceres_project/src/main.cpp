@@ -16,15 +16,14 @@ int main(int argc, char* argv[])
 
     std::stringstream config_path;
     config_path << ROOT_DIR << "config.json";
-    int n_rows, n_cols, n_cams;
-    float sqr_size;
+    Config config;
     std::string output_dir;
-    Parser::loadConfig(config_path.str().c_str(), output_dir, n_rows, n_cols, sqr_size, n_cams);
+    Parser::loadConfig(config_path.str().c_str(), output_dir, config);
     std::cout << "Read: " << config_path.str() << std::endl;
-    std::cout << "  - chb=(" << n_rows << " x " << n_cols << "), size=" << sqr_size << "mm" << ", n_cams=" << n_cams << ", output_dir=" << output_dir.c_str() << std::endl;
+    std::cout << "  - chb=(" << config.chb_n_rows << " x " << config.chb_n_cols << "), size=" << config.chb_sqr_size << "mm" << ", n_cams=" << config.n_cams << ", output_dir=" << output_dir.c_str() << std::endl;
 
     BundAdj6Dof task;
-    task.init(output_dir.c_str(), n_cams, n_rows, n_cols, sqr_size);
+    task.init(output_dir.c_str(), config);
     task.run(output_dir.c_str());
 
     int i;

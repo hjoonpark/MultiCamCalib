@@ -19,8 +19,8 @@
 #include "camera.h"
 #include "frame.h"
 #include "checkerboard.h"
-
 #define MAX_BUF 65536
+
 namespace Parser {
     rapidjson::Document readJson(const char*path) {
         FILE *fp;
@@ -47,7 +47,7 @@ namespace Parser {
         doc.Accept(writer_fs);
         fclose(fp);
     }
-    void loadConfig(const char* config_path, std::string &output_dir, int &n_rows, int &n_cols, float &sqr_size, int &n_cams) {
+    void loadConfig(const char* config_path, std::string &output_dir, Config &config) {
         rapidjson::Document doc = Parser::readJson(config_path);
 
         // parse paths
@@ -55,13 +55,22 @@ namespace Parser {
 
         // parse checkerboard info
         const rapidjson::Value &chb_info = doc["checkerboard"];
-        n_rows = chb_info["n_rows"].GetInt();
-        n_cols = chb_info["n_cols"].GetInt();
-        sqr_size = chb_info["sqr_size"].GetFloat(); // in milimeters
+        config.chb_n_rows = chb_info["n_rows"].GetInt();
+        config.chb_n_cols = chb_info["n_cols"].GetInt();
+        config.chb_sqr_size = chb_info["sqr_size"].GetDouble(); // in milimeters
 
         // parse camera info
         const rapidjson::Value &cams_info = doc["cameras"];
-        n_cams = cams_info["n_cams"].GetInt();
+        config.n_cams = cams_info["n_cams"].GetInt();
+
+        // parse bundle adjustment configs
+        const rapidjson::Value &bund_info = doc["bundle_adjustment"];
+        config.max_iter = bund_info["max_iter"].GetInt();
+        config.num_thread = bund_info["num_thread"].GetInt();
+        config.function_tolerance = bund_info["function_tolerance"].GetDouble();
+        config.parameter_tolerance = bund_info["parameter_tolerance"].GetDouble();
+        config.gradient_tolerance = bund_info["gradient_tolerance"].GetDouble();
+        config.inner_iteration_tolerance = bund_info["inner_iteration_tolerance"].GetDouble();
     }
 
     void loadInitialCamParams(const char* cam_path, const int n_cams, std::vector<Camera> &cameras) {
