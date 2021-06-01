@@ -162,7 +162,8 @@ namespace Parser {
 
             const char* img_name = frames[frame_idx].img_name.c_str();
 
-            const rapidjson::Value &chb_data = doc[img_name];
+            const rapidjson::Value &frame = doc["frames"];
+            const rapidjson::Value &chb_data = frame[img_name];
             const rapidjson::Value &rvec = chb_data["rvec"];
             const rapidjson::Value &tvec = chb_data["tvec"];
 

@@ -1,8 +1,8 @@
 __pycache__/
 output/
-jupyter/
 .vs/
 .vscode/
 build/
 .ceres_project2/
 .jpg
+notebooks/

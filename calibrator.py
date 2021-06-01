@@ -24,7 +24,7 @@ def Rz(theta):
                     [ m.sin(theta), m.cos(theta) , 0 ],
                     [ 0           , 0            , 1 ]])
 
-def calib_initial_params(output_dir, chb_config, calib_config, chb, outlier_path=None, save_plot=True):
+def calib_initial_params(output_dir, calib_config, chb, outlier_path=None, save_plot=True):
     random.seed(0)
     
     center_cam_idx = calib_config["center_cam_idx"]
@@ -237,7 +237,7 @@ def calib_initial_params(output_dir, chb_config, calib_config, chb, outlier_path
         plot_save_path = os.path.join(save_dir, "config_initial.png")
         render_config(cam_param_save_path, None, "Initial configuration", plot_save_path)
 
-def estimate_initial_world_points(output_dir, chb_config, calib_config, chb):
+def estimate_initial_world_points(output_dir, calib_config, chb):
     center_cam_idx = calib_config["center_cam_idx"]
 
     # load detection result
@@ -254,7 +254,7 @@ def estimate_initial_world_points(output_dir, chb_config, calib_config, chb):
 
     cam_indices = sorted([int(i) for i in cam_params.keys()])
 
-    world_pts = {}
+    world_pts = {"checkerboard": {"n_rows": chb.n_rows, "n_cols": chb.n_cols, "sqr_size": chb.sqr_size}, "frames": {}}
     for i, img_name in enumerate(img_names):
         rvec_mean = np.float32([0, 0, 0]).reshape(3, )
         tvec_mean = np.float32([0, 0, 0]).reshape(3, )
@@ -311,10 +311,10 @@ def estimate_initial_world_points(output_dir, chb_config, calib_config, chb):
             tvec_mean = tvec_mean.reshape(3, 1)
             tvec = np.repeat(tvec_mean, chb.chb_pts.shape[0], axis=1)
             pts = (R @ chb.chb_pts.T + tvec).T
-            world_pts[img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist(), "world_pts": pts.tolist()}
+            world_pts["frames"][img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist(), "world_pts": pts.tolist()}
             # world_pts[img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist()}
         else:
-            world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1, "world_pts": -1}
+            world_pts["frames"][img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1, "world_pts": -1}
             # world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1}
             print("  - [{}/{}]\tNo detection for image {}".format(i+1, len(img_names), img_name))
 

@@ -91,7 +91,6 @@ public:
         options.parameter_tolerance = config.parameter_tolerance;
         options.gradient_tolerance = config.gradient_tolerance;
         options.inner_iteration_tolerance = config.inner_iteration_tolerance;
-        std::cout << config.function_tolerance << std::endl;
         ceres::Solver::Summary summary;
         ceres::Solve(options, &ceres_prob, &summary);
         std::cout << summary.FullReport() << std::endl;
@@ -156,6 +155,19 @@ public:
         rapidjson::StringBuffer writer_buf_wp;
         rapidjson::PrettyWriter<rapidjson::StringBuffer> writer_wp(writer_buf_wp);
         writer_wp.StartObject();
+        writer_wp.Key("checkerboard");
+        writer_wp.StartObject();
+        {
+            writer_wp.Key("n_rows");
+            writer_wp.Int(Checkerboard::n_rows);
+            writer_wp.Key("n_cols");
+            writer_wp.Int(Checkerboard::n_cols);
+            writer_wp.Key("sqr_size");
+            writer_wp.Double(Checkerboard::sqr_size);
+        }
+        writer_wp.EndObject();
+        writer_wp.Key("frames");
+        writer_wp.StartObject();
         for(int frame_idx = 0; frame_idx < checkerboards.size(); frame_idx++) {
             Checkerboard *chb = &checkerboards[frame_idx];
             std::vector<std::array<double, 3>> wps;
@@ -208,6 +220,7 @@ public:
             }
             writer_wp.EndObject();
         }
+        writer_wp.EndObject();
         writer_wp.EndObject();
         Parser::writeJson(worldpoints_out_path.str().c_str(), writer_buf_wp);
 
