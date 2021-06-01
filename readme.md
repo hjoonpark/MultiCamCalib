@@ -1,5 +1,4 @@
 # Ceres installation
-## 1. [Windows](install_guide/windows.md)
-## 2. [Linux](install_guide/linux.md) (coming)
-## 3. [macOS](install_guide/macos.md) (coming)
-
+## 1. [Windows](docs/install_windows.md)
+## 2. [Linux](docs/install_linux.md) (coming)
+## 3. [macOS](docs/install_macos.md) (coming)

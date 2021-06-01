@@ -1,5 +1,0 @@
-D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\x64\Release\bundle_adjustment.vcxproj.CopyComplete
-D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\x64\Release\bundle_adjustment.exe
-D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\x64\Release\ceres.dll
-D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\x64\Release\glog.dll
-D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\bundle_adjustment\x64\Release\gflags.dll
