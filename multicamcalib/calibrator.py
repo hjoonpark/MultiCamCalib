@@ -24,14 +24,14 @@ def Rz(theta):
                     [ m.sin(theta), m.cos(theta) , 0 ],
                     [ 0           , 0            , 1 ]])
 
-def calib_initial_params(output_dir, calib_config, chb, outlier_path=None, save_plot=True):
+def calib_initial_params(paths, calib_config, chb, outlier_path=None, save_plot=True):
     random.seed(0)
     
     center_cam_idx = calib_config["center_cam_idx"]
     center_img_name = calib_config["center_img_name"]
 
     # create output directory
-    save_dir = os.path.join(output_dir, "cam_params")
+    save_dir = paths["cam_params"]
     os.makedirs(save_dir, exist_ok=True)
 
     outliers = []
@@ -43,7 +43,7 @@ def calib_initial_params(output_dir, calib_config, chb, outlier_path=None, save_
                 outliers.append(d["img_name"])
     outliers = set(outliers)
 
-    corners_dir = os.path.join(output_dir, "corners")
+    corners_dir = paths["corners"]
 
     # output directory
     cam_param_save_path = os.path.join(save_dir, "cam_params_initial.json")
@@ -237,18 +237,18 @@ def calib_initial_params(output_dir, calib_config, chb, outlier_path=None, save_
         plot_save_path = os.path.join(save_dir, "config_initial.png")
         render_config(cam_param_save_path, None, "Initial configuration", plot_save_path)
 
-def estimate_initial_world_points(output_dir, calib_config, chb):
+def estimate_initial_world_points(paths, calib_config, chb):
     center_cam_idx = calib_config["center_cam_idx"]
 
     # load detection result
-    detect_path = os.path.join(output_dir, "detection_result.json")
+    detect_path = os.path.join(paths["corners"], "detection_result.json")
     with open(detect_path, "r") as f:
         detections = json.load(f)["detections"]
 
     img_names = sorted(list(detections.keys()))
 
     # load initial camera parameters
-    in_cam_param_path = os.path.join(output_dir, "cam_params", "cam_params_initial.json")
+    in_cam_param_path = os.path.join(paths["cam_params"], "cam_params_initial.json")
     with open(in_cam_param_path, "r") as f:
         cam_params = json.load(f)
 
@@ -267,7 +267,7 @@ def estimate_initial_world_points(output_dir, calib_config, chb):
             if not detected:
                 continue
 
-            corner_path = os.path.join(output_dir, "corners", "cam_{}".format(cam_idx), "{}_{}.txt".format(cam_idx, img_name))
+            corner_path = os.path.join(paths["corners"], "cam_{}".format(cam_idx), "{}_{}.txt".format(cam_idx, img_name))
             corners, _ = load_corner_txt(corner_path)
             assert(corners is not None)
             
@@ -318,7 +318,7 @@ def estimate_initial_world_points(output_dir, calib_config, chb):
             # world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1}
             print("  - [{}/{}]\tNo detection for image {}".format(i+1, len(img_names), img_name))
 
-    save_dir = os.path.join(output_dir, "world_points")
+    save_dir = paths["world_points"]
     os.makedirs(save_dir, exist_ok=True)
 
     world_points_save_path = os.path.join(save_dir, "world_points_initial.json")
