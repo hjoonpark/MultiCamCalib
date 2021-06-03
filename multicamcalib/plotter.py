@@ -42,7 +42,6 @@ def render_config(in_cam_param_path, in_world_points_path=None, title="Configura
     with open(in_cam_param_path, "r") as f:
         cam_params = json.load(f)
 
-    fig = plt.figure(figsize=(10, 8))
     ax = plt.axes(projection='3d')
     L = 1000
     ax.plot([0, L], [0, 0], [0, 0], c="r", linewidth=4)
@@ -85,4 +84,3 @@ def render_config(in_cam_param_path, in_world_points_path=None, title="Configura
         plt.close()
     else:
         plt.show()
-    print("  - Plot saved: {}".format(save_path))

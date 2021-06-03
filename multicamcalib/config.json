@@ -21,7 +21,7 @@
         "z_dim": 2,
         "kl_weight": 0.001,
         "lr": 0.001,
-        "n_epochs": 1000,
+        "n_epochs": 10,
         "batch_size": 1000,
         "outlier_thres": 0.001
     },

@@ -24,7 +24,7 @@ def Rz(theta):
                     [ m.sin(theta), m.cos(theta) , 0 ],
                     [ 0           , 0            , 1 ]])
 
-def calib_initial_params(paths, calib_config, chb, outlier_path=None, save_plot=True):
+def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, save_plot=True):
     random.seed(0)
     
     center_cam_idx = calib_config["center_cam_idx"]
@@ -64,7 +64,7 @@ def calib_initial_params(paths, calib_config, chb, outlier_path=None, save_plot=
             fname = os.path.basename(corner_path).split(".")[0]
             if fname in outliers:
                 # skip image that contains outlier corner
-                print("\tskipping outlier image for intrinsics: {}".format(fname))
+                logger.debug("Skipping outlier image for intrinsics: {}".format(fname))
                 continue
 
             corners, imageSize = load_corner_txt(corner_path) # imageSize: (h, w)
@@ -100,8 +100,7 @@ def calib_initial_params(paths, calib_config, chb, outlier_path=None, save_plot=
     corner_path = os.path.join(corners_dir, "cam_{}".format(center_cam_idx), "{}_{}.txt".format(center_cam_idx, center_img_name))
     _2d_pts, _ = load_corner_txt(corner_path)
     if _2d_pts is None:
-        print("[ERROR] No corner detected for: {}".format(corner_path))
-        print("Provide a different image name!")
+        logger.error("No corner detected for: {}\nProvide a different image name!".format(corner_path))
         assert(0)
     
     _3d_pts = chb.chb_pts
@@ -124,7 +123,7 @@ def calib_initial_params(paths, calib_config, chb, outlier_path=None, save_plot=
         cam_idx_1 = (cam_idx_2 + 1) if cam_idx_2 < center_cam_idx else cam_idx_2 - 1
         stereo_transformations[cam_idx_2] = {}
     
-        print("Stereo calibration: camera {} & {}".format(cam_idx_1, cam_idx_2))
+        logger.info("Stereo-calibrating: camera {} & {}".format(cam_idx_1, cam_idx_2))
         corners_1 = []
         corners_2 = []
         for corner_path_2 in corner2_paths:
@@ -133,7 +132,7 @@ def calib_initial_params(paths, calib_config, chb, outlier_path=None, save_plot=
             fname_2 = "{}_{}".format(cam_idx_2, img_name)
             if (fname_1 in outliers) or (fname_2 in outliers):
                 # skip image that contains outlier corner
-                print("\tskipping outlier image for extrinsics: {}, {}".format(fname_1, fname_2))
+                logger.debug("Skipping outlier image for extrinsics: {}, {}".format(fname_1, fname_2))
                 continue
 
             corner_path_1 = os.path.join(corners_dir, "cam_{}".format(cam_idx_1), "{}_{}.txt".format(cam_idx_1, img_name))
@@ -197,9 +196,9 @@ def calib_initial_params(paths, calib_config, chb, outlier_path=None, save_plot=
             stereo_transformations[cam_idx_2]["R"] = dR
             stereo_transformations[cam_idx_2]["t"] = dt.reshape(3, 1)
         else:
-            print("[ERROR] Stereo calibration between cam {} and cam {} FAILED!".format(cam_idx_1, cam_idx_2))
-            print('\t- Perhaps try different values for configs["calib_initial"]["extrinsics"]["n_max_stereo_imgs"].')
-            print("\t- Check checkerboard corners are valid for both cameras.")
+            logger.error("Stereo calibration between cam {} and cam {} FAILED!".format(cam_idx_1, cam_idx_2))
+            logger.error('  Perhaps try different values for configs["calib_initial"]["extrinsics"]["n_max_stereo_imgs"].')
+            logger.error("  Check checkerboard corners are valid for both cameras.")
             assert(0)
 
     # convert stereo extrinsics to global extrinsics
@@ -231,15 +230,14 @@ def calib_initial_params(paths, calib_config, chb, outlier_path=None, save_plot=
 
     with open(cam_param_save_path, "w+") as f:
         json.dump(cam_params_sorted, f, indent=4)
-    print("  - Initial camera parameters saved: {}".format(cam_param_save_path))
+    logger.info("Initial camera parameters saved: {}".format(cam_param_save_path))
 
     if save_plot:
         plot_save_path = os.path.join(save_dir, "config_initial.png")
         render_config(cam_param_save_path, None, "Initial configuration", plot_save_path)
+        logger.info("Plot saved: {}".format(plot_save_path))
 
-def estimate_initial_world_points(paths, calib_config, chb):
-    center_cam_idx = calib_config["center_cam_idx"]
-
+def estimate_initial_world_points(logger, paths, calib_config, chb):
     # load detection result
     detect_path = os.path.join(paths["corners"], "detection_result.json")
     with open(detect_path, "r") as f:
@@ -278,11 +276,11 @@ def estimate_initial_world_points(paths, calib_config, chb):
             
             M = np.float32([[p["fx"], 0, p["cx"]], [0, p["fy"], p["cy"]], [0, 0, 1]])
             d = np.float32([p["k1"], p["k2"], p["p1"], p["p2"], p["k3"]])
-            ret, rvec, tvec = cv2.solvePnP(chb.chb_pts, corners, M, d) # brings points from the model coordinate system to the camera coordinate system.
+            _, rvec, tvec = cv2.solvePnP(chb.chb_pts, corners, M, d) # brings points from the model coordinate system to the camera coordinate system.
 
             tvec_norm = np.linalg.norm(tvec)
             if tvec_norm > 1e5:
-                print("skipping large tvec: {}\timg={}".format(tvec_norm, img_name))
+                logger.debug("Skipping large tvec: {}\timg={}".format(tvec_norm, img_name))
             else:
                 R_ext_curr, _ = cv2.Rodrigues(rvec)
                 R_model2world = R_ext.T @ R_ext_curr
@@ -316,7 +314,7 @@ def estimate_initial_world_points(paths, calib_config, chb):
         else:
             world_pts["frames"][img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1, "world_pts": -1}
             # world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1}
-            print("  - [{}/{}]\tNo detection for image {}".format(i+1, len(img_names), img_name))
+            logger.debug("[{}/{}] No detection for image {}".format(i+1, len(img_names), img_name))
 
     save_dir = paths["world_points"]
     os.makedirs(save_dir, exist_ok=True)
@@ -324,6 +322,7 @@ def estimate_initial_world_points(paths, calib_config, chb):
     world_points_save_path = os.path.join(save_dir, "world_points_initial.json")
     with open(world_points_save_path, "w+") as f:
         json.dump(world_pts, f, indent=4)
-
+    logger.info("Initial world points saved: {}".format(world_points_save_path))
     plot_save_path = os.path.join(save_dir, "intial_world_points.png")
     render_config(in_cam_param_path, world_points_save_path, "Initial configuration", plot_save_path)
+    logger.info("Plot saved: {}".format(plot_save_path))

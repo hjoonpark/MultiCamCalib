@@ -134,7 +134,7 @@ def __binarize(img):
     img_out = np.float32(img_out) / 255.0
     return img_out
 
-def generate_crops_around_corners(img_paths, paths, crop_size=15):
+def generate_crops_around_corners(logger, img_paths, paths, crop_size=15):
     dir_corners = paths["corners"]
     dir_cornercrops = paths["corner_crops"]
     
@@ -187,12 +187,12 @@ def generate_crops_around_corners(img_paths, paths, crop_size=15):
 
         save_path2 = os.path.join(dir_cornercrops, "{}_binary.npy".format(cam_idx))
         np.save(save_path2, crops_binary)
-        print("  - crop saved:\n\t(gray) {}\n\t(binary) {}".format(save_path1, save_path2))
+        logger.info("Crops saved (camera {}): (gray) {}\t(binary) {}".format(cam_idx, save_path1, save_path2))
         
     # save metadata
     with open(save_path, "w+") as f:
         json.dump(crop_metadata, f)
-        print("  - metadata saved: {}".format(save_path))
+        logger.info("Crops metadata saved: {}".format(save_path))
 
 def __load_corner_crops(input_paths):
     # load corner crops
@@ -205,7 +205,7 @@ def __load_corner_crops(input_paths):
             crops = torch.vstack((crops, crop))
     return crops
 
-def train_vae_outlier_detector(input_paths, paths, vae_configs):
+def train_vae_outlier_detector(logger, input_paths, paths, vae_configs):
     batch_size = vae_configs["batch_size"]
     device = vae_configs["device"]
     lr = vae_configs["lr"]
@@ -226,11 +226,7 @@ def train_vae_outlier_detector(input_paths, paths, vae_configs):
     # truncate batch
     n_batch = len(crops) // batch_size
     crops_trunc = crops[0:batch_size*n_batch]
-    print("  - INPUT: {} crops | batch_size={} | n_batch={} | trunc={} | unused={}".format(len(crops), batch_size, n_batch, len(crops_trunc), len(crops)-len(crops_trunc)))
-
-    # shuffle manually
-    indices = np.random.shuffle(np.arange(0, len(crops_trunc)))    
-    crops_trunc_shuffled = crops_trunc[indices].squeeze()
+    logger.info("Train input: {} crops | batch_size={} | n_batch={} | trunc={} | unused={}".format(len(crops), batch_size, n_batch, len(crops_trunc), len(crops)-len(crops_trunc)))
 
     # initialize model
     model = VAE_ConvConv(device=device, z_dim=z_dim, debug=debug, in_channels=1).to(device)
@@ -242,7 +238,7 @@ def train_vae_outlier_detector(input_paths, paths, vae_configs):
     save_path = os.path.join(dir_vae_outlier_detector, "train_hyper_params.json")
     with open(save_path, "w+") as f:
         json.dump({"z_dim": z_dim, "kld_weight": kl_weight, "epochs": n_epochs, "n_batch": n_batch, "batch_size": batch_size, 'lr': lr},  f, indent=4)
-    print("  - Hyper parameters saved: {}".format(save_path))
+    logger.info("Hyperparameters saved: {}".format(save_path))
 
     # save losses for monitoring
     losses = {"total": [], "kld": [], "recon": []}
@@ -257,9 +253,7 @@ def train_vae_outlier_detector(input_paths, paths, vae_configs):
         losses_curr = {"total": 0.0, "kld": 0.0, "recon": 0.0}
 
         for batch_idx in range(n_batch):
-            t0 = time.time()
-            in_batch = crops_trunc[batch_idx*batch_size:(batch_idx+1)*batch_size].unsqueeze(1).to(device)
-            targets = crops_trunc[batch_idx*batch_size:(batch_idx+1)*batch_size].unsqueeze(1).to(device)
+            in_batch = crops_trunc_shuffled[batch_idx*batch_size:(batch_idx+1)*batch_size].unsqueeze(1).to(device)
 
             # forward
             recons, mu, logvar = model(in_batch, is_training=True)
@@ -295,7 +289,7 @@ def train_vae_outlier_detector(input_paths, paths, vae_configs):
             # save model
             model_save_path = os.path.join(dir_vae_outlier_detector, "vae_model.pt")
             torch.save(model, model_save_path)
-            print("\n  - Model saved: {}".format(model_save_path))
+            print("Model saved: {}".format(model_save_path))
 
             plt.figure()
             plt.plot(losses["total"], linewidth=3, label="total")
@@ -312,14 +306,17 @@ def train_vae_outlier_detector(input_paths, paths, vae_configs):
 
             save_path = os.path.join(dir_vae_outlier_detector, "train_loss_plot.png")
             plt.savefig(save_path, dpi=150)
-            print("  - Plot saved: {}".format(save_path))
+            print("Train plot saved: {}".format(save_path))
+
+            if e == n_epochs - 1:
+                logger.info("Train plot saved: {}".format(save_path))
 
     model_save_path = os.path.join(dir_vae_outlier_detector, "vae_model.pt")
     torch.save(model, model_save_path)
-    print("  - Model saved: {}".format(model_save_path))
+    logger.info("Model saved: {}".format(model_save_path))
 
 
-def run_vae_outlier_detector(input_paths, paths, model_path, vae_configs):
+def run_vae_outlier_detector(logger, input_paths, paths, model_path, vae_configs):
     batch_size = vae_configs["batch_size"]
     device = vae_configs["device"]
 
@@ -338,16 +335,16 @@ def run_vae_outlier_detector(input_paths, paths, model_path, vae_configs):
     model.eval()
     model.debug = False
 
-    time_start = time.time()
     losses = {"recon": []}
-    for i in tqdm(range(len(crops))):
+    pbar = tqdm(total=len(crops))
+    for i in range(len(crops)):
         input_crops = crops[i].unsqueeze(0).unsqueeze(1).to(device)
 
         # forward
-        recons, mu, logvar = model(input_crops, is_training=False)
+        recons, _, _ = model(input_crops, is_training=False)
 
         # losses
-        l_kld = -0.5 * torch.sum(1 + logvar - mu ** 2 - logvar.exp())
+        # l_kld = -0.5 * torch.sum(1 + logvar - mu ** 2 - logvar.exp())
         l_recons = float(torch.sum(((input_crops-recons)**2)).detach().squeeze().cpu())
 
         losses["recon"].append(l_recons)
@@ -356,15 +353,15 @@ def run_vae_outlier_detector(input_paths, paths, model_path, vae_configs):
         result[i] = l_recons
 
         if i % batch_size == 0:
-            tqdm.write("[{}/{}]\telapsed={}".format(i, len(crops-1), convert_sec(time.time()-time_start)))
+            pbar.update(batch_size)
 
     with open(output_path, 'w+') as f:
         json.dump(result, f)
 
-    print("  - VAE forward result saved to: {}".format(output_path))
+    logger.info("VAE forward result saved to: {}".format(output_path))
 
 
-def determine_outliers(paths, save_path, thres_loss_percent=0.001, save_imgs=False):
+def determine_outliers(logger, paths, save_path, thres_loss_percent=0.001, save_imgs=False):
     os.makedirs(paths["outliers"], exist_ok=True)
     
     # crop metadata
@@ -395,7 +392,7 @@ def determine_outliers(paths, save_path, thres_loss_percent=0.001, save_imgs=Fal
 
     with open(save_path, "w+") as f:
         json.dump(outliers, f, indent=4)
-    print("  - Outliers saved to: {}".format(save_path))
+    logger.info("Outliers saved to: {}".format(save_path))
 
     if save_imgs:
         in_dir = paths["corner_crops"]
@@ -443,4 +440,4 @@ def determine_outliers(paths, save_path, thres_loss_percent=0.001, save_imgs=Fal
             plt.suptitle("[{}/{}] {}/{} outlier corners (total={})".format(plot_idx+1,n_plots, (plot_idx+1)*n_cols*n_rows_max, len(crops), n_items))
             plt.savefig(save_path, dpi=150, bbox_inches='tight')
             plt.close()
-            print("  - Outlier plot saved: {}".format(save_path))
+            logger.info("Outlier plot saved [{}/{}]: {}".format(plot_idx+1, n_plots, save_path))

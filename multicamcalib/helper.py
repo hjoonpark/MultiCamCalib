@@ -32,13 +32,6 @@ def load_config(path):
     with open(path, 'r') as f:
         return json.load(f)
 
-def output_log(path, strs):
-    if path is not None:
-        mode = "a+" if os.path.exists(path) else "w+"
-        with open(path, mode) as f:
-            f.write(strs)
-            f.close()
-
 def load_corner_txt(path):
     with open(path, 'r') as f:
         lines = f.readlines()
@@ -61,3 +54,10 @@ def convert_sec(seconds):
     min, sec = divmod(seconds, 60) 
     hour, min = divmod(min, 60) 
     return "%d:%02d:%02d" % (hour, min, sec) 
+
+# def output_log(path, strs):
+#     if path is not None:
+#         mode = "a+" if os.path.exists(path) else "w+"
+#         with open(path, mode) as f:
+#             f.write(strs)
+#             f.close()
