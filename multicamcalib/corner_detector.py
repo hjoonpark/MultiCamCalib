@@ -51,6 +51,9 @@ def __corner_detector(g_logger, lock, cam_idx, n_cols, n_rows, paths, output_fol
             f.writelines(output_str)
 
         del img
+
+        if i == 5:
+            break
     logger.info("Corner detection - COMPLETE\t: camera {}\t| Corners saved to: {}".format(cam_idx, output_folder))
 
     __write_cornerdet_completion_log(lock, shared_log_path, cam_idx, True)

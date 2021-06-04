@@ -20,30 +20,30 @@ public:
     std::vector<Frame> frames;
     std::vector<Checkerboard> checkerboards;
     BundAdj6Dof::Config config;
-    void init(const char* output_dir, const Config &config_) {
+    void init(const Config &config_) {
         config = config_;
         Checkerboard::initGlobalProperties(config.chb_n_rows, config.chb_n_cols, config.chb_sqr_size);
 
         std::stringstream cam_path;
-        cam_path << output_dir << OS_SEP << "cam_params" << OS_SEP << "cam_params_initial.json";
+        cam_path << config.dir_cam_params << OS_SEP << "cam_params_initial.json";
         std::cout << "Read: " << cam_path.str() << std::endl;
         Parser::loadInitialCamParams(cam_path.str().c_str(), config.n_cams, cameras);
         std::cout << "  - " << cameras.size() << " cameras loaded" << std::endl;
 
-        std::stringstream detect_res_path;
-        detect_res_path << output_dir << OS_SEP << "detection_result.json";
-        std::stringstream outlier_path;
-        outlier_path << output_dir << OS_SEP << "vae_outlier_detector" << OS_SEP << "outliers.json";
-        Parser::loadDetectionResult(outlier_path.str().c_str(), detect_res_path.str().c_str(), frames, config.n_cams);
+        std::stringstream detection_result_path;
+        detection_result_path << config.dir_corners << OS_SEP << "detection_result.json";
+        std::stringstream outliers_path;
+        outliers_path << config.dir_outliers << OS_SEP << "outliers.json";
+        Parser::loadDetectionResult(outliers_path.str().c_str(), detection_result_path.str().c_str(), frames, config.n_cams);
         std::cout << "  - " << frames.size() << " vaild frames loaded" << std::endl;
         
-        std::stringstream world_point_path;
-        world_point_path << output_dir << OS_SEP << "world_points" << OS_SEP << "world_points_initial.json";
-        Parser::loadInitialCheckerboardPoses(world_point_path.str().c_str(), frames, checkerboards);
+        std::stringstream world_points_path;
+        world_points_path << config.dir_world_points << OS_SEP << "world_points_initial.json";
+        Parser::loadInitialCheckerboardPoses(world_points_path.str().c_str(), frames, checkerboards);
         std::cout << "  - " << checkerboards.size() << " chb poses loaded" << std::endl;
     }
 
-    void run(const char* output_dir) {
+    void run(const Config &config) {
         std::cout << ">> Run" << std::endl;
         // loss function
         ceres::LossFunction *loss = NULL; 
@@ -57,11 +57,11 @@ public:
             for(int cam_idx = 0; cam_idx < n_cams; cam_idx++ ){
                 if(frame->detected[cam_idx]) {
                     // image point path
-                    std::stringstream imgpts_path;
-                    imgpts_path << output_dir << OS_SEP << "corners" << OS_SEP << "cam_" << std::to_string(cam_idx) << OS_SEP << std::to_string(cam_idx) << "_" << frame->img_name.c_str() << ".txt";
+                    std::stringstream image_points_path;
+                    image_points_path << config.dir_corners << OS_SEP << "cam_" << std::to_string(cam_idx) << OS_SEP << std::to_string(cam_idx) << "_" << frame->img_name.c_str() << ".txt";
 
                     // ceres::CostFunction *cost_func = BundAdj6Dof::ReprojectionError::Create(imgpts_path.str().c_str(), chb, frame->n_detected);
-                    BundAdj6Dof::ReprojectionError::ReprojectionErrorCostFunc *cost_func = BundAdj6Dof::ReprojectionError::Create(imgpts_path.str().c_str(), chb, frame->n_detected);
+                    BundAdj6Dof::ReprojectionError::ReprojectionErrorCostFunc *cost_func = BundAdj6Dof::ReprojectionError::Create(image_points_path.str().c_str(), chb, frame->n_detected);
 
                     std::vector<double*> parameter_blocks;
                     parameter_blocks.push_back(cameras[cam_idx].params);
@@ -98,132 +98,21 @@ public:
 
         // save outputs
         std::stringstream cam_out_path;
-        cam_out_path << output_dir << OS_SEP << "cam_params" << OS_SEP << "cam_params_final.json";
-        rapidjson::StringBuffer writer_buf;
-        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(writer_buf);
-        writer.StartObject();
-        for (int cam_idx = 0; cam_idx < n_cams; cam_idx++ ){
-            Camera *cam = &cameras[cam_idx];
-            writer.Key(std::to_string(cam_idx).c_str());
-            writer.StartObject();
-            {
-                writer.Key("fx");
-                writer.Double(cam->fx());
-                writer.Key("fy");
-                writer.Double(cam->fy());
-
-                writer.Key("cx");
-                writer.Double(cam->cx());
-                writer.Key("cy");
-                writer.Double(cam->cy());
-
-                writer.Key("k1");
-                writer.Double(cam->k1());
-                writer.Key("k2");
-                writer.Double(cam->k2());
-                writer.Key("p1");
-                writer.Double(cam->p1());
-                writer.Key("p2");
-                writer.Double(cam->p2());
-                writer.Key("k3");
-                writer.Double(cam->k3());
-
-                writer.Key("rvec");
-                writer.StartArray();
-                writer.Double(cam->rvec()[0]);
-                writer.Double(cam->rvec()[1]);
-                writer.Double(cam->rvec()[2]);
-                writer.EndArray();
-                
-                writer.Key("tvec");
-                writer.StartArray();
-                writer.Double(cam->tvec()[0]);
-                writer.Double(cam->tvec()[1]);
-                writer.Double(cam->tvec()[2]);
-                writer.EndArray();
-            }
-            writer.EndObject();
-        }
-        writer.EndObject();
-        
-        Parser::writeJson(cam_out_path.str().c_str(), writer_buf);
-        std::cout << ">> Camera parameters saved: " << cam_out_path.str().c_str() << std::endl;
+        cam_out_path << config.dir_cam_params << OS_SEP << "cam_params_final.json";
+        Parser::saveFinalCameraParameters(cam_out_path.str().c_str(), cameras);
+        std::cout << ">> Camera parameters saved: " << cam_out_path.str() << std::endl;
 
         // save final world points
-        std::stringstream worldpoints_out_path;
-        worldpoints_out_path << output_dir << OS_SEP << "world_points" << OS_SEP << "world_points_final.json";
-        rapidjson::StringBuffer writer_buf_wp;
-        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer_wp(writer_buf_wp);
-        writer_wp.StartObject();
-        writer_wp.Key("checkerboard");
-        writer_wp.StartObject();
-        {
-            writer_wp.Key("n_rows");
-            writer_wp.Int(Checkerboard::n_rows);
-            writer_wp.Key("n_cols");
-            writer_wp.Int(Checkerboard::n_cols);
-            writer_wp.Key("sqr_size");
-            writer_wp.Double(Checkerboard::sqr_size);
-        }
-        writer_wp.EndObject();
-        writer_wp.Key("frames");
-        writer_wp.StartObject();
-        for(int frame_idx = 0; frame_idx < checkerboards.size(); frame_idx++) {
-            Checkerboard *chb = &checkerboards[frame_idx];
-            std::vector<std::array<double, 3>> wps;
-            for (int p_idx = 0; p_idx < Checkerboard::n_pts; p_idx++) {
-                double wp0[3] = {Checkerboard::chb_pts[3*p_idx], Checkerboard::chb_pts[3*p_idx+1], Checkerboard::chb_pts[3*p_idx+2]};
-                double wp1[3];
-                ceres::AngleAxisRotatePoint(chb->rvec, wp0, wp1);
-                wp1[0] += chb->tvec[0];
-                wp1[1] += chb->tvec[1];
-                wp1[2] += chb->tvec[2];
-                std::array<double, 3> pt = {wp1[0], wp1[1], wp1[2]};
-                wps.push_back(pt);
-            }
+        std::stringstream world_points_out_path;
+        world_points_out_path << config.dir_world_points << OS_SEP << "world_points_final.json";
+        Parser::saveFinalWorldPoints(world_points_out_path.str().c_str(), checkerboards, frames);
+        std::cout << ">> World points saved: " << world_points_out_path.str() << std::endl;
 
-            const char* img_name = chb->img_name.c_str(); 
-            writer_wp.Key(img_name);
-            writer_wp.StartObject();
-            {
-                writer_wp.Key("n_detected");
-                writer_wp.Int(frames[frame_idx].n_detected);
-
-                writer_wp.Key("rvec");
-                writer_wp.StartArray();
-                {
-                    writer_wp.Double(chb->rvec[0]);
-                    writer_wp.Double(chb->rvec[1]);
-                    writer_wp.Double(chb->rvec[2]);
-                }
-                writer_wp.EndArray();
-
-                writer_wp.Key("tvec");
-                writer_wp.StartArray();
-                {
-                    writer_wp.Double(chb->tvec[0]);
-                    writer_wp.Double(chb->tvec[1]);
-                    writer_wp.Double(chb->tvec[2]);
-                }
-                writer_wp.EndArray();
-
-                writer_wp.Key("world_pts");
-                writer_wp.StartArray();
-                for(int i = 0; i < Checkerboard::n_pts; i++) {
-                    writer_wp.StartArray();
-                    writer_wp.Double(wps[i][0]);
-                    writer_wp.Double(wps[i][1]);
-                    writer_wp.Double(wps[i][2]);
-                    writer_wp.EndArray();
-                }
-                writer_wp.EndArray();
-            }
-            writer_wp.EndObject();
-        }
-        writer_wp.EndObject();
-        writer_wp.EndObject();
-        Parser::writeJson(worldpoints_out_path.str().c_str(), writer_buf_wp);
-
+        // save bundle adjustment result
+        std::stringstream result_out_path;
+        result_out_path << config.dir_ceres_output << OS_SEP << "bundle_adjustment_result.json";
+        Parser::saveBundleAdjustmentResult(result_out_path.str().c_str(), summary.initial_cost, summary.final_cost, summary.iterations.back().iteration, cam_out_path.str().c_str(), world_points_out_path.str().c_str());
+        std::cout << ">> Bundle adjustment result saved: " << result_out_path.str() << std::endl;
     }
 
     struct LensDistortionRegularization {

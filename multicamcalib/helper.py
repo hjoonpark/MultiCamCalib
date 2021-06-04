@@ -3,9 +3,9 @@ import json
 import cv2
 from camera import *
 
-def load_img_paths(path_file):
+def load_img_paths(file_path):
     img_paths = {}
-    with open(path_file, 'r') as f:
+    with open(file_path, 'r') as f:
             ls = f.readlines()
             for l in ls:
                 vs = l.split(" ")

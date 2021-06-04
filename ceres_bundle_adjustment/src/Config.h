@@ -3,7 +3,7 @@
 #define CeresMulticamCalib_VERSION_MAJOR 1
 #define CeresMulticamCalib_VERSION_MINOR 0
 
-#define ROOT_DIR "D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/ceres_project/../"
+#define ROOT_DIR "D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/ceres_bundle_adjustment"
 #define NUM_CAM_PARAMS 15
 #define TEST "@CERES_INCLUDE_DIRS"
 
@@ -14,6 +14,7 @@
     #define READ_MODE "rb"
     #define WRITE_MODE "wb"
 
+    #include <direct.h>
     #ifdef _WIN64
     // Windows (64-bit only)
     #else
@@ -30,6 +31,7 @@
         #define OS_MACOS
         #define READ_MODE "r"
         #define WRITE_MODE "w"
+        #include <sys/stat.h>
     #else
     #   error "Unknown Apple platform"
     #endif
@@ -38,6 +40,8 @@
     #define OS_LINUX
     #define READ_MODE "r"
     #define WRITE_MODE "w"
+    #include <sys/stat.h>
+
 #elif __unix__ // all unices not caught above
     // Unix
 #elif defined(_POSIX_VERSION)
@@ -53,9 +57,12 @@
 #define OS_SEP "/"
 #endif
 
+#include <string>
 struct Config {
     int max_iter, num_thread;
     double function_tolerance, parameter_tolerance, gradient_tolerance, inner_iteration_tolerance;
     int chb_n_rows, chb_n_cols, chb_sqr_size;
     int n_cams;
+
+    std::string dir_output, dir_cam_params, dir_corners, dir_outliers, dir_world_points, dir_ceres_output;
 };

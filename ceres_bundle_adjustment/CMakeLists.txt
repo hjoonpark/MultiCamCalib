@@ -26,7 +26,7 @@ set(DLL_PATHS
 file(COPY ${DLL_PATHS}
     DESTINATION ${PROJECT_OUTPUT_DIR_RELEASE})
 
-configure_file(src/Config.h.in ./../src/Config.h)
+configure_file(src/config.h.in ./../src/config.h)
 
 
 add_executable(${TARGET_NAME} src/main.cpp)

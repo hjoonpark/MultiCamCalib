@@ -1,13 +1,15 @@
 {
     "paths": {
-        "image_paths_file": "./image_paths.txt",
-        "logs": "../output/logs",
-        "corners": "../output/corners",
-        "vae_outlier_detector": "../output/vae_outlier_detector",
-        "corner_crops": "../output/vae_outlier_detector/corner_crops",
-        "outliers": "../output/vae_outlier_detector/outliers",
-        "cam_params": "../output/cam_params",
-        "world_points": "../output/world_points"
+        "image_paths_file": "image_paths.txt",
+        "output_dir": "../output",
+        "logs": "logs",
+        "corners": "corners",
+        "vae_outlier_detector": "vae_outlier_detector",
+        "corner_crops": "vae_outlier_detector/corner_crops",
+        "outliers": "vae_outlier_detector/outliers",
+        "cam_params": "cam_params",
+        "world_points": "world_points",
+        "ceres_output": "bundle_adjustment"
     },
     "checkerboard": {
         "n_cols": 11,
@@ -20,8 +22,8 @@
     "vae_outlier_detector": {
         "z_dim": 2,
         "kl_weight": 0.001,
+        "n_epochs": 1000,
         "lr": 0.001,
-        "n_epochs": 10,
         "batch_size": 1000,
         "outlier_thres": 0.001
     },

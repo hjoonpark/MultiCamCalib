@@ -279,8 +279,8 @@ def train_vae_outlier_detector(logger, input_paths, paths, vae_configs):
             losses[k].append(v)
 
         if len(losses["total"]) > 0:
-            tqdm.write('[{}/{}] e[{}/{}]\telapsed={} | loss: initial={:.4f} curr epoch={:.4f} | recon loss={:.4f}, kld loss={:.4f}'.format(
-                e*n_batch+batch_idx, n_epochs*n_batch-1, e, n_epochs-1, dt_elpased, losses["total"][0], losses["total"][-1], losses["recon"][-1], losses["kld"][-1])
+            tqdm.write('Epoch {}/{}\telapsed={} | loss: initial={:.4f} curr epoch={:.4f} | recon loss={:.4f}, kld loss={:.4f}'.format(
+                e+1, n_epochs, dt_elpased, losses["total"][0], losses["total"][-1], losses["recon"][-1], losses["kld"][-1])
                 )
         
         dt_elpased = convert_sec(time.time() - time_start)
@@ -307,6 +307,7 @@ def train_vae_outlier_detector(logger, input_paths, paths, vae_configs):
             save_path = os.path.join(dir_vae_outlier_detector, "train_loss_plot.png")
             plt.savefig(save_path, dpi=150)
             print("Train plot saved: {}".format(save_path))
+            plt.close()
 
             if e == n_epochs - 1:
                 logger.info("Train plot saved: {}".format(save_path))
@@ -381,7 +382,7 @@ def determine_outliers(logger, paths, save_path, thres_loss_percent=0.001, save_
 
     n_items = len(corner_indices)
     outliers_indices = sorted_indices[0:int(n_items*thres_loss_percent)]
-    outliers_losses = sorted_losses[0:int(n_items*thres_loss_percent)]
+    # outliers_losses = sorted_losses[0:int(n_items*thres_loss_percent)]
 
     outliers = {}
     for i in range(len(outliers_indices)):

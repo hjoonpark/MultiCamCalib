@@ -1,3 +1,4 @@
+from plotter import render_config
 from camera import *
 from checkerboard import *
 from logger import init_logger
@@ -16,7 +17,13 @@ from calibrator import calib_initial_params, estimate_initial_world_points
 if __name__ == "__main__":
     # load user-defined config
     config = load_config("config.json")
-    paths = config["paths"]
+    paths_dict = config["paths"]
+    paths = {}
+    for name, path in paths_dict.items():
+        if name != "output_dir" and name != "image_paths_file":
+            paths[name] = os.path.join(paths_dict["output_dir"], path)
+        else:
+            paths[name] = path
 
     # initialize logger
     logger = init_logger("MAIN", paths["logs"], init_console_handler=True, init_file_handler=True)
@@ -94,3 +101,11 @@ if __name__ == "__main__":
         logger.info(">> ESTIMATE INITIAL WORLD POINTS <<")
         # initial world points
         estimate_initial_world_points(logger, paths, config["calib_initial"], chb)
+
+    if "9" in argv:
+        logger.info(">> RENDER FINAL CONFIGURATIONS <<")
+        # render final configurations after ceres bundle adjustment
+        cam_param_path = os.path.join(paths["cam_params"], "cam_params_final.json")
+        world_points_path = os.path.join(paths["world_points"], "world_points_final.json")
+        render_config(cam_param_path, None, "Final configuration", save_path=os.path.join(paths["cam_params"], "config_final.png"))
+        render_config(cam_param_path, world_points_path, "Final configuration", save_path=os.path.join(paths["world_points"], "final_world_points.png"))
