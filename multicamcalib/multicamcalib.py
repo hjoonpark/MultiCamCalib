@@ -109,3 +109,5 @@ if __name__ == "__main__":
         world_points_path = os.path.join(paths["world_points"], "world_points_final.json")
         render_config(cam_param_path, None, "Final configuration", save_path=os.path.join(paths["cam_params"], "config_final.png"))
         render_config(cam_param_path, world_points_path, "Final configuration", save_path=os.path.join(paths["world_points"], "final_world_points.png"))
+
+    logger.info("* FINISHED RUNNING *")

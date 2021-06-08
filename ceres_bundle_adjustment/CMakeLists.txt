@@ -13,7 +13,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_OUTPUT_DIR})
 
-set(SUITESPARSE_WIN_x64_DIR "C:/Users/hjoon/ceres/suitesparse/lapack_windows/x64")
+
+# copy dlls
+set(CERES_ROOT_DIR "C:/Users/hjoon/ceres-solver")
+set(SUITESPARSE_WIN_x64_DIR "${CERES_ROOT_DIR}/suitesparse/lapack_windows/x64")
 set(PROJECT_OUTPUT_DIR_RELEASE "${PROJECT_OUTPUT_DIR}/Release")
 set(DLL_PATHS 
     "${SUITESPARSE_WIN_x64_DIR}/libblas.dll"
@@ -21,6 +24,8 @@ set(DLL_PATHS
     "${SUITESPARSE_WIN_x64_DIR}/libgcc_s_sjlj-1.dll"
     "${SUITESPARSE_WIN_x64_DIR}/libgfortran-3.dll"
     "${SUITESPARSE_WIN_x64_DIR}/libquadmath-0.dll"
+    "${CERES_ROOT_DIR}/glog/install/bin/glog.dll"
+    "${CERES_ROOT_DIR}/glog/install/bin/glog.dll"
 )
 
 file(COPY ${DLL_PATHS}
@@ -37,7 +42,7 @@ target_include_directories(${TARGET_NAME} PUBLIC
 
 # link external ceres library
 # find_package(Ceres REQUIRED)
-find_package(Ceres REQUIRED PATHS "C:/Users/hjoon/ceres/ceres-install")
+find_package(Ceres REQUIRED PATHS "${CERES_ROOT_DIR}/ceres-install")
 
 target_include_directories(${TARGET_NAME}
     PRIVATE

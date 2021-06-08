@@ -209,15 +209,23 @@ namespace Parser {
         return 0;
     }
 
-    void saveBundleAdjustmentResult(const char* save_path, const double initial_cost, const double final_cost, const int n_iterations, const char* final_cam_param_path, const char* final_world_points_path) {
+    void saveBundleAdjustmentResult(const char* save_path, const double initial_cost, const double final_cost, const double mean_err_initial, const double mean_err_final, const int n_reproj_err_resblocks, const int n_regularization_resblocks, const int n_iterations, const char* final_cam_param_path, const char* final_world_points_path) {
         rapidjson::StringBuffer writer_buf;
         rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(writer_buf);
         writer.StartObject();
         {
-            writer.Key("initial_cost");
+            writer.Key("initial_ceres_cost");
             writer.Double(initial_cost);
-            writer.Key("final_cost");
+            writer.Key("final_ceres_cost");
             writer.Double(final_cost);
+            writer.Key("initial_mean_reproj_err_per_chb_point");
+            writer.Double(mean_err_initial);
+            writer.Key("final_mean_reproj_err_per_chb_point");
+            writer.Double(mean_err_final);
+            writer.Key("n_reprojection_error_residual_blocks");
+            writer.Int(n_reproj_err_resblocks);
+            writer.Key("n_regularization_residual_blocks");
+            writer.Int(n_regularization_resblocks);
             writer.Key("n_iterations");
             writer.Int(n_iterations);
             writer.Key("final_camera_parameters");

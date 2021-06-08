@@ -49,7 +49,7 @@ public:
         ceres::LossFunction *loss = NULL; 
 
         int n_cams = cameras.size();
-        int n_residual_blocks = 0;
+        int n_reproj_err_resblocks = 0;
         ceres::Problem ceres_prob;
         for (int frame_idx = 0; frame_idx < frames.size(); frame_idx++) {
             Frame *frame = &frames[frame_idx];
@@ -60,7 +60,6 @@ public:
                     std::stringstream image_points_path;
                     image_points_path << config.dir_corners << OS_SEP << "cam_" << std::to_string(cam_idx) << OS_SEP << std::to_string(cam_idx) << "_" << frame->img_name.c_str() << ".txt";
 
-                    // ceres::CostFunction *cost_func = BundAdj6Dof::ReprojectionError::Create(imgpts_path.str().c_str(), chb, frame->n_detected);
                     BundAdj6Dof::ReprojectionError::ReprojectionErrorCostFunc *cost_func = BundAdj6Dof::ReprojectionError::Create(image_points_path.str().c_str(), chb, frame->n_detected);
 
                     std::vector<double*> parameter_blocks;
@@ -68,20 +67,21 @@ public:
                     parameter_blocks.push_back(chb->rvec);
                     parameter_blocks.push_back(chb->tvec);
                     ceres_prob.AddResidualBlock(cost_func, loss, parameter_blocks);
-                    n_residual_blocks += 1;
+
+                    n_reproj_err_resblocks += 1;
                 }
             }
         }
         
         // regularization
+        int n_regularization_resblocks = 0;
         double lens_coeffs_weights[5] = {0.1};
         for (int cam_idx = 0; cam_idx < n_cams; cam_idx++) {
             ceres::CostFunction *reg_func = BundAdj6Dof::LensDistortionRegularization::Create(lens_coeffs_weights);
             ceres_prob.AddResidualBlock(reg_func, NULL, cameras[cam_idx].params);
-            n_residual_blocks += 1;
+            n_regularization_resblocks += 1;
         }
-
-        std::cout << ">> " << n_residual_blocks << " residual blocks." << std::endl;
+        
         ceres::Solver::Options options;
         options.linear_solver_type = ceres::DENSE_SCHUR;
         options.minimizer_progress_to_stdout = 1;
@@ -94,8 +94,13 @@ public:
         ceres::Solver::Summary summary;
         ceres::Solve(options, &ceres_prob, &summary);
         std::cout << summary.FullReport() << std::endl;
-        std::cout << "Cost: " << summary.initial_cost << " -> " << summary.final_cost << ", iterations: " << summary.iterations.back().iteration << std::endl;
 
+        double mean_reproj_err_initial = sqrt(summary.initial_cost / (Checkerboard::n_pts * n_reproj_err_resblocks * 0.5));
+        double mean_reproj_err_final = sqrt(summary.final_cost / (Checkerboard::n_pts * n_reproj_err_resblocks * 0.5));
+        std::cout << "* Iterations: " << summary.iterations.back().iteration << std::endl;
+        std::cout << "* Ceres cost:\n\t(initial) " << summary.initial_cost << " -> (final) " << summary.final_cost << std::endl;
+        std::cout << "* Mean reprojection error per checkerboard point:\n\t(initial) " << mean_reproj_err_initial << " -> (final) " << mean_reproj_err_final << std::endl << std::endl;
+        
         // save outputs
         std::stringstream cam_out_path;
         cam_out_path << config.dir_cam_params << OS_SEP << "cam_params_final.json";
@@ -111,7 +116,7 @@ public:
         // save bundle adjustment result
         std::stringstream result_out_path;
         result_out_path << config.dir_ceres_output << OS_SEP << "bundle_adjustment_result.json";
-        Parser::saveBundleAdjustmentResult(result_out_path.str().c_str(), summary.initial_cost, summary.final_cost, summary.iterations.back().iteration, cam_out_path.str().c_str(), world_points_out_path.str().c_str());
+        Parser::saveBundleAdjustmentResult(result_out_path.str().c_str(), summary.initial_cost, summary.final_cost, mean_reproj_err_initial, mean_reproj_err_final, n_reproj_err_resblocks, n_regularization_resblocks, summary.iterations.back().iteration, cam_out_path.str().c_str(), world_points_out_path.str().c_str());
         std::cout << ">> Bundle adjustment result saved: " << result_out_path.str() << std::endl;
     }
 
@@ -168,17 +173,7 @@ public:
             cost_func->SetNumResiduals(2*chb_->n_pts);
             return cost_func;
         }
-
-        /*
-        static ceres::CostFunction* Create(const char* imgpts_path_, Checkerboard *chb_, const int n_cams_used_) {
-            constexpr int kChbRvecDim = 3;
-            constexpr int kChbTvecDim = 3;
-            constexpr int kNumResiduals = 2;
-            ReprojectionError *re = new BundAdj6Dof::ReprojectionError(imgpts_path_, chb_, n_cams_used_);
-            return (new ceres::DynamicAutoDiffCostFunction<ReprojectionError, 176, NUM_CAM_PARAMS, kChbRvecDim, kChbTvecDim>(re));
-        }
-        */
-
+        
         ~ReprojectionError() {
             delete[] img_pts;
         }
@@ -222,23 +217,26 @@ public:
                 T r2 = xp*xp + yp*yp;
                 T rad_dist = T(1) + k[0]*r2 + k[1]*r2*r2 + k[2]*r2*r2*r2;
                 T tan_dist[2] ={ p[1]*(r2+2.0*xp*xp) + 2.0*p[0]*xp*yp, p[0]*(r2+2.0*yp*yp) + 2.0*p[1]*xp*yp };
-
                 T u = xp * rad_dist + tan_dist[0];
                 T v = yp * rad_dist + tan_dist[1];
+
+                // without lens distortions
                 //T u = xp;
                 //T v = yp;
 
                 // projection to image
-                T x_pred = f[0]*u + c[0];
-                T y_pred = f[1]*v + c[1];
+                T u_pred = f[0]*u + c[0];
+                T v_pred = f[1]*v + c[1];
 
                 // reprojection error
-                T dx = x_pred - img_pts[i*2];
-                T dy = y_pred - img_pts[i*2 + 1];
+                T du = u_pred - img_pts[i*2];
+                T dv = v_pred - img_pts[i*2 + 1];
 
-                // output
-                residuals[2*i] = dx / T(n_cams_used);
-                residuals[2*i + 1] = dy / T(n_cams_used);
+                // output: 
+                // {ceres_final_cost} = 0.5*(du^2+dv^2)*chb->n_pts*n_reproj_err_resblocks.
+                // => mean reprojection error per checkerboard point = sqrt(du^2+dv^2) = sqrt({ceres_final_cost}/(chb->n_pts*n_reproj_err_resblocks*0.5))
+                residuals[2 * i] = du;
+                residuals[2 * i + 1] = dv;
             }
             return true;
         }
