@@ -13,6 +13,7 @@ from helper import load_img_paths, load_config, init_cameras
 from corner_detector import detect_corners, generate_detection_results
 from outlier_detector import generate_crops_around_corners, train_vae_outlier_detector, run_vae_outlier_detector, determine_outliers
 from calibrator import calib_initial_params, estimate_initial_world_points
+from analyzer import analyze_calibration_result
 
 if __name__ == "__main__":
     # load user-defined config
@@ -107,7 +108,17 @@ if __name__ == "__main__":
         # render final configurations after ceres bundle adjustment
         cam_param_path = os.path.join(paths["cam_params"], "cam_params_final.json")
         world_points_path = os.path.join(paths["world_points"], "world_points_final.json")
-        render_config(cam_param_path, None, "Final configuration", save_path=os.path.join(paths["cam_params"], "config_final.png"))
-        render_config(cam_param_path, world_points_path, "Final configuration", save_path=os.path.join(paths["world_points"], "final_world_points.png"))
+        save_path_cam_config = os.path.join(paths["cam_params"], "config_final.png")
+        save_path_world_points = os.path.join(paths["world_points"], "final_world_points.png")
+        render_config(cam_param_path, None, "Final configuration", save_path=save_path_cam_config)
+        render_config(cam_param_path, world_points_path, "Final configuration", save_path=save_path_world_points)
+        logger.info("Plots saved:\n\t{}\n\t{}".format(save_path_cam_config, save_path_world_points))
+
+    if "10" in argv:
+        logger.info(">> Analyze calibration result")
+        cam_param_path = os.path.join(paths["cam_params"], "cam_params_final.json")
+        world_points_path = os.path.join(paths["world_points"], "world_points_final.json")
+        outliers_path = os.path.join(paths["outliers"], "outliers.json")
+        analyze_calibration_result(logger, cam_param_path, world_points_path, paths, outliers_path=outliers_path, save_histogram=True, save_images=True)
 
     logger.info("* FINISHED RUNNING *")

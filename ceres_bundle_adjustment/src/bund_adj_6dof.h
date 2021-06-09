@@ -51,6 +51,7 @@ public:
         int n_cams = cameras.size();
         int n_reproj_err_resblocks = 0;
         ceres::Problem ceres_prob;
+        std::cout << "Loading frames";
         for (int frame_idx = 0; frame_idx < frames.size(); frame_idx++) {
             Frame *frame = &frames[frame_idx];
             Checkerboard *chb = &checkerboards[frame_idx];
@@ -69,10 +70,13 @@ public:
                     ceres_prob.AddResidualBlock(cost_func, loss, parameter_blocks);
 
                     n_reproj_err_resblocks += 1;
+
+                    std::cout << ".";
                 }
             }
         }
-        
+        std::cout << std::endl;
+
         // regularization
         int n_regularization_resblocks = 0;
         double lens_coeffs_weights[5] = {0.1};

@@ -9,7 +9,8 @@
         "outliers": "vae_outlier_detector/outliers",
         "cam_params": "cam_params",
         "world_points": "world_points",
-        "ceres_output": "bundle_adjustment"
+        "ceres_output": "bundle_adjustment",
+        "analysis": "analysis"
     },
     "checkerboard": {
         "n_cols": 11,
