@@ -8,7 +8,7 @@
 ---
 This project calibrates multiple cameras using *VAE outlier corner detection* and *bundle adjustment* employing a planar calibration checkerboard.
 The steps are as followed.
-<img src="./docs/readme_assets/pipeline.jpg" alt="pipeline" style="max-width:1200px;width:100%"/>
+<img src="./docs/readme_assets/pipeline.jpg" alt="pipeline" style="max-width:1000px;width:100%"/>
 
 (1). **Multi-view images**: The input is a set of images capturing a freely moving checkerboard.
 
