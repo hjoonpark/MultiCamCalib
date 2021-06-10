@@ -7,7 +7,7 @@
 
 #include <ceres/ceres.h>
 #include <ceres/rotation.h>
-#include "Config.h"
+#include "config.h"
 #include "parser.h"
 #include "checkerboard.h"
 #include "bund_adj_6dof.h"

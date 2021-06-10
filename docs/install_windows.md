@@ -1,10 +1,10 @@
-# Ceres installation (Windows 10 x64)
+# Ceres installation - Windows 10 x64
 Install [CMake](https://cmake.org/) (3.5 or later) if you haven't.
 ## 1. Make directories following the [official guide](http://ceres-solver.org/installation.html).
 
     {root}/ceres
     
-<b>For my PC, `{root}` is `{root}`.</b> Note, if `{root}` is too long, compiling `suitesparse` gives errors related to path lengths.
+<b>For my PC, `{root}` is `C:/users/hjoon`.</b> Note, if `{root}` is too long, compiling `suitesparse` gives errors related to path lengths.
 
 ## 2. Prepare [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) (3.3 and later)
 

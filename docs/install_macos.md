@@ -1,3 +1,3 @@
-# Ceres installation (macOS)
+# Ceres installation - macOS
 
 Coming...
