@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string>
 
+#include <eigen3/Eigen/Core>
+
 #include <ceres/ceres.h>
 #include <ceres/rotation.h>
 #include "config.h"

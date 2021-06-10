@@ -52,8 +52,11 @@ if (WIN32)
     # find_package(Ceres REQUIRED)
     find_package(Ceres REQUIRED PATHS "${CERES_ROOT_DIR}/ceres-install") # if the install directory is not in your PATH
 endif()
-if (LINUX AND NOT APPLE)
+if (UNIX AND NOT APPLE)
     find_package(Ceres REQUIRED)
+    find_package(Eigen3 REQUIRED)
+    # EIGEN3_INCLUDE_DIRS = /usr/include/eigen3
+    include_directories(${EIGEN3_INCLUDE_DIRS})
 endif()
 
 target_include_directories(${TARGET_NAME}

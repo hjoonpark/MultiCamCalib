@@ -15,7 +15,7 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/filewritestream.h>
 
-#include "Config.h"
+#include "config.h"
 #include "camera.h"
 #include "frame.h"
 #include "checkerboard.h"
@@ -24,8 +24,13 @@
 namespace Parser {
     rapidjson::Document readJson(const char*path) {
         FILE *fp;
+
+        #ifdef OS_WINDOWS
         errno_t err = fopen_s(&fp, path, READ_MODE);
-        
+        #else
+        fp = fopen(path, READ_MODE);
+        #endif
+
         char read_buf[MAX_BUF];
         rapidjson::FileReadStream fs(fp, read_buf, sizeof(read_buf));
 
@@ -39,8 +44,11 @@ namespace Parser {
         doc.Parse(writer_buf.GetString());
 
         FILE* fp;
+        #ifdef OS_WINDOWS
         errno_t err = fopen_s(&fp, out_path, WRITE_MODE);
-        
+        #else
+        fp = fopen(out_path, READ_MODE);
+        #endif
         char json_buf[MAX_BUF];
         rapidjson::FileWriteStream json_os(fp, json_buf, sizeof(json_buf));
         rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer_fs(json_os);

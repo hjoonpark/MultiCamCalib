@@ -40,8 +40,6 @@ public:
         }
     }
     ~Checkerboard() {
-        delete[] rvec;
-        delete[] tvec;
     }
 };
 

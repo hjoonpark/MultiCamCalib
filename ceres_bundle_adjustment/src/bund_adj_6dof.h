@@ -19,7 +19,7 @@ public:
     std::vector<Camera> cameras;
     std::vector<Frame> frames;
     std::vector<Checkerboard> checkerboards;
-    BundAdj6Dof::Config config;
+    Config config;
     void init(const Config &config_) {
         config = config_;
         Checkerboard::initGlobalProperties(config.chb_n_rows, config.chb_n_cols, config.chb_sqr_size);
