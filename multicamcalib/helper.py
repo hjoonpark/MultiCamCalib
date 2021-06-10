@@ -3,6 +3,15 @@ import json
 import cv2
 from camera import *
 
+def extract_paths(paths_dict):
+    paths = {}
+    for name, path in paths_dict.items():
+        if name != "output_dir" and name != "image_paths_file":
+            paths[name] = os.path.join(paths_dict["output_dir"], path)
+        else:
+            paths[name] = path
+    return paths
+
 def load_img_paths(file_path):
     img_paths = {}
     with open(file_path, 'r') as f:

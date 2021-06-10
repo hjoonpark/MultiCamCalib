@@ -9,22 +9,17 @@ import sys
 import time
 import glob
 from datetime import datetime
-from helper import load_img_paths, load_config, init_cameras
+from helper import load_img_paths, load_config, init_cameras, extract_paths
 from corner_detector import detect_corners, generate_detection_results
 from outlier_detector import generate_crops_around_corners, train_vae_outlier_detector, run_vae_outlier_detector, determine_outliers
 from calibrator import calib_initial_params, estimate_initial_world_points
-from analyzer import analyze_calibration_result
+from analyzer import reproject_world_points, render_reprojection_results
+
 
 if __name__ == "__main__":
     # load user-defined config
     config = load_config("config.json")
-    paths_dict = config["paths"]
-    paths = {}
-    for name, path in paths_dict.items():
-        if name != "output_dir" and name != "image_paths_file":
-            paths[name] = os.path.join(paths_dict["output_dir"], path)
-        else:
-            paths[name] = path
+    paths = extract_paths(config["paths"])
 
     # initialize logger
     logger = init_logger("MAIN", paths["logs"], init_console_handler=True, init_file_handler=True)
@@ -115,10 +110,15 @@ if __name__ == "__main__":
         logger.info("Plots saved:\n\t{}\n\t{}".format(save_path_cam_config, save_path_world_points))
 
     if "10" in argv:
-        logger.info(">> Analyze calibration result")
+        logger.info(">> Reproject world points")
         cam_param_path = os.path.join(paths["cam_params"], "cam_params_final.json")
         world_points_path = os.path.join(paths["world_points"], "world_points_final.json")
         outliers_path = os.path.join(paths["outliers"], "outliers.json")
-        analyze_calibration_result(logger, cam_param_path, world_points_path, paths, outliers_path=outliers_path, save_histogram=True, save_images=True)
+        reproject_world_points(logger, cam_param_path, world_points_path, paths, outliers_path=outliers_path)
+
+    if "11" in argv:
+        logger.info(">> Analyze reprojection results")
+        render_reprojection_results(logger, paths, save_histogram=False, save_reproj_images=True, error_thres=5)
+
 
     logger.info("* FINISHED RUNNING *")
