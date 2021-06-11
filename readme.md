@@ -16,7 +16,7 @@ The steps are as followed.
 
 (3). **VAE outlier detector**: Outlier corners are identified using VAE (variational auto-encoder), and corresponding images are discarded.
 
-(4). **Initial camera calibration**: Initial camera parameters (and frame-wise checkerboard poses) are estimated from a subset of images using [Zhang's method](#zhang2000flexible).
+(4). **Initial camera calibration**: Initial camera parameters (and frame-wise checkerboard poses) are estimated from a subset of images using Zhang's method<sup>[[1]](#zhang2000flexible)</sup>.
 
 (5). **Bundle adjustment**: The camera parameters (and frame-wise checkerboard poses) are further refined using bundle adjustment.
 
