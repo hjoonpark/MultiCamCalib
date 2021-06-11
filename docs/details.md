@@ -6,11 +6,13 @@
     - [Objective of VAE](#vae-objective)
     - [VAE architecture](#vae-architecture)
 - [Experimental results](#experimental)
-    - [Effects of corner outliers on the calibration accuracy](#vae-effects)
-    - [Performance evaluations](#vae-performance)
-        - [Synthetic experiment](#performance-synth)
-        - [Real experiment](#performance-real)
- 
+    - [VAE outlier corner detector](#exp-vae)
+        - [Effects of corner outliers on the calibration accuracy](#vae-effects)
+        - [Performance evaluations](#vae-performance)
+            - [Synthetic experiment](#performance-synth)
+            - [Real experiment](#performance-real)
+    - [Improvements on 3D reconstructions accuracy](#exp-recon)
+
 - [References](#references)
 
 <h2 id="camera-model">Camera model</h2>
@@ -45,7 +47,6 @@ Using this planar model, we minimize the following sum of mean reprojection erro
 
 where ![$i$](./readme_assets/eq/i.jpg) is frame index, ![$j$](./readme_assets/eq/j.jpg) is camera index with ![$V_i$](./readme_assets/eq/Vi.jpg) encoding visibility information, ![$\bb{a}_j$](./readme_assets/eq/aj.jpg) is a vector of 15 parameters of camera ![$j$](./readme_assets/eq/j.jpg), ![$(\bm{\bb{\omega}}_i, \bm{\tau}_i)$](./readme_assets/eq/omegatau.jpg) is the pose of the checkerboard, ![$\hat{\bb{q}}_{ij}\in \mathbb{R}^{3K}$](./readme_assets/eq/qhat.jpg) are the vectorized positions of observed corners, ![$\mathcal{P}(\cdot)$](./readme_assets/eq/PP.jpg) projects each of the ![$K$](./readme_assets/eq/kk.jpg) world points ![$\mathcal{Q}(\cdot)$](./readme_assets/eq/QQ.jpg) onto camera's image plane, and ![$\mathcal{N}$](./readme_assets/eq/N.jpg) is for averaging.
 
-
 <h2 id="vae">VAE outlier corner detection</h2>
 
 ---
@@ -53,7 +54,7 @@ where ![$i$](./readme_assets/eq/i.jpg) is frame index, ![$j$](./readme_assets/eq
 We treat incorrectly or inaccurately detected corners as
 outliers and identify them using VAE.
 
-<img src="./readme_assets/corner_example.jpg" style="max-width:500px; width=500px">
+<img src="./readme_assets/corner_example.jpg" width="500px">
 
 <h3 id="vae-objective">Objective of VAE</h3>
 
@@ -76,7 +77,7 @@ For VAEs, ![$q_\phi(\bb{z}|\bb{x})$](./readme_assets/eq/vae/q_phi_zx.jpg) refers
 
 <h3 id="vae-architecture">VAE architecture</h3>
 
-<img src="./readme_assets/eq/vae/vae_architecture.jpg" style="max-width:600px; width=600px">
+<img src="./readme_assets/eq/vae/vae_architecture.jpg" width="600px">
 
 For input images, we first remove shading information through binarization using Otsu's method following Gaussian blurring. The last layer in the decoder is a sigmoid activation which returns pixel values in range [0,1].
 
@@ -84,7 +85,9 @@ For input images, we first remove shading information through binarization using
 
 ---
 
-<h3 id="vae-effects">Effects of corner outliers on the calibration accuracy</h3>
+<h3 id="exp-vae">VAE outlier corner detector</h3>
+
+<h4 id="vae-effects">Effects of corner outliers on the calibration accuracy</h4>
 
 <figure>
     <img src="./readme_assets/studio_setup.jpg" width="450px" id="studio-setup">
@@ -94,13 +97,13 @@ For input images, we first remove shading information through binarization using
 We generate four sets of synthetic image points of a virtual planar checkerboard ([Figure 1](#studio-setup)). We include different percentages of outlier corners (0%, 0.01%, 0.1%, and 1%) in each image set where each outlier corner is randomly offset from its ground-truth location by 10-15 pixels. Then, we estimate the parameters of 16 cameras using each of the four image sets and compare the root mean square error (RMSE) between the ground-truth.
 
 <figure>
-    <img src="./readme_assets/cam_param_compare_outlier.jpg" width="600px" id="rmse">,
+    <img src="./readme_assets/cam_param_compare_outlier.jpg" width="600px" id="rmse">
     <figcaption>Figure 2: RMSE comparisons of estimated camera parameters, grouped by percentages of outlier corners.</figcaption>
 </figure>
 
 The result is obtained as in [Figure 2](#rmse), where the geodesic distance on unit sphere is used for computing the error in camera orientations ![$\bb{R}'$](./readme_assets/eq/exp/R_dash.jpg), and ![$\bm{t}'$](./readme_assets/eq/exp/t_dash.jpg) denotes camera position. Since each calibration is obtained in an arbitrary coordinates system, we align them with the reference coordinates using Procrustes analysis before computing RMSE.
 
-<h3 id="vae-performance">Performance evaluations</h3>
+<h4 id="vae-performance">Performance evaluations</h4>
 
 <h4 id="performance-synth">Synthetic experiment</h4>
 
@@ -142,12 +145,29 @@ We capture images (~172 frames per camera) of a freely moving checkerboard and c
     <figcaption>Figure 6: Original grayscale crops (above) and VAE reconstructions (below) sorted by normalized losses.</figcaption>
 </figure>
 
+The result in [Figure 6](#recons-real) shows that the outlier corners are reconstructed with large loss, and via visual inspection 37 outliers can be identified (~ 0.015% outliers). Similar to [Figure 5](#recon-loss), a clear classification margin can be observed in the reconstruction loss plot in [Figure 7](#recon-loss-real). Utilizing these, we can determine the outlier corners with high confidence from tens to thousands of images.
+
 <figure>
     <img src="./readme_assets/recon_loss_real.jpg" width="600px" id="recon-loss-real">
     <figcaption>Figure 7: Normalized VAE reconstruction losses of every corner crops displaying distinct classification margin.</figcaption>
 </figure>
 
-The result in [Figure 6](#recons-real) shows that the outlier corners are reconstructed with large loss, and via visual inspection 37 outliers can be identified (~ 0.015% outliers). Similar to [Figure 5](#recon-loss), a clear classification margin can be observed in the reconstruction loss plot in [Figure 7](#recon-loss-real). Utilizing these, we can determine the outlier corners with high confidence from tens to thousands of images.
+<h3 id="exp-recon">Improvements on 3D reconstructions accuracy</h3>
+
+<figure>
+    <img src="./readme_assets/bowlingballs.jpg" width="600px" id="ballingballs">
+    <figcaption>Figure 8: (a) Bowling ball captured at three different locations in three frames and (b) its stereo triangulations visualized.</figcaption>
+</figure>
+
+We capture images (~172 frames per camera) of a freely moving checkerboard and calibrate cameras using two different methods: (1) with and (2) without outlier corners. Then, we capture images of a polyester bowling ball at three different locations and reconstruct its 34 manually-marked visible feature points ([Figure 8a](#ballingballs)). We triangulate its feature points using pairs of calibrated cameras {(1, 2), (2, 3), ..., (16,1)} to obtain a set of sparse point clouds ([Figure 8b](#ballingballs)). The radius of the ball is measured ~108 mm, but we do not rely solely on this since it is human-measured and the reconstruction error is usually very small (<1 mm). Instead, we evaluate the reconstruction consistency based on the radius values between the triangulated points and center of spheres fitted to each point cloud set via least-square fitting. If the calibrations are accurate, every radius values should have very small deviations from their mean.
+
+<figure>
+    <img src="./readme_assets/exp_real.jpg" width="600px" id="exp-real">
+    <figcaption>Figure 9: Total of 102 feature points triangulated using camera pairs calibrated with/without corner outliers (<i>mean</i>, <i>standard deviation</i>).</figcaption>
+</figure>
+
+The box plots of the obtained radiuses are shown in [Figure 9](#exp-real). The radiuses display smaller deviations with statistically significant difference (*p* < 0.05 from paired sample t-test) when images containing the outlier corners are removed.
+
 
 <h2 id="references">References</h2>
 
