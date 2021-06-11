@@ -18,10 +18,13 @@ def __corner_detector(g_logger, lock, cam_idx, n_cols, n_rows, paths, output_fol
         img_original = load_img(path)
         
         # if image is too large, corner detection takes too long
-        scale = 0.5
         h, w = img_original.shape
         if min(h, w) > 1080:
+            scale = 0.5
             img = cv2.resize(img_original, dsize=(int(w*scale), int(h*scale)), interpolation=cv2.INTER_AREA)
+        else:
+            scale = 1.0
+            img = img_original
 
         log_str = "({}/{}) {}\t| ".format(i+1, len(paths), path)
 
@@ -51,9 +54,6 @@ def __corner_detector(g_logger, lock, cam_idx, n_cols, n_rows, paths, output_fol
             f.writelines(output_str)
 
         del img
-
-        if i == 5:
-            break
     logger.info("Corner detection - COMPLETE\t: camera {}\t| Corners saved to: {}".format(cam_idx, output_folder))
 
     __write_cornerdet_completion_log(lock, shared_log_path, cam_idx, True)

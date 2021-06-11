@@ -1,7 +1,7 @@
 {
     "paths": {
-        "image_paths_file": "image_paths.txt",
-        "output_dir": "../output",
+        "image_paths_file": "D:/Pictures/2021_06_12_SynthCheckerboards/image_paths.txt",
+        "output_dir": "../output_synth",
         "logs": "logs",
         "corners": "corners",
         "vae_outlier_detector": "vae_outlier_detector",
@@ -22,20 +22,20 @@
     },
     "vae_outlier_detector": {
         "z_dim": 2,
-        "kl_weight": 0.001,
-        "n_epochs": 1000,
+        "kl_weight": 0.01,
+        "n_epochs": 500,
         "lr": 0.001,
         "batch_size": 1000,
-        "outlier_thres": 0.001
+        "outlier_thres_ratio": 0.01
     },
     "calib_initial": {
-        "center_cam_idx": 7,
-        "center_img_name": "00000",
+        "center_cam_idx": 0,
+        "center_img_name": "0000",
         "intrinsics": {
             "n_max_imgs": 20
         },
         "extrinsics": {
-            "n_max_stereo_imgs": 60
+            "n_max_stereo_imgs": 40
         }
     },
     "bundle_adjustment": {

@@ -1,5 +1,6 @@
 __pycache__/
 output/
+output_synth/
 output_/
 .vs/
 .vscode/

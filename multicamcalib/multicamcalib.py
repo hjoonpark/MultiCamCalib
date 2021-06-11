@@ -41,6 +41,7 @@ if __name__ == "__main__":
     if "1" in argv:
         # detect corners
         lock = threading.Lock()
+        os.makedirs(paths["corners"], exist_ok=True)
         shared_log_path = os.path.join(paths["corners"], "cornerdetect_completion.json")
         detect_corners(logger, lock, chb, img_paths, paths, shared_log_path, use_threads=True, log=True)
 
@@ -86,7 +87,7 @@ if __name__ == "__main__":
     if "6" in argv:
         logger.info(">> DETERMINE OUTLIERS <<")
         # determine outliers
-        determine_outliers(logger, paths, save_path=outlier_path, thres_loss_percent=vae["outlier_thres"], save_imgs=True)
+        determine_outliers(logger, paths, save_path=outlier_path, outlier_thres_ratio=vae["outlier_thres_ratio"], save_imgs=True)
 
     if "7" in argv:
         logger.info(">> CALIBRATE INITIAL CAMERA PARAMETERS <<")
@@ -118,7 +119,7 @@ if __name__ == "__main__":
 
     if "11" in argv:
         logger.info(">> Analyze reprojection results")
-        render_reprojection_results(logger, paths, save_histogram=False, save_reproj_images=True, error_thres=5)
+        render_reprojection_results(logger, paths, save_histogram=True, save_reproj_images=True, error_thres=2)
 
 
     logger.info("* FINISHED RUNNING *")

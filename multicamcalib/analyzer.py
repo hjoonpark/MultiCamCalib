@@ -135,8 +135,8 @@ def render_reprojection_results(logger, paths, save_histogram=True, save_reproj_
             corner_errors.extend(err_each)
             corner_errors_2d.extend(dudv)
 
-            err_sum = float(np.sum(err_each))
-            errors_for_lookup[img_name] = max(errors_for_lookup[img_name], err_sum)
+            err_max = float(np.max(err_each))
+            errors_for_lookup[img_name] = max(errors_for_lookup[img_name], err_max)
 
     corner_errors = np.float32(corner_errors)
     corner_errors_2d = np.float32(corner_errors_2d)

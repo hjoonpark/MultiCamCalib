@@ -1,5 +1,9 @@
 <h1>Academical details</h1>
 
+<h2>Table of contents</h2>
+
+---
+
 - [Camera model](#camera-model)
 - [Bundle adjustment with planar checkerboard](#bundle-adjustment)
 - [VAE outlier corner detection](#vae)  
@@ -19,13 +23,13 @@
 
 ---
 
-We model the cameras as the usual pinhole camera. A 3D world point is denoted as ![$p=[x, y, z]$](./readme_assets/eq/world_point.jpg) and its projected image point as ![$q=[u, v]$](./readme_assets/eq/image_point.jpg), related by:
+We model the cameras as the usual pinhole camera following Zhang's method<sup>[[1]](#zhang2000flexible)</sup>. A 3D world point is denoted as ![$p=[x, y, z]$](./readme_assets/eq/world_point.jpg) and its projected image point as ![$q=[u, v]$](./readme_assets/eq/image_point.jpg), related by:
 
 ![pinhole-model](./readme_assets/eq/camera_model.jpg),
 
-where ![$(R, t)$](./readme_assets/eq/rt.jpg) are extrinsic parameters with rotation (parameterized as the angle-axis vector) and translation, and ![s](./readme_assets/eq/s.jpg) is an arbitrary scale factor. ![K](./readme_assets/eq/k.jpg) is the camera intrinsic matrix with focal lengths ![$(fx, fy)$](./readme_assets/eq/fxfy.jpg) and principal points ![$(cx, cy)$](./readme_assets/eq/cxcy.jpg) in pixel unit. ![$\gamma$](./readme_assets/eq/gamma.jpg) describes the skew of the two image axes which can be assumed zero for most modern cameras<sup>[[1]](#szeliski2010computer)</sup>. 
+where ![$(R, t)$](./readme_assets/eq/rt.jpg) are extrinsic parameters with rotation (parameterized as the angle-axis vector) and translation, and ![s](./readme_assets/eq/s.jpg) is an arbitrary scale factor. ![K](./readme_assets/eq/k.jpg) is the camera intrinsic matrix with focal lengths ![$(fx, fy)$](./readme_assets/eq/fxfy.jpg) and principal points ![$(cx, cy)$](./readme_assets/eq/cxcy.jpg) in pixel unit. ![$\gamma$](./readme_assets/eq/gamma.jpg) describes the skew of the two image axes which can be assumed zero for most modern cameras<sup>[[2]](#szeliski2010computer)</sup>. 
 
-The lens distortions are modeled using the coefficients ![$(k1, k2, k3)$](./readme_assets/eq/k1k2k3.jpg) for radial and ![$(p1, p2)$](./readme_assets/eq/p1p2.jpg) for tangential distortions following the widely used lens model<sup>[[1]](#szeliski2010computer)</sup> relating a distorted image point ![$q_d$](./readme_assets/eq/q_d.jpg) and undistorted image point ![$q$](./readme_assets/eq/q.jpg) by:
+The lens distortions are modeled using the coefficients ![$(k1, k2, k3)$](./readme_assets/eq/k1k2k3.jpg) for radial and ![$(p1, p2)$](./readme_assets/eq/p1p2.jpg) for tangential distortions following the widely used lens model<sup>[[2]](#szeliski2010computer)</sup> relating a distorted image point ![$q_d$](./readme_assets/eq/q_d.jpg) and undistorted image point ![$q$](./readme_assets/eq/q.jpg) by:
 
 ![lens-model](./readme_assets/eq/lens_distortion.jpg)
 
@@ -58,7 +62,7 @@ outliers and identify them using VAE.
 
 <h3 id="vae-objective">Objective of VAE</h3>
 
-VAE deals with an unknown underlying probabilistic distribution ![$p^*(\bb{x})$](./readme_assets/eq/vae/p_star.jpg) defined over the data points ![$\bb{x}$](./readme_assets/eq/vae/x.jpg) in some potentially high-dimensional space ![$\mathcal{X}$](./readme_assets/eq/vae/xx.jpg)<sup>[[2]](#kingma2013auto)</sup>. The aim of VAE is to approximate the underlying distribution with a chosen model ![$p_{\bb{\theta}}(\bb{x}) \approx p^*(\bb{x})$](./readme_assets/eq/vae/p_theta_approx.jpg), parameterized by ![$\bb{\theta}$](./readme_assets/eq/vae/theta.jpg) and marginalized over the latent variables ![$\bb{z}$](./readme_assets/eq/vae/z.jpg):
+VAE deals with an unknown underlying probabilistic distribution ![$p^*(\bb{x})$](./readme_assets/eq/vae/p_star.jpg) defined over the data points ![$\bb{x}$](./readme_assets/eq/vae/x.jpg) in some potentially high-dimensional space ![$\mathcal{X}$](./readme_assets/eq/vae/xx.jpg)<sup>[[3]](#kingma2013auto)</sup>. The aim of VAE is to approximate the underlying distribution with a chosen model ![$p_{\bb{\theta}}(\bb{x}) \approx p^*(\bb{x})$](./readme_assets/eq/vae/p_theta_approx.jpg), parameterized by ![$\bb{\theta}$](./readme_assets/eq/vae/theta.jpg) and marginalized over the latent variables ![$\bb{z}$](./readme_assets/eq/vae/z.jpg):
 
 ![$\bb{x}\sim p_{\bb{\theta}}(\bb{x}) = \int p_{\bb{\theta}}(\bb{x}, \bb{z}) d\bb{z} = \int p_{\bb{\theta}}(\bb{x}|\bb{z}) p_{\bb{\theta}}(\bb{z})d\bb{z}$](./readme_assets/eq/vae/x_approx.jpg).
 
@@ -66,7 +70,7 @@ The objective is to estimate the parameters ![$\bb{\theta}$](./readme_assets/eq/
 
 ![lower_bound](./readme_assets/eq/vae/lower_bound.jpg),
 
-where ![$D_{KL}(\cdot)$](./readme_assets/eq/vae/dkl.jpg) is Kullback-Leibler (KL) divergence<sup>[[3]](#murphy2012machine)</sup>.
+where ![$D_{KL}(\cdot)$](./readme_assets/eq/vae/dkl.jpg) is Kullback-Leibler (KL) divergence<sup>[[4]](#murphy2012machine)</sup>.
 
 To make the maximization of the evidence lower bound tractable, the prior ![$p_{\bb{\theta}}(\bb{z})$](./readme_assets/eq/vae/p_theta_z.jpg) is set as isotropic unit Gaussian and the posterior ![$q_{\bb{\phi}}(\bb{z}|\bb{x}_i)$](./readme_assets/eq/vae/q_phi_zxi.jpg) as Gaussians ![$\mathcal{N}(\bm{\mu}_q, \sigma_q^2\bm{I})$](./readme_assets/eq/vae/N_dist.jpg). Also, this parameterization allows the use of the *reparameterization trick* to make the random sampling of ![$\bb{z}$$\sim$$q_{\bb{\phi}}(\bb{z}|\bb{x}_i)$](./readme_assets/eq/vae/z_approx.jpg) in ![$\mathcal{L}_{\bb{\theta}, \bb{\phi}}(\bb{x}_i)$](./readme_assets/eq/vae/L.jpg) differentiable w.r.t. ![$\bb{\phi}$](./readme_assets/eq/vae/phi.jpg) by reparameterizing it as ![$\bb{z} = \bm{\mu}_q + \sigma_q \bm{\epsilon}$](./readme_assets/eq/vae/z_equal.jpg), with ![$\bm{\epsilon}$$\sim$$\mathcal{N}(\bb{0}, \bb{I})$](./readme_assets/eq/vae/epsilon_approx.jpg). Moreover, by choosing ![$p_{\bb{\theta}}(\bb{x}_i|\bb{z})$$\sim$$\mathcal{N}(\bm{\mu}_p, \sigma_p^2 \bm{I})$](./readme_assets/eq/vae/p_theta_xz_approx.jpg) where ![$\sigma_p$](./readme_assets/eq/vae/sigma_p.jpg) is pre-determined and after collecting constant terms into ![$\omega$](./readme_assets/eq/vae/omega.jpg), maximizing ![the right-hand side of Equation \ref{eq:lower-bound}](./readme_assets/eq/vae/L.jpg) becomes equivalent to minimizing:
 
@@ -115,7 +119,7 @@ The outlier corners are offset from the center of crop by 2-4 pixels ([Figure 3b
 
 We set the latent space of VAE and AE to 2 dimensional, and VAE's KL divergence weight to ![$\omega$](./readme_assets/eq/vae/omega.jpg)=1. Then, VAE and AE are trained for 1k epochs using Adam optimizer with learning rate 1e-3. For PCA and kPCA (with a Gaussian kernel), we use 2 principal axes for reconstructions.
 
-We use the same binarized inputs for both training and testing ([Figure 3](#synth-crops)) and compare the results using the area under the receiver operator characteristic curve (AUROC) and the precision recall curve (AUPRC). Note, when the data for binary classification is heavily imbalanced, AUPRC can be less misleading than AUROC<sup>[[4]](#davis2006relationship)</sup>.
+We use the same binarized inputs for both training and testing ([Figure 3](#synth-crops)) and compare the results using the area under the receiver operator characteristic curve (AUROC) and the precision recall curve (AUPRC). Note, when the data for binary classification is heavily imbalanced, AUPRC can be less misleading than AUROC<sup>[[5]](#davis2006relationship)</sup>.
 
 <figure>
     <img src="./readme_assets/vae_synth_crops.jpg" width="600px" id="synth-crops">
@@ -162,7 +166,7 @@ The result in [Figure 6](#recons-real) shows that the outlier corners are recons
 We capture images (~172 frames per camera) of a freely moving checkerboard and calibrate cameras using two different methods: (1) with and (2) without outlier corners. Then, we capture images of a polyester bowling ball at three different locations and reconstruct its 34 manually-marked visible feature points ([Figure 8a](#ballingballs)). We triangulate its feature points using pairs of calibrated cameras {(1, 2), (2, 3), ..., (16,1)} to obtain a set of sparse point clouds ([Figure 8b](#ballingballs)). The radius of the ball is measured ~108 mm, but we do not rely solely on this since it is human-measured and the reconstruction error is usually very small (<1 mm). Instead, we evaluate the reconstruction consistency based on the radius values between the triangulated points and center of spheres fitted to each point cloud set via least-square fitting. If the calibrations are accurate, every radius values should have very small deviations from their mean.
 
 <figure>
-    <img src="./readme_assets/exp_real.jpg" width="600px" id="exp-real">
+    <img src="./readme_assets/exp_real.jpg" width="400px" id="exp-real">
     <figcaption>Figure 9: Total of 102 feature points triangulated using camera pairs calibrated with/without corner outliers (<i>mean</i>, <i>standard deviation</i>).</figcaption>
 </figure>
 
@@ -172,11 +176,13 @@ The box plots of the obtained radiuses are shown in [Figure 9](#exp-real). The r
 <h2 id="references">References</h2>
 
 ---
-<a id="szeliski2010computer">[1]</a> Szeliski R. Computer vision: algorithms and applications. Springer Science & Business Media; 2010 Sep 30.
+<a id="zhang2000flexible">[1]</a> Zhang Z. A flexible new technique for camera calibration. IEEE Transactions on pattern analysis and machine intelligence. 2000 Nov;22(11):1330-4.
 
-<a id="kingma2013auto">[2]</a> Kingma DP, Welling M. Auto-encoding variational bayes. arXiv preprint arXiv:1312.6114. 2013 Dec 20.
+<a id="szeliski2010computer">[2]</a> Szeliski R. Computer vision: algorithms and applications. Springer Science & Business Media; 2010 Sep 30.
 
-<a id="murphy2012machine">[3]</a> Murphy KP. Machine learning: a probabilistic perspective. MIT press; 2012 Sep 7.
+<a id="kingma2013auto">[3]</a> Kingma DP, Welling M. Auto-encoding variational bayes. arXiv preprint arXiv:1312.6114. 2013 Dec 20.
 
-<a id="davis2006relationship">[4]</a> Davis J, Goadrich M. The relationship between Precision-Recall and ROC curves. InProceedings of the 23rd international conference on Machine learning 2006 Jun 25 (pp. 233-240).
+<a id="murphy2012machine">[4]</a> Murphy KP. Machine learning: a probabilistic perspective. MIT press; 2012 Sep 7.
+
+<a id="davis2006relationship">[5]</a> Davis J, Goadrich M. The relationship between Precision-Recall and ROC curves. InProceedings of the 23rd international conference on Machine learning 2006 Jun 25 (pp. 233-240).
 

@@ -123,8 +123,14 @@ def __crop_corners(img, corners, crop_size=15):
     for corner_idx in range(len(corners)):
         center = np.int32(corners[corner_idx])
         crop = img[center[1]-s:center[1]+s+1, center[0]-s:center[0]+s+1]
-        crops.append(crop)
-    return np.array(crops)
+
+        if crop.shape[0] != crop_size or crop.shape[1] != crop_size:
+            continue
+        else:
+            crops.append(crop)
+        
+    crops = np.array(crops)
+    return crops
 
 def __binarize(img):
     # Otsu's thresholding after Gaussian filtering
@@ -191,7 +197,7 @@ def generate_crops_around_corners(logger, img_paths, paths, crop_size=15):
         
     # save metadata
     with open(save_path, "w+") as f:
-        json.dump(crop_metadata, f)
+        json.dump(crop_metadata, f, indent=4)
         logger.info("Crops metadata saved: {}".format(save_path))
 
 def __load_corner_crops(input_paths):
@@ -279,7 +285,7 @@ def train_vae_outlier_detector(logger, input_paths, paths, vae_configs):
             losses[k].append(v)
 
         if len(losses["total"]) > 0:
-            tqdm.write('Epoch {}/{}\telapsed={} | loss: initial={:.4f} curr epoch={:.4f} | recon loss={:.4f}, kld loss={:.4f}'.format(
+            tqdm.write('Epoch {}/{}\telapsed={} | loss: initial={:.4f} curr={:.4f} | recon loss={:.4f}, kld loss={:.4f}'.format(
                 e+1, n_epochs, dt_elpased, losses["total"][0], losses["total"][-1], losses["recon"][-1], losses["kld"][-1])
                 )
         
@@ -289,7 +295,7 @@ def train_vae_outlier_detector(logger, input_paths, paths, vae_configs):
             # save model
             model_save_path = os.path.join(dir_vae_outlier_detector, "vae_model.pt")
             torch.save(model, model_save_path)
-            print("Model saved: {}".format(model_save_path))
+            print("\nModel saved: {}".format(model_save_path))
 
             plt.figure()
             plt.plot(losses["total"], linewidth=3, label="total")
@@ -362,7 +368,7 @@ def run_vae_outlier_detector(logger, input_paths, paths, model_path, vae_configs
     logger.info("VAE forward result saved to: {}".format(output_path))
 
 
-def determine_outliers(logger, paths, save_path, thres_loss_percent=0.001, save_imgs=False):
+def determine_outliers(logger, paths, save_path, outlier_thres_ratio=0.001, save_imgs=False):
     os.makedirs(paths["outliers"], exist_ok=True)
     
     # crop metadata
@@ -381,8 +387,8 @@ def determine_outliers(logger, paths, save_path, thres_loss_percent=0.001, save_
     sorted_indices = corner_indices[idx]
 
     n_items = len(corner_indices)
-    outliers_indices = sorted_indices[0:int(n_items*thres_loss_percent)]
-    # outliers_losses = sorted_losses[0:int(n_items*thres_loss_percent)]
+    outliers_indices = sorted_indices[0:int(n_items*outlier_thres_ratio)]
+    # outliers_losses = sorted_losses[0:int(n_items*outlier_thres_ratio)]
 
     outliers = {}
     for i in range(len(outliers_indices)):
