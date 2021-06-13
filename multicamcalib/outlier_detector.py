@@ -322,9 +322,11 @@ def train_vae_outlier_detector(logger, input_paths, paths, vae_config):
     torch.save(model, model_save_path)
     logger.info("Model saved: {}".format(model_save_path))
 
-def run_vae_outlier_detector(logger, input_paths, paths, model_path, vae_config):
-    batch_size = vae_config["batch_size"]
-    # batch_size = 1
+def run_vae_outlier_detector(logger, input_paths, paths, model_path, vae_config, save_result_imgs=False):
+    if not save_result_imgs:
+        batch_size = vae_config["batch_size"]
+    else:
+        batch_size = 1
     device = vae_config["device"]
 
     # save forward run reconstruction losses
@@ -345,7 +347,8 @@ def run_vae_outlier_detector(logger, input_paths, paths, model_path, vae_config)
     losses = {"recon": []}
     pbar = tqdm(total=len(crops))
 
-    # outputs = []
+    if save_result_imgs:
+        outputs = []
     for i in range(len(crops)):
         input_crops = crops[i].unsqueeze(0).unsqueeze(1).to(device)
 
@@ -361,7 +364,8 @@ def run_vae_outlier_detector(logger, input_paths, paths, model_path, vae_config)
         # save losses
         result[i] = l_recons
 
-        # outputs.append({"idx": i, "input": input_crops.squeeze().detach().cpu().numpy(), "recon": recons.squeeze().detach().cpu().numpy(), "loss": l_recons})
+        if save_result_imgs:
+            outputs.append({"idx": i, "input": input_crops.squeeze().detach().cpu().numpy(), "recon": recons.squeeze().detach().cpu().numpy(), "loss": l_recons})
 
         if i % batch_size == 0:
             pbar.update(batch_size)
@@ -371,132 +375,8 @@ def run_vae_outlier_detector(logger, input_paths, paths, model_path, vae_config)
 
     logger.info("VAE forward result saved to: {}".format(output_path))
 
-    #
-    #
-    #
-    # n_crops = len(outputs)
-    # n_cols = 10
-    # n_rows_max = 10
-
-    # n_rows, rem = divmod(n_crops, n_cols)
-    # n_plots, rem2 = divmod(n_rows*2, n_rows_max)
-
-    # if rem2 > 0:
-    #     n_plots += 1
-    # if rem > 0:
-    #     n_rows += 1
-    
-    # save_dir = os.path.join(paths["vae_outlier_detector"], "forward_result")
-    # os.makedirs(save_dir, exist_ok=True)
-
-    # crop_idx = 0
-    # for plot_idx in range(n_plots): 
-    #     save_path = os.path.join(save_dir, "forward_{}.png".format(plot_idx))
-    #     s = 2
-    #     fig, ax = plt.subplots(nrows=n_rows_max, ncols=n_cols, squeeze=True, figsize=(s*n_cols, 1.2*s*n_rows_max))
-    #     ax = ax.ravel()
-    #     for r in range(0, n_rows_max, 2):
-    #         for c in range(n_cols):
-    #             a0 = ax[r*n_cols + c]
-    #             a1 = ax[(r+1)*n_cols + c]
-    #             if crop_idx < len(crops):
-    #                 output = outputs[crop_idx]
-    #                 a0.imshow(output["input"], cmap="gray")
-    #                 a0.set_title("({}/{})\n{} | {:.2f}".format(crop_idx+1, n_crops, output["idx"], output["loss"]))
-    #                 a0.set_xticks([])
-    #                 a0.set_yticks([])
-
-    #                 a1.imshow(output["recon"], cmap="gray")
-    #                 a1.set_title("({}/{})\nreconstructed".format(crop_idx+1, n_crops))
-    #                 a1.set_xticks([])
-    #                 a1.set_yticks([])
-
-    #                 crop_idx += 1
-    #             else:
-    #                 a0.axis(False)
-    #                 a1.axis(False)
-    #     fig.subplots_adjust(top=0.95)
-    #     plt.suptitle("[{}/{}] {}/{} forwards".format(plot_idx+1,n_plots, (plot_idx+1)*n_cols*n_rows_max, len(crops)))
-    #     plt.savefig(save_path, dpi=150, bbox_inches='tight')
-    #     plt.close()
-    #     logger.info("Forward plot saved [{}/{}]: {}".format(plot_idx+1, n_plots, save_path))
-
-
-def determine_outliers(logger, vae_config, model_path, paths, save_path, outlier_thres_ratio=0.001, save_imgs=False):
-    os.makedirs(paths["outliers"], exist_ok=True)
-    
-    # crop metadata
-    with open(os.path.join(paths["corner_crops"], "crop_metadata.json"), "r") as f:
-        crop_md = json.load(f)
-    
-    # recon loss from forward vae
-    with open(os.path.join(paths["vae_outlier_detector"], "vae_forward_result.json"), "r") as f:
-        vae_result = json.load(f)
-
-    recon_losses = np.array(list(vae_result.values()))
-    corner_indices = np.array(list(vae_result.keys()))
-
-    idx = np.argsort(recon_losses)[::-1]
-    sorted_losses = recon_losses[idx]
-    sorted_indices = corner_indices[idx]
-
-    n_items = len(corner_indices)
-    outliers_indices = sorted_indices[0:int(n_items*outlier_thres_ratio)]
-    # outliers_losses = sorted_losses[0:int(n_items*outlier_thres_ratio)]
-
-    outliers = {}
-    for i in range(len(outliers_indices)):
-        crop_idx = str(outliers_indices[i])
-        loss = sorted_losses[i]
-        md = crop_md[crop_idx]
-        outliers[crop_idx] = {"recon_loss": loss, "img_name": md["img_name"], "camera_idx": md["camera_idx"], "crop_idx": crop_idx, "corner_idx": md["corner_idx"], "idx_for_curr_cam": md["idx_for_curr_cam"]}
-
-    with open(save_path, "w+") as f:
-        json.dump(outliers, f, indent=4)
-    logger.info("Outliers saved to: {}".format(save_path))
-
-    if save_imgs:
-        # load vae model to run forward passes
-        device = vae_config["device"]
-
-        # load model
-        model = torch.load(model_path)
-        model.eval()
-        model.debug = False
-
-        in_dir = paths["corner_crops"]
-        save_dir = paths["outliers"]
-        os.makedirs(save_dir, exist_ok=True)
-
-        mds = []
-        crops = []
-        crops_recon = []
-        pbar = tqdm(total=len(outliers.keys()))
-        for _, md in outliers.items():
-            pbar.update(1)
-            
-            cam_idx = md["camera_idx"]
-            idx_for_curr_cam = md["idx_for_curr_cam"]
-            crops_npy = np.load(os.path.join(in_dir, "{}_gray.npy".format(cam_idx)))
-            crops_binary = np.load(os.path.join(in_dir, "{}_binary.npy".format(cam_idx)))
-            crop = crops_npy[idx_for_curr_cam]
-            crop_binary = crops_binary[idx_for_curr_cam]
-
-            mds.append(md)
-            crops.append(crop_binary)
-
-            # forward
-            input_crop = torch.from_numpy(crop_binary.astype(np.float32)).unsqueeze(0).unsqueeze(1).to(device)
-            recon, _, _ = model(input_crop, is_training=False)
-            recon = recon.detach().squeeze().cpu().numpy()
-            crops_recon.append(recon)
-
-            # loss check
-            l = np.sum((recon - input_crop.squeeze().cpu().numpy())**2)
-            # print("{} | {:.2f}\t{:.2f}".format(md["crop_idx"], md["recon_loss"], l))
-
-
-        n_crops = len(crops)
+    if save_result_imgs:
+        n_crops = len(outputs)
         n_cols = 10
         n_rows_max = 10
 
@@ -508,9 +388,12 @@ def determine_outliers(logger, vae_config, model_path, paths, save_path, outlier
         if rem > 0:
             n_rows += 1
         
+        save_dir = os.path.join(paths["vae_outlier_detector"], "forward_result")
+        os.makedirs(save_dir, exist_ok=True)
+
         crop_idx = 0
         for plot_idx in range(n_plots): 
-            save_path = os.path.join(save_dir, "outliers_{}.png".format(plot_idx))
+            save_path = os.path.join(save_dir, "forward_{}.png".format(plot_idx))
             s = 2
             fig, ax = plt.subplots(nrows=n_rows_max, ncols=n_cols, squeeze=True, figsize=(s*n_cols, 1.2*s*n_rows_max))
             ax = ax.ravel()
@@ -519,15 +402,13 @@ def determine_outliers(logger, vae_config, model_path, paths, save_path, outlier
                     a0 = ax[r*n_cols + c]
                     a1 = ax[(r+1)*n_cols + c]
                     if crop_idx < len(crops):
-                        md = mds[crop_idx]
-                        a0.imshow(crops[crop_idx], cmap="gray")
-                        # a0.set_title("({}/{})\n{} | {:.2f}".format(crop_idx+1, n_crops, md["img_name"], md["recon_loss"]))
-                        a0.set_title("({}/{})\n{} | {:.2f}".format(crop_idx+1, n_crops, md["crop_idx"], md["recon_loss"]))
-
+                        output = outputs[crop_idx]
+                        a0.imshow(output["input"], cmap="gray")
+                        a0.set_title("({}/{})\n{} | {:.2f}".format(crop_idx+1, n_crops, output["idx"], output["loss"]))
                         a0.set_xticks([])
                         a0.set_yticks([])
 
-                        a1.imshow(crops_recon[crop_idx], cmap="gray")
+                        a1.imshow(output["recon"], cmap="gray")
                         a1.set_title("({}/{})\nreconstructed".format(crop_idx+1, n_crops))
                         a1.set_xticks([])
                         a1.set_yticks([])
@@ -537,7 +418,133 @@ def determine_outliers(logger, vae_config, model_path, paths, save_path, outlier
                         a0.axis(False)
                         a1.axis(False)
             fig.subplots_adjust(top=0.95)
-            plt.suptitle("[{}/{}] {}/{} outlier corners (total={})".format(plot_idx+1,n_plots, (plot_idx+1)*n_cols*n_rows_max, len(crops), n_items))
+            plt.suptitle("[{}/{}] {}/{} forwards".format(plot_idx+1,n_plots, (plot_idx+1)*n_cols*n_rows_max, len(crops)))
+            plt.savefig(save_path, dpi=150, bbox_inches='tight')
+            plt.close()
+            logger.info("Forward plot saved [{}/{}]: {}".format(plot_idx+1, n_plots, save_path))
+
+
+def determine_outliers(logger, vae_config, model_path, input_paths, paths, save_path, outlier_thres_ratio=0.001, save_imgs=False):
+    input_paths = sorted(list(glob.glob(os.path.join(paths["corner_crops"], "*_binary.npy"))))
+    input_gray_paths = sorted(list(glob.glob(os.path.join(paths["corner_crops"], "*_gray.npy"))))
+    
+    os.makedirs(paths["outliers"], exist_ok=True)
+    
+    # load crops
+    crops = __load_corner_crops(input_paths)
+    if save_imgs:
+        crops_gray = __load_corner_crops(input_gray_paths)
+
+    # crop metadata
+    with open(os.path.join(paths["corner_crops"], "crop_metadata.json"), "r") as f:
+        crop_md = json.load(f)
+    
+    # recon loss from forward vae
+    with open(os.path.join(paths["vae_outlier_detector"], "vae_forward_result.json"), "r") as f:
+        vae_result = json.load(f)
+
+    corner_indices = np.array(list(vae_result.keys()))
+    recon_losses = []
+    for i in corner_indices:
+        recon_losses.append(vae_result[i])
+    recon_losses = np.array(recon_losses)
+
+    idx = np.argsort(recon_losses)[::-1]
+    sorted_losses = recon_losses[idx]
+    sorted_indices = corner_indices[idx]
+
+    n_items = len(corner_indices)
+    outliers_indices = sorted_indices[0:int(n_items*outlier_thres_ratio)]
+    outliers_losses = sorted_losses[0:int(n_items*outlier_thres_ratio)]
+
+    outliers = {}
+    for i in range(len(outliers_indices)):
+        crop_idx = outliers_indices[i]
+        loss = outliers_losses[i]
+        md = crop_md[str(crop_idx)]
+        outliers[crop_idx] = {"crop_idx": int(crop_idx), "recon_loss": loss, "img_name": md["img_name"], "camera_idx": md["camera_idx"], "corner_idx": md["corner_idx"], "idx_for_curr_cam": md["idx_for_curr_cam"]}
+
+    with open(save_path, "w+") as f:
+        json.dump(outliers, f, indent=4)
+
+    logger.info("Outliers saved to: {}".format(save_path))
+
+    if save_imgs:
+        # load vae model to run forward passes
+        device = vae_config["device"]
+
+        # load model
+        model = torch.load(model_path)
+        model.eval()
+        model.debug = False
+
+        save_dir = paths["outliers"]
+        os.makedirs(save_dir, exist_ok=True)
+
+        # load corner images
+        mds = []
+        crops_for_plot = []
+        crops_recon = []
+        pbar = tqdm(total=len(outliers.keys()))
+        for _, md in outliers.items():
+            pbar.update(1)
+            
+            crop_idx = int(md["crop_idx"])
+            crop_binary = crops[crop_idx, :, :]
+            crop_gray = crops_gray[crop_idx, :, :]
+
+            mds.append(md)
+
+            # forward
+            input_crop = crop_binary.unsqueeze(0).unsqueeze(1).to(device)
+            recon, _, _ = model(input_crop, is_training=False)
+            recon = recon.detach().squeeze().cpu().numpy()
+
+            crops_recon.append(recon)
+            crops_for_plot.append(crop_gray.numpy())
+
+        n_crops = len(crops_for_plot)
+        n_cols = 10
+        n_rows_max = 10
+
+        n_rows, rem = divmod(n_crops, n_cols)
+        n_plots, rem2 = divmod(n_rows*2, n_rows_max)
+
+        if rem2 > 0:
+            n_plots += 1
+        if rem > 0:
+            n_rows += 1
+        
+        i = 0
+        for plot_idx in range(n_plots): 
+            save_path = os.path.join(save_dir, "outliers_{}.png".format(plot_idx))
+            s = 2
+            fig, ax = plt.subplots(nrows=n_rows_max, ncols=n_cols, squeeze=True, figsize=(s*n_cols, 1.2*s*n_rows_max))
+            ax = ax.ravel()
+            for r in range(0, n_rows_max, 2):
+                for c in range(n_cols):
+                    a0 = ax[r*n_cols + c]
+                    a1 = ax[(r+1)*n_cols + c]
+                    if i < len(crops_for_plot):
+                        md = mds[i]
+                        a0.imshow(crops_for_plot[i], cmap="gray")
+                        a0.set_title("({}/{})\n{} | {:.2f}".format(i+1, n_crops, md["crop_idx"], md["recon_loss"]))
+                        a0.set_xlabel(md["img_name"])
+
+                        a0.set_xticks([])
+                        a0.set_yticks([])
+
+                        a1.imshow(crops_recon[i], cmap="gray")
+                        a1.set_title("({}/{})\nreconstructed".format(i+1, n_crops))
+                        a1.set_xticks([])
+                        a1.set_yticks([])
+
+                        i += 1
+                    else:
+                        a0.axis(False)
+                        a1.axis(False)
+            fig.subplots_adjust(top=0.95)
+            plt.suptitle("[{}/{}] {}/{} outlier corners (total={})".format(plot_idx+1,n_plots, (plot_idx+1)*n_cols*n_rows_max, len(crops_for_plot), n_items))
             plt.savefig(save_path, dpi=150, bbox_inches='tight')
             plt.close()
             logger.info("Outlier plot saved [{}/{}]: {}".format(plot_idx+1, n_plots, save_path))

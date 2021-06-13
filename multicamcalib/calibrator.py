@@ -60,6 +60,7 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
         random.shuffle(corner_paths)
         _2d_pts = []
 
+        imageSize = None
         for corner_path in corner_paths:
             fname = os.path.basename(corner_path).split(".")[0]
             if fname in outliers:
@@ -67,9 +68,11 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
                 logger.debug("Skipping outlier image for intrinsics: {}".format(fname))
                 continue
 
-            corners, imageSize = load_corner_txt(corner_path) # imageSize: (h, w)
+            corners, imageSizeCurr = load_corner_txt(corner_path) # imageSize: (h, w)
+
             if corners is not None:
                 _2d_pts.append(corners)
+                imageSize = imageSizeCurr
                 if len(_2d_pts) == calib_config["intrinsics"]["n_max_imgs"]:
                     break
         _2d_pts = np.float32(_2d_pts)
@@ -123,7 +126,6 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
         cam_idx_1 = (cam_idx_2 + 1) if cam_idx_2 < center_cam_idx else cam_idx_2 - 1
         stereo_transformations[cam_idx_2] = {}
     
-        logger.info("Stereo-calibrating: camera {} & {}".format(cam_idx_1, cam_idx_2))
         corners_1 = []
         corners_2 = []
         for corner_path_2 in corner2_paths:
@@ -156,6 +158,7 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
         
         _2d_pts_1 = np.float32(corners_1)
         _2d_pts_2 = np.float32(corners_2)
+        logger.info("Stereo-calibrating: camera {} & {} | {} images".format(cam_idx_1, cam_idx_2, len(corners_1)))
 
         _3d_pts = np.float32([chb.chb_pts for _ in range(len(corners_1))])
 

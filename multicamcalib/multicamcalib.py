@@ -87,9 +87,9 @@ if __name__ == "__main__":
     if "6" in argv:
         logger.info(">> DETERMINE OUTLIERS <<")
         # determine outliers
-        save_reconstructions = True
+        save_imgs = False
         model_path = os.path.join(paths["vae_outlier_detector"], "vae_model.pt")
-        determine_outliers(logger, vae_config, model_path, paths, save_path=outlier_path, outlier_thres_ratio=vae["outlier_thres_ratio"], save_imgs=True)
+        determine_outliers(logger, vae_config, model_path, input_crop_paths, paths, save_path=outlier_path, outlier_thres_ratio=vae["outlier_thres_ratio"], save_imgs=save_imgs)
 
     if "7" in argv:
         logger.info(">> CALIBRATE INITIAL CAMERA PARAMETERS <<")
@@ -121,6 +121,7 @@ if __name__ == "__main__":
 
     if "11" in argv:
         logger.info(">> Analyze reprojection results")
-        render_reprojection_results(logger, paths, save_histogram=True, save_reproj_images=True, error_thres=2)
+        save_reproj_images = False
+        render_reprojection_results(logger, paths, save_histogram=True, save_reproj_images=save_reproj_images, error_thres=2)
 
     logger.info("* FINISHED RUNNING *")
