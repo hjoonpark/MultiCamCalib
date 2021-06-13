@@ -62,7 +62,7 @@ struct Config {
     int max_iter, num_thread;
     double function_tolerance, parameter_tolerance, gradient_tolerance, inner_iteration_tolerance;
     int chb_n_rows, chb_n_cols, chb_sqr_size;
-    int n_cams;
+    int n_cams, center_cam_idx;
 
     std::string dir_output, dir_cam_params, dir_corners, dir_outliers, dir_world_points, dir_ceres_output;
 };

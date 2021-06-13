@@ -84,6 +84,7 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
         cameraMatrix = None
         distCoeffs = None
         rms_err, M, d, _, _ = cv2.calibrateCamera(_3d_pts, _2d_pts, imageSize=imageSize, cameraMatrix=cameraMatrix, distCoeffs=distCoeffs)
+        logger.info("Intrinsics calibrated: camera {} | {} images | error={:.2f}".format(cam_idx, len(_3d_pts), rms_err))
 
         if rms_err:
             cam_params[cam_idx]["fx"] = M[0, 0]
@@ -158,7 +159,6 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
         
         _2d_pts_1 = np.float32(corners_1)
         _2d_pts_2 = np.float32(corners_2)
-        logger.info("Stereo-calibrating: camera {} & {} | {} images".format(cam_idx_1, cam_idx_2, len(corners_1)))
 
         _3d_pts = np.float32([chb.chb_pts for _ in range(len(corners_1))])
 
@@ -191,6 +191,7 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
         ret, mtx_1, dist_1, mtx_2, dist_2, dR, dt, E, F = cv2.stereoCalibrate(_3d_pts, _2d_pts_1, _2d_pts_2,
                                                                         M_1, d_1, M_2, d_2,
                                                                         imageSize, criteria=criteria, flags=flags)
+        logger.info("Stereo-calibrated: camera {} & {} | {} images | error={:.2f}".format(cam_idx_1, cam_idx_2, len(corners_1), ret))
 
         if ret:
             # dR, dt: brings points given in the first camera's coordinate system to points in the second camera's coordinate system
@@ -237,10 +238,10 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
 
     if save_plot:
         plot_save_path = os.path.join(save_dir, "config_initial.png")
-        render_config(cam_param_save_path, None, "Initial configuration", plot_save_path)
+        render_config(cam_param_save_path, center_cam_idx, center_img_name, None, "Initial configuration", plot_save_path)
         logger.info("Plot saved: {}".format(plot_save_path))
 
-def estimate_initial_world_points(logger, paths, calib_config, chb):
+def estimate_initial_world_points(logger, paths, chb, config):
     # load detection result
     detect_path = os.path.join(paths["corners"], "detection_result.json")
     with open(detect_path, "r") as f:
@@ -325,7 +326,10 @@ def estimate_initial_world_points(logger, paths, calib_config, chb):
     world_points_save_path = os.path.join(save_dir, "world_points_initial.json")
     with open(world_points_save_path, "w+") as f:
         json.dump(world_pts, f, indent=4)
+
     logger.info("Initial world points saved: {}".format(world_points_save_path))
     plot_save_path = os.path.join(save_dir, "intial_world_points.png")
-    render_config(in_cam_param_path, world_points_save_path, "Initial configuration", plot_save_path)
+    center_cam_idx = config["calib_initial"]["center_cam_idx"]
+    center_img_name = config["calib_initial"]["center_img_name"]
+    render_config(in_cam_param_path, center_cam_idx, center_img_name, world_points_save_path, "Initial configuration", plot_save_path)
     logger.info("Plot saved: {}".format(plot_save_path))

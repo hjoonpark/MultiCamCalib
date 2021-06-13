@@ -38,7 +38,7 @@ def _draw_camera(ax, cam_idx, rvec, tvec, zorder=10, color="k"):
     ax.text(t_SE3[0], t_SE3[1], t_SE3[2]+L, cam_idx, fontsize=12, zorder=zorder)
 
 
-def render_config(in_cam_param_path, in_world_points_path=None, title="Configuration", save_path=None):
+def render_config(in_cam_param_path, center_cam_idx=None, center_img_name=None, in_world_points_path=None, title="Configuration", save_path=None):
     with open(in_cam_param_path, "r") as f:
         cam_params = json.load(f)
 
@@ -61,11 +61,17 @@ def render_config(in_cam_param_path, in_world_points_path=None, title="Configura
             if d["n_detected"] > 0:
                 p = np.float32(d["world_pts"])
                 # ax.scatter(p[:,0], p[:,1], p[:,2], c='lime', s=0.1, zorder=1)
-                color = "lime"
-                ax.plot([p[0, 0], p[c-1, 0]], [p[0, 1], p[c-1, 1]], [p[0, 2], p[c-1, 2]], c=color, linewidth=0.5, zorder=2)
-                ax.plot([p[0, 0], p[(r-1)*c, 0]], [p[0, 1], p[(r-1)*c, 1]], [p[0, 2], p[(r-1)*c, 2]], c=color, linewidth=0.5, zorder=2)
-                ax.plot([p[c-1, 0], p[r*c-1, 0]], [p[c-1, 1], p[r*c-1, 1]], [p[c-1, 2], p[r*c-1, 2]], c=color, linewidth=0.5, zorder=2)
-                ax.plot([p[(r-1)*c, 0], p[r*c-1, 0]], [p[(r-1)*c, 1], p[r*c-1, 1]], [p[(r-1)*c, 2], p[r*c-1, 2]], c=color, linewidth=0.5, zorder=2)
+
+                if img_name == center_img_name:
+                    color = "r"
+                    zorder=9
+                else:
+                    color = "lime"
+                    zorder = 2
+                ax.plot([p[0, 0], p[c-1, 0]], [p[0, 1], p[c-1, 1]], [p[0, 2], p[c-1, 2]], c=color, linewidth=0.5, zorder=zorder)
+                ax.plot([p[0, 0], p[(r-1)*c, 0]], [p[0, 1], p[(r-1)*c, 1]], [p[0, 2], p[(r-1)*c, 2]], c=color, linewidth=0.5, zorder=zorder)
+                ax.plot([p[c-1, 0], p[r*c-1, 0]], [p[c-1, 1], p[r*c-1, 1]], [p[c-1, 2], p[r*c-1, 2]], c=color, linewidth=0.5, zorder=zorder)
+                ax.plot([p[(r-1)*c, 0], p[r*c-1, 0]], [p[(r-1)*c, 1], p[r*c-1, 1]], [p[(r-1)*c, 2], p[r*c-1, 2]], c=color, linewidth=0.5, zorder=zorder)
                 
                 k += 1
     
@@ -73,7 +79,12 @@ def render_config(in_cam_param_path, in_world_points_path=None, title="Configura
     for cam_idx, v in cam_params.items():
         tvec = np.float32(v["tvec"]).flatten()
         rvec = np.float32(v["rvec"]).flatten()
-        _draw_camera(ax, cam_idx, rvec, tvec, zorder=10, color="k")
+
+        if int(cam_idx) == center_cam_idx:
+            color = "r"
+        else:
+            color = "k"
+        _draw_camera(ax, cam_idx, rvec, tvec, zorder=10, color=color)
 
     ax.set_xlabel("X")
     ax.set_ylabel("Y")

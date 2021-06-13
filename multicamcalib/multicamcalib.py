@@ -87,7 +87,7 @@ if __name__ == "__main__":
     if "6" in argv:
         logger.info(">> DETERMINE OUTLIERS <<")
         # determine outliers
-        save_imgs = False
+        save_imgs = True
         model_path = os.path.join(paths["vae_outlier_detector"], "vae_model.pt")
         determine_outliers(logger, vae_config, model_path, input_crop_paths, paths, save_path=outlier_path, outlier_thres_ratio=vae["outlier_thres_ratio"], save_imgs=save_imgs)
 
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     if "8" in argv:
         logger.info(">> ESTIMATE INITIAL WORLD POINTS <<")
         # initial world points
-        estimate_initial_world_points(logger, paths, config["calib_initial"], chb)
+        estimate_initial_world_points(logger, paths, chb, config)
 
     if "9" in argv:
         logger.info(">> RENDER FINAL CONFIGURATIONS <<")
@@ -108,8 +108,10 @@ if __name__ == "__main__":
         world_points_path = os.path.join(paths["world_points"], "world_points_final.json")
         save_path_cam_config = os.path.join(paths["cam_params"], "config_final.png")
         save_path_world_points = os.path.join(paths["world_points"], "final_world_points.png")
-        render_config(cam_param_path, None, "Final configuration", save_path=save_path_cam_config)
-        render_config(cam_param_path, world_points_path, "Final configuration", save_path=save_path_world_points)
+        center_cam_idx = config["calib_initial"]["center_cam_idx"]
+        center_img_name = config["calib_initial"]["center_img_name"]
+        render_config(cam_param_path, center_cam_idx, center_img_name, None, "Final configuration", save_path=save_path_cam_config)
+        render_config(cam_param_path, center_cam_idx, center_img_name, world_points_path, "Final configuration", save_path=save_path_world_points)
         logger.info("Plots saved:\n\t{}\n\t{}".format(save_path_cam_config, save_path_world_points))
 
     if "10" in argv:

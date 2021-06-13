@@ -15,7 +15,7 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/filewritestream.h>
 
-#include "config.h"
+#include "Config.h"
 #include "camera.h"
 #include "frame.h"
 #include "checkerboard.h"
@@ -24,13 +24,8 @@
 namespace Parser {
     rapidjson::Document readJson(const char*path) {
         FILE *fp;
-
-        #ifdef OS_WINDOWS
         errno_t err = fopen_s(&fp, path, READ_MODE);
-        #else
-        fp = fopen(path, READ_MODE);
-        #endif
-
+        
         char read_buf[MAX_BUF];
         rapidjson::FileReadStream fs(fp, read_buf, sizeof(read_buf));
 
@@ -44,11 +39,8 @@ namespace Parser {
         doc.Parse(writer_buf.GetString());
 
         FILE* fp;
-        #ifdef OS_WINDOWS
         errno_t err = fopen_s(&fp, out_path, WRITE_MODE);
-        #else
-        fp = fopen(out_path, READ_MODE);
-        #endif
+        
         char json_buf[MAX_BUF];
         rapidjson::FileWriteStream json_os(fp, json_buf, sizeof(json_buf));
         rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer_fs(json_os);
@@ -61,13 +53,14 @@ namespace Parser {
         // parse paths
         const rapidjson::Value &paths = doc["paths"];
 
-        config.dir_output = ROOT_DIR + std::string(OS_SEP) + paths["output_dir"].GetString();
+        config.dir_output = paths["output_dir"].GetString();
         config.dir_cam_params = config.dir_output + std::string(OS_SEP) + paths["cam_params"].GetString();
         config.dir_corners = config.dir_output + std::string(OS_SEP) + paths["corners"].GetString();
         config.dir_outliers = config.dir_output + std::string(OS_SEP) + paths["outliers"].GetString();
         config.dir_world_points = config.dir_output + std::string(OS_SEP) + paths["world_points"].GetString();
         config.dir_ceres_output = config.dir_output + std::string(OS_SEP) + paths["ceres_output"].GetString();
-
+        
+        std::cout << "dir_cam_params:" << config.dir_cam_params << std::endl;
         // parse checkerboard info
         const rapidjson::Value &chb_info = doc["checkerboard"];
         config.chb_n_rows = chb_info["n_rows"].GetInt();
@@ -78,6 +71,10 @@ namespace Parser {
         const rapidjson::Value &cams_info = doc["cameras"];
         config.n_cams = cams_info["n_cams"].GetInt();
 
+        // center camera index
+        const rapidjson::Value &calib_initial = doc["calib_initial"];
+        config.center_cam_idx = calib_initial["center_cam_idx"].GetInt();
+        
         // parse bundle adjustment configs
         const rapidjson::Value &bund_info = doc["bundle_adjustment"];
         config.max_iter = bund_info["max_iter"].GetInt();
@@ -217,23 +214,15 @@ namespace Parser {
         return 0;
     }
 
-    void saveBundleAdjustmentResult(const char* save_path, const double initial_cost, const double final_cost, const double mean_err_initial, const double mean_err_final, const int n_reproj_err_resblocks, const int n_regularization_resblocks, const int n_iterations, const char* final_cam_param_path, const char* final_world_points_path) {
+    void saveBundleAdjustmentResult(const char* save_path, const double initial_cost, const double final_cost, const int n_iterations, const char* final_cam_param_path, const char* final_world_points_path) {
         rapidjson::StringBuffer writer_buf;
         rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(writer_buf);
         writer.StartObject();
         {
-            writer.Key("initial_ceres_cost");
+            writer.Key("initial_cost");
             writer.Double(initial_cost);
-            writer.Key("final_ceres_cost");
+            writer.Key("final_cost");
             writer.Double(final_cost);
-            writer.Key("initial_mean_reproj_err_per_chb_point");
-            writer.Double(mean_err_initial);
-            writer.Key("final_mean_reproj_err_per_chb_point");
-            writer.Double(mean_err_final);
-            writer.Key("n_reprojection_error_residual_blocks");
-            writer.Int(n_reproj_err_resblocks);
-            writer.Key("n_regularization_residual_blocks");
-            writer.Int(n_regularization_resblocks);
             writer.Key("n_iterations");
             writer.Int(n_iterations);
             writer.Key("final_camera_parameters");
