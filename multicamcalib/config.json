@@ -32,10 +32,10 @@
         "center_cam_idx": 7,
         "center_img_name": "0000",
         "intrinsics": {
-            "n_max_imgs": 40
+            "n_max_imgs": 30
         },
         "extrinsics": {
-            "n_max_stereo_imgs": 3
+            "n_max_stereo_imgs": 4
         }
     },
     "bundle_adjustment": {

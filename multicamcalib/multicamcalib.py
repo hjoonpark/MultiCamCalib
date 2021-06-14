@@ -92,16 +92,16 @@ if __name__ == "__main__":
         determine_outliers(logger, vae_config, model_path, input_crop_paths, paths, save_path=outlier_path, outlier_thres_ratio=vae["outlier_thres_ratio"], save_imgs=save_imgs)
 
     if "7" in argv:
-        logger.info(">> CALIBRATE INITIAL CAMERA PARAMETERS <<")
+        logger.info(">> CALIBRATE INITIAL CAMERA PARAMETERS & WORLD POINTS <<")
         # initial camera calibration (PnP)
-        calib_initial_params(logger, paths, config["calib_initial"], chb, outlier_path=outlier_path)
+        calib_done = calib_initial_params(logger, paths, config["calib_initial"], chb, outlier_path=outlier_path)
+
+        if calib_done:
+            logger.info(">> ESTIMATE INITIAL WORLD POINTS <<")
+            # initial world points
+            estimate_initial_world_points(logger, paths, chb, config)
 
     if "8" in argv:
-        logger.info(">> ESTIMATE INITIAL WORLD POINTS <<")
-        # initial world points
-        estimate_initial_world_points(logger, paths, chb, config)
-
-    if "9" in argv:
         logger.info(">> RENDER FINAL CONFIGURATIONS <<")
         # render final configurations after ceres bundle adjustment
         cam_param_path = os.path.join(paths["cam_params"], "cam_params_final.json")
@@ -114,14 +114,14 @@ if __name__ == "__main__":
         render_config(cam_param_path, center_cam_idx, center_img_name, world_points_path, "Final configuration", save_path=save_path_world_points)
         logger.info("Plots saved:\n\t{}\n\t{}".format(save_path_cam_config, save_path_world_points))
 
-    if "10" in argv:
+    if "9" in argv:
         logger.info(">> Reproject world points")
         cam_param_path = os.path.join(paths["cam_params"], "cam_params_final.json")
         world_points_path = os.path.join(paths["world_points"], "world_points_final.json")
         outliers_path = os.path.join(paths["outliers"], "outliers.json")
         reproject_world_points(logger, cam_param_path, world_points_path, paths, outliers_path=outliers_path)
 
-    if "11" in argv:
+    if "10" in argv:
         logger.info(">> Analyze reprojection results")
         save_reproj_images = False
         render_reprojection_results(logger, paths, save_histogram=True, save_reproj_images=save_reproj_images, error_thres=2)

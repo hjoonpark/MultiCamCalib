@@ -1,3 +1,4 @@
+from operator import truediv
 from helper import *
 from plotter import render_config
 import cv2
@@ -241,6 +242,8 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
         render_config(cam_param_save_path, center_cam_idx, center_img_name, None, "Initial configuration", plot_save_path)
         logger.info("Plot saved: {}".format(plot_save_path))
 
+    return True
+
 def estimate_initial_world_points(logger, paths, chb, config):
     # load detection result
     detect_path = os.path.join(paths["corners"], "detection_result.json")
@@ -248,6 +251,8 @@ def estimate_initial_world_points(logger, paths, chb, config):
         detections = json.load(f)["detections"]
 
     img_names = sorted(list(detections.keys()))
+    center_img_name = config["calib_initial"]["center_img_name"]
+    center_cam_idx = config["calib_initial"]["center_cam_idx"]
 
     # load initial camera parameters
     in_cam_param_path = os.path.join(paths["cam_params"], "cam_params_initial.json")
@@ -280,7 +285,7 @@ def estimate_initial_world_points(logger, paths, chb, config):
             
             M = np.float32([[p["fx"], 0, p["cx"]], [0, p["fy"], p["cy"]], [0, 0, 1]])
             d = np.float32([p["k1"], p["k2"], p["p1"], p["p2"], p["k3"]])
-            _, rvec, tvec = cv2.solvePnP(chb.chb_pts, corners, M, d) # brings points from the model coordinate system to the camera coordinate system.
+            _, rvec, tvec = cv2.solvePnP(chb.chb_pts, corners, M, d) # brings points from the model frame to the camera frame.
 
             tvec_norm = np.linalg.norm(tvec)
             if tvec_norm > 1e5:
@@ -313,12 +318,66 @@ def estimate_initial_world_points(logger, paths, chb, config):
             tvec_mean = tvec_mean.reshape(3, 1)
             tvec = np.repeat(tvec_mean, chb.chb_pts.shape[0], axis=1)
             pts = (R @ chb.chb_pts.T + tvec).T
+
             world_pts["frames"][img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist(), "world_pts": pts.tolist()}
             # world_pts[img_name] = {"n_detected": n_cams, "rvec": rvec.flatten().tolist(), "tvec": tvec_mean.flatten().tolist()}
         else:
             world_pts["frames"][img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1, "world_pts": -1}
             # world_pts[img_name] = {"n_detected": n_cams, "rvec": -1, "tvec": -1}
             logger.debug("[{}/{}] No detection for image {}".format(i+1, len(img_names), img_name))
+
+    # recenter s.t. center img's chb is at R=I_3x3, t=[0, 0, 0]
+    center_chb = world_pts["frames"][center_img_name]
+    rvec_center = np.float32(center_chb["rvec"])
+    R_center, _ = cv2.Rodrigues(rvec_center)
+    dR = R_center.T
+
+    tvec_center = np.float32(center_chb["tvec"])
+    dt = -R_center.T@tvec_center
+
+    # recenter checkerboards
+    for img_name, pose in world_pts["frames"].items():
+        if pose["rvec"] == -1:
+            continue
+        R, _ = cv2.Rodrigues(np.float32(pose["rvec"]))
+        t = np.float32(pose["tvec"])
+
+        # retarget: H_new = H@dH
+        R_new = R@dR
+        tvec_new = R@dt + t
+
+        rvec_new, _ = cv2.Rodrigues(R_new)
+        tvec_new_stacked = np.repeat(tvec_new.reshape(3, 1), chb.chb_pts.shape[0], axis=1)
+        pts = (R_new @ chb.chb_pts.T + tvec_new_stacked).T
+
+        world_pts["frames"][img_name]["rvec"] = rvec_new.flatten().tolist()
+        world_pts["frames"][img_name]["tvec"] = tvec_new.flatten().tolist()
+        world_pts["frames"][img_name]["world_pts"] = pts.tolist()
+
+    # recenter cameras
+    for cam_idx, p in cam_params.items():
+        R_ext, _ = cv2.Rodrigues(np.float32(p["rvec"]))
+        t_ext = np.float32(p["tvec"])
+
+        # retarget: H_new = H@dH
+        R_new = R_ext.T@dR
+        t_new = R_ext.T@(dt - t_ext)
+
+        R_ext_new = R_new.T
+        rvec_new, _ = cv2.Rodrigues(R_ext_new)
+        tvec_new = -R_new.T@t_new
+
+        cam_params[cam_idx]["rvec"] = rvec_new.flatten().tolist()
+        cam_params[cam_idx]["tvec"] = tvec_new.flatten().tolist()
+
+    # re-save initial camera parameters
+    in_cam_param_path = os.path.join(paths["cam_params"], "cam_params_initial.json")
+    renamed_path = os.path.join(paths["cam_params"], "cam_params_initial_uncentered.json")
+    import shutil
+    shutil.copy(in_cam_param_path, renamed_path)
+    
+    with open(in_cam_param_path, "w+") as f:
+        json.dump(cam_params, f, indent=4)
 
     save_dir = paths["world_points"]
     os.makedirs(save_dir, exist_ok=True)
