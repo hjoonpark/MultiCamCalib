@@ -85,6 +85,9 @@ namespace Parser {
         config.parameter_tolerance = bund_info["parameter_tolerance"].GetDouble();
         config.gradient_tolerance = bund_info["gradient_tolerance"].GetDouble();
         config.inner_iteration_tolerance = bund_info["inner_iteration_tolerance"].GetDouble();
+
+        // regularization weight
+        config.lens_coeffs_reg_weight = bund_info["lens_coeffs_reg_weight"].GetDouble();
     }
 
     void loadInitialCamParams(const char* cam_path, const int n_cams, std::vector<Camera> &cameras) {
@@ -208,7 +211,7 @@ namespace Parser {
                     return -1;
                 }
             } else {
-                for (int i =0; i < v.size(); i++) {
+                for (int i = 0; i < v.size(); i++) {
                     img_pts[2*(line_idx-1) + i] = std::stod(v[i]);
                 }
             }

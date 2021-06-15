@@ -1,7 +1,7 @@
 {
     "paths": {
-        "image_paths_file": "C:/Users/hjoon/OneDrive/Desktop/MultiCamCalib/2021_06_12_SynthCheckerboards/image_paths.txt",
-        "output_dir": "C:/Users/hjoon/OneDrive/Desktop/MultiCamCalib/output_synth",
+        "image_paths_file": "D:/Pictures/2021_06_12_SynthCheckerboards/image_paths.txt",
+        "output_dir": "D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/output_synth",
         "logs": "logs",
         "corners": "corners",
         "vae_outlier_detector": "vae_outlier_detector",
@@ -39,7 +39,7 @@
         }
     },
     "bundle_adjustment": {
-        "max_iter": 1000,
+        "max_iter": 44,
         "num_thread": 4,
         "function_tolerance": 1e-15,
         "parameter_tolerance": 1e-15,

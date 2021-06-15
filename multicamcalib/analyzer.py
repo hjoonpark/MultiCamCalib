@@ -200,7 +200,7 @@ def render_reprojection_results(logger, paths, save_histogram=True, save_reproj_
                 else:
                     r = c
 
-                fig, ax = plt.subplots(r, c, figsize=(20, 14))
+                fig, ax = plt.subplots(r, c, figsize=(40, 28))
                 ax = ax.ravel()
 
                 # 1st loop to compute errors

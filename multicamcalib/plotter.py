@@ -86,9 +86,9 @@ def render_config(in_cam_param_path, center_cam_idx=None, center_img_name=None, 
             color = "k"
         _draw_camera(ax, cam_idx, rvec, tvec, zorder=10, color=color)
 
-    ax.set_xlim([-3000, 4000])
-    ax.set_ylim([-3000, 4000])
-    ax.set_zlim([-500, 2500])
+    # ax.set_xlim([-3000, 4000])
+    # ax.set_ylim([-3000, 4000])
+    # ax.set_zlim([-500, 2500])
     ax.set_xlabel("X")
     ax.set_ylabel("Y")
     ax.set_zlabel("Z")

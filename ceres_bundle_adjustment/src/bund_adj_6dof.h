@@ -119,7 +119,6 @@ public:
         // loss function
         ceres::LossFunction *loss = NULL; 
 
-
         int n_cams = cameras.size();
         int n_residual_blocks = 0;
         ceres::Problem ceres_prob;
@@ -146,7 +145,7 @@ public:
         }
         
         // regularization
-        double lens_coeffs_weights[5] = {0.01};
+        double lens_coeffs_weights[5] = {0.1};
         for (int cam_idx = 0; cam_idx < n_cams; cam_idx++) {
             ceres::CostFunction *reg_func = BundAdj6Dof::LensDistortionRegularization::Create(lens_coeffs_weights);
             ceres_prob.AddResidualBlock(reg_func, NULL, cameras[cam_idx].params);
@@ -182,12 +181,15 @@ public:
         // save outputs
         std::stringstream cam_out_path;
         cam_out_path << config.dir_cam_params << OS_SEP << "cam_params_final.json";
+        //int n_iter = std::max(config.max_iter, summary.iterations.back().iteration);
+        //cam_out_path << config.dir_cam_params << OS_SEP << "cam_params_final_" << n_iter << ".json";
         Parser::saveFinalCameraParameters(cam_out_path.str().c_str(), cameras);
         std::cout << ">> Camera parameters saved: " << cam_out_path.str() << std::endl;
 
         // save final world points
         std::stringstream world_points_out_path;
         world_points_out_path << config.dir_world_points << OS_SEP << "world_points_final.json";
+        //world_points_out_path << config.dir_world_points << OS_SEP << "world_points_final_" << n_iter << ".json";
         Parser::saveFinalWorldPoints(world_points_out_path.str().c_str(), checkerboards, frames);
         std::cout << ">> World points saved: " << world_points_out_path.str() << std::endl;
 

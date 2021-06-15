@@ -124,7 +124,8 @@ if __name__ == "__main__":
 
     if "10" in argv:
         logger.info(">> Analyze reprojection results")
-        save_reproj_images = False
-        render_reprojection_results(logger, paths, save_histogram=True, save_reproj_images=save_reproj_images, error_thres=2)
+        save_reproj_images = True
+        save_histogram = True
+        render_reprojection_results(logger, paths, save_histogram=save_histogram, save_reproj_images=save_reproj_images, error_thres=2)
 
     logger.info("* FINISHED RUNNING *")
