@@ -28,7 +28,8 @@ def load_img_paths(file_path):
 
 def load_img(path):
     img = cv2.imread(path)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    if img is not None:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     return img
 
 def init_cameras(img_paths):

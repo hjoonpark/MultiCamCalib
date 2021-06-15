@@ -46,7 +46,7 @@ def _reproject(param, world_pts):
     
 
 
-def reproject_world_points(logger, cam_param_path, world_points_path, paths, outliers_path=None):
+def reproject_world_points(logger, cam_param_path, world_points_path, paths, reprojection_save_path, outliers_path=None):
     os.makedirs(paths["analysis"], exist_ok=True)
 
     # load camera parameters
@@ -97,10 +97,9 @@ def reproject_world_points(logger, cam_param_path, world_points_path, paths, out
             reprojections["frames"][img_name][cam_idx] = {"error_sum": err_sum, "img_pts_pred": img_pts_pred.tolist()}
 
     # save reprojections as json
-    json_save_path = os.path.join(paths["analysis"], "reprojections.json")
-    with open(json_save_path, "w+") as f:
+    with open(reprojection_save_path, "w+") as f:
         json.dump(reprojections, f, indent=4)
-        logger.info("Reprojections saved: {}".format(json_save_path))
+        logger.info("Reprojections saved: {}".format(reprojection_save_path))
 
                     
         
@@ -230,7 +229,9 @@ def render_reprojection_results(logger, paths, save_histogram=True, save_reproj_
                         gt = img_pts_measured[img_name][cam_idx]
 
                         err_curr = errs[idx:idx+len(pred)]
-                        a.imshow(img, cmap="gray")
+
+                        if img is not None:
+                            a.imshow(img, cmap="gray")
                         sc = a.scatter(pred[:,0], pred[:,1], c=err_curr, s=0.25, vmin=vmin, vmax=vmax, zorder=2)
                         a.scatter(gt[:,0], gt[:,1], c="lime", s=0.25, vmin=vmin, vmax=vmax, zorder=1)
                         a.set_title("Camera {}\nErrors: avg={:.2f}, min={:.2f}, max={:.2f}".format(cam_idx, np.mean(err_curr), np.min(err_curr), np.max(err_curr)))

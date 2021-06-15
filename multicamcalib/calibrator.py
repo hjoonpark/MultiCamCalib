@@ -7,7 +7,6 @@ import numpy as np
 import os
 import json
 import random
-import pickle
 
 import math as m
 
@@ -238,9 +237,9 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
     logger.info("Initial camera parameters saved: {}".format(cam_param_save_path))
 
     if save_plot:
-        plot_save_path = os.path.join(save_dir, "config_initial.png")
-        render_config(cam_param_save_path, center_cam_idx, center_img_name, None, "Initial configuration", plot_save_path)
-        logger.info("Plot saved: {}".format(plot_save_path))
+        cam_plot_save_path = os.path.join(save_dir, "intial_cameras.png")
+        render_config(cam_param_save_path, center_cam_idx, center_img_name, None, "Initial cameras", cam_plot_save_path)
+        logger.info("Plot saved: {}".format(cam_plot_save_path))
 
     return True
 
@@ -339,12 +338,13 @@ def estimate_initial_world_points(logger, paths, chb, config):
     for img_name, pose in world_pts["frames"].items():
         if pose["rvec"] == -1:
             continue
+        
         R, _ = cv2.Rodrigues(np.float32(pose["rvec"]))
         t = np.float32(pose["tvec"])
 
-        # retarget: H_new = H@dH
-        R_new = R@dR
-        tvec_new = R@dt + t
+        # retarget: H_new = dH @ H
+        R_new = dR@R
+        tvec_new = dR@t + dt
 
         rvec_new, _ = cv2.Rodrigues(R_new)
         tvec_new_stacked = np.repeat(tvec_new.reshape(3, 1), chb.chb_pts.shape[0], axis=1)
@@ -359,9 +359,9 @@ def estimate_initial_world_points(logger, paths, chb, config):
         R_ext, _ = cv2.Rodrigues(np.float32(p["rvec"]))
         t_ext = np.float32(p["tvec"])
 
-        # retarget: H_new = H@dH
-        R_new = R_ext.T@dR
-        t_new = R_ext.T@(dt - t_ext)
+        # retarget: H_new = dH @ H = dH @ H_ext^(-1)
+        R_new = dR@R_ext.T
+        t_new = -dR@R_ext.T@t_ext + dt
 
         R_ext_new = R_new.T
         rvec_new, _ = cv2.Rodrigues(R_ext_new)
@@ -372,9 +372,6 @@ def estimate_initial_world_points(logger, paths, chb, config):
 
     # re-save initial camera parameters
     in_cam_param_path = os.path.join(paths["cam_params"], "cam_params_initial.json")
-    renamed_path = os.path.join(paths["cam_params"], "cam_params_initial_uncentered.json")
-    import shutil
-    shutil.copy(in_cam_param_path, renamed_path)
     
     with open(in_cam_param_path, "w+") as f:
         json.dump(cam_params, f, indent=4)
@@ -387,8 +384,10 @@ def estimate_initial_world_points(logger, paths, chb, config):
         json.dump(world_pts, f, indent=4)
 
     logger.info("Initial world points saved: {}".format(world_points_save_path))
-    plot_save_path = os.path.join(save_dir, "intial_world_points.png")
+    wp_plot_save_path = os.path.join(save_dir, "intial_world_points.png")
+
     center_cam_idx = config["calib_initial"]["center_cam_idx"]
     center_img_name = config["calib_initial"]["center_img_name"]
-    render_config(in_cam_param_path, center_cam_idx, center_img_name, world_points_save_path, "Initial configuration", plot_save_path)
-    logger.info("Plot saved: {}".format(plot_save_path))
+    render_config(in_cam_param_path, center_cam_idx, center_img_name, world_points_save_path, "Initial configuration", wp_plot_save_path)
+    
+    logger.info("Initial world points plot saved: {}".format(wp_plot_save_path))

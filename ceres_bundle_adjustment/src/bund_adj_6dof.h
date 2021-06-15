@@ -3,6 +3,7 @@
 #include <math.h>
 #include <iostream>
 #include <stdio.h>
+#include <map>
 
 #include <ceres/ceres.h>
 #include <ceres/rotation.h>
@@ -20,93 +21,73 @@ public:
     std::vector<Camera> cameras;
     std::vector<Frame> frames;
     std::vector<Checkerboard> checkerboards;
+    std::map<std::string, int> imgname_to_frameidx;
     BundAdj6Dof::Config config;
 
-    void compute_center_cam_dR_dt(double (&rvec0)[3], double (&tvec0)[3], double (&rvec1)[3], double (&tvec1)[3], double (&d_rvec)[3], double (&d_tvec)[3]) {
-        Eigen::Vector3d r0(rvec0[0], rvec0[1], rvec0[2]);
-        Eigen::Vector3d r1(rvec1[0], rvec1[1], rvec1[2]);
+    void compute_center_dR_dt(double (&rvec_chb)[3], double (&tvec_chb)[3], Eigen::Matrix3d &dR, Eigen::Vector3d &dt) {
+        Eigen::Vector3d r_chb(rvec_chb[0], rvec_chb[1], rvec_chb[2]);
 
-        Eigen::Matrix3d R0;
-        R0 = Eigen::AngleAxisd(r0.norm(), r0 / r0.norm());
-        Eigen::Matrix3d R1;
-        R1 = Eigen::AngleAxisd(r1.norm(), r1 / r1.norm());
+        Eigen::Matrix3d R;
+        R = Eigen::AngleAxisd(r_chb.norm(), r_chb / r_chb.norm());
+        Eigen::Vector3d t(tvec_chb[0], tvec_chb[1], tvec_chb[2]);
 
-        Eigen::Vector3d t0(tvec0[0], tvec0[1], tvec0[2]);
-        Eigen::Vector3d t1(tvec1[0], tvec1[1], tvec1[2]);
-
-        // extrinsics -> SE(3)
-        /*
-        t0 = -R0.transpose() * t0;
-        t1 = -R1.transpose() * t1;
-        R0 = R0.transpose();
-        R1 = R1.transpose();
-
-        Eigen::Matrix3d dR = R0.transpose() * R1;
-        Eigen::Vector3d dt = R0.transpose() * (t1 - t0);
-        */
-        
-        Eigen::Matrix3d dR;
-        dR << 1, 0, 0, 0, 0, -1, 0, 1, 0;
-        Eigen::Vector3d dt(0, 0, 0);
-
-        Eigen::AngleAxisd d_r_aa(dR);
-        Eigen::Vector3d dr = d_r_aa.axis() * d_r_aa.angle();
-        
-        d_rvec[0] = dr(0);
-        d_rvec[1] = dr(1);
-        d_rvec[2] = dr(2);
-
-        d_tvec[0] = dt(0);
-        d_tvec[1] = dt(1);
-        d_tvec[2] = dt(2);
+        // dR, dt
+        dR = R.transpose();
+        dt = -R.transpose() * t;
     }
 
-    void retarget_cameras(std::vector<Camera> &cameras, double (&drvec)[3], double (&dtvec)[3]) {
-        Eigen::Vector3d dr(drvec[0], drvec[1], drvec[2]);
-        Eigen::Vector3d dt(dtvec[0], dtvec[1], dtvec[2]);
-        Eigen::Matrix3d dR;
-        dR = Eigen::AngleAxisd(dr.norm(), dr / dr.norm());
-        dR = Eigen::Matrix3d::Identity();
-
+    void retarget_cameras(std::vector<Camera> &cameras, const Eigen::Matrix3d &dR, const Eigen::Vector3d &dt) {
         for(size_t cam_idx = 0; cam_idx < cameras.size(); cam_idx++) {
             Camera *cam = &cameras[cam_idx];
 
-            Eigen::Vector3d r0(cam->rvec()[0], cam->rvec()[1], cam->rvec()[2]);
-            Eigen::Matrix3d R0;
-            R0 = Eigen::AngleAxisd(r0.norm(), r0 / r0.norm());
-            Eigen::Vector3d t0(cam->tvec()[0], cam->tvec()[1], cam->tvec()[2]);
+            // extrinsics
+            Eigen::Vector3d r(cam->rvec()[0], cam->rvec()[1], cam->rvec()[2]);
+            Eigen::Matrix3d R;
+            R = Eigen::AngleAxisd(r.norm(), r / r.norm());
+            Eigen::Vector3d t(cam->tvec()[0], cam->tvec()[1], cam->tvec()[2]);
 
-            // extrinsics -> SE3
-            t0 = -R0.transpose() * t0;
-            R0 = R0.transpose();
+            // new extrinsics
+            Eigen::Matrix3d R_new = R * dR.transpose();
+            Eigen::Vector3d tvec_new = -R * dR.transpose() * dt + t;
+            
+            Eigen::AngleAxisd r_new_aa(R_new);
+            Eigen::Vector3d rvec_new = r_new_aa.axis() * r_new_aa.angle();
 
-            Eigen::Matrix3d R1 = dR*R0;
-            Eigen::Vector3d tvec_after = dR * t0 + dt;
+            cam->rvec()[0] = rvec_new(0);
+            cam->rvec()[1] = rvec_new(1);
+            cam->rvec()[2] = rvec_new(2);
 
-            R1 = R0;
-            tvec_after = t0;
+            cam->tvec()[0] = tvec_new(0);
+            cam->tvec()[1] = tvec_new(1);
+            cam->tvec()[2] = tvec_new(2);
+        }
+    }
 
-            // SE3 -> extrinsics
-            tvec_after = -R1.transpose() * tvec_after;
-            R1 = R1.transpose();
+    void retarget_checkerboards(std::vector<Checkerboard>& chbs, const Eigen::Matrix3d& dR, const Eigen::Vector3d& dt) {
+        for (size_t frame_idx = 0; frame_idx < chbs.size(); frame_idx++) {
+            Checkerboard* chb = &chbs[frame_idx];
 
-            Eigen::AngleAxisd r1(R1);
-            Eigen::Vector3d rvec_after = r1.axis() * r1.angle();
+            // se3
+            Eigen::Vector3d r(chb->rvec[0], chb->rvec[1], chb->rvec[2]);
+            Eigen::Matrix3d R;
+            R = Eigen::AngleAxisd(r.norm(), r / r.norm());
+            Eigen::Vector3d t(chb->tvec[0], chb->tvec[1], chb->tvec[2]);
 
-            std::cout << "Cam" << cam_idx << std::endl;
-            std::cout << R1 << std::endl << std::endl;
-            std::cout << r1.axis() << "\t" << r1.angle() << std::endl;
-            std::cout << rvec_after << std::endl;
-            int k;
-            std::cin >> k;
+            // new se3
+            Eigen::Matrix3d R_new = dR * R;
+            Eigen::Vector3d tvec_new = dR * t + dt;
 
-            cam->rvec()[0] = rvec_after(0);
-            cam->rvec()[1] = rvec_after(1);
-            cam->rvec()[2] = rvec_after(2);
+            // back to rvec, tvec
+            Eigen::AngleAxisd r_aa(R_new);
+            Eigen::Vector3d rvec_new = r_aa.axis() * r_aa.angle();
+        
+            chb->rvec[0] = rvec_new[0];
+            chb->rvec[1] = rvec_new[1];
+            chb->rvec[2] = rvec_new[2];
 
-            cam->tvec()[0] = tvec_after(0);
-            cam->tvec()[1] = tvec_after(1);
-            cam->tvec()[2] = tvec_after(2);
+            chb->tvec[0] = tvec_new[0];
+            chb->tvec[1] = tvec_new[1];
+            chb->tvec[2] = tvec_new[2];
         }
     }
 
@@ -129,7 +110,7 @@ public:
         
         std::stringstream world_points_path;
         world_points_path << config.dir_world_points << OS_SEP << "world_points_initial.json";
-        Parser::loadInitialCheckerboardPoses(world_points_path.str().c_str(), frames, checkerboards);
+        Parser::loadInitialCheckerboardPoses(world_points_path.str().c_str(), frames, checkerboards, imgname_to_frameidx);
         std::cout << "  - " << checkerboards.size() << " chb poses loaded" << std::endl;
     }
 
@@ -138,10 +119,6 @@ public:
         // loss function
         ceres::LossFunction *loss = NULL; 
 
-        // save initial pose of center camera for retargeting after bundle adjustment.
-        Camera *center_cam = &cameras[config.center_cam_idx];
-        double rvec_center_initial[3] = {center_cam->rvec()[0], center_cam->rvec()[1], center_cam->rvec()[2]};
-        double tvec_center_initial[3] = {center_cam->tvec()[0], center_cam->tvec()[1], center_cam->tvec()[2]};
 
         int n_cams = cameras.size();
         int n_residual_blocks = 0;
@@ -169,7 +146,7 @@ public:
         }
         
         // regularization
-        double lens_coeffs_weights[5] = {0.1};
+        double lens_coeffs_weights[5] = {0.01};
         for (int cam_idx = 0; cam_idx < n_cams; cam_idx++) {
             ceres::CostFunction *reg_func = BundAdj6Dof::LensDistortionRegularization::Create(lens_coeffs_weights);
             ceres_prob.AddResidualBlock(reg_func, NULL, cameras[cam_idx].params);
@@ -191,12 +168,16 @@ public:
         std::cout << summary.FullReport() << std::endl;
         std::cout << "Cost: " << summary.initial_cost << " -> " << summary.final_cost << ", iterations: " << summary.iterations.back().iteration << std::endl;
 
-        // recenter all cameras s.t. center camera is set to its initial pose
-        double d_rvec[3], d_tvec[3];
-        double rvec_center_final[3] = {center_cam->rvec()[0], center_cam->rvec()[1], center_cam->rvec()[2]};
-        double tvec_center_final[3] = {center_cam->tvec()[0], center_cam->tvec()[1], center_cam->tvec()[2]};
-        compute_center_cam_dR_dt(rvec_center_initial, tvec_center_initial, rvec_center_final, tvec_center_final, d_rvec, d_tvec);
-        retarget_cameras(cameras, d_rvec, d_tvec);
+        // recenter all cameras & checkerboards s.t. center checkerboard is set to its initial pose
+        int center_frame_idx = imgname_to_frameidx[config.center_img_name];
+        Checkerboard* center_chb = &checkerboards[center_frame_idx];
+        double rvec_center[3] = { center_chb->rvec[0], center_chb->rvec[1], center_chb->rvec[2] };
+        double tvec_center[3] = { center_chb->tvec[0], center_chb->tvec[1], center_chb->tvec[2] };
+        Eigen::Matrix3d dR;
+        Eigen::Vector3d dt;
+        compute_center_dR_dt(rvec_center, tvec_center, dR, dt);
+        retarget_cameras(cameras, dR, dt);
+        retarget_checkerboards(checkerboards, dR, dt);
 
         // save outputs
         std::stringstream cam_out_path;

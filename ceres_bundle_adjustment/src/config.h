@@ -3,7 +3,7 @@
 #define CeresMulticamCalib_VERSION_MAJOR 1
 #define CeresMulticamCalib_VERSION_MINOR 0
 
-#define ROOT_DIR "D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/ceres_bundle_adjustment"
+#define ROOT_DIR "C:/Users/hjoon/OneDrive/Desktop/MultiCamCalib/ceres_bundle_adjustment"
 #define NUM_CAM_PARAMS 15
 #define TEST "@CERES_INCLUDE_DIRS"
 
@@ -63,6 +63,7 @@ struct Config {
     double function_tolerance, parameter_tolerance, gradient_tolerance, inner_iteration_tolerance;
     int chb_n_rows, chb_n_cols, chb_sqr_size;
     int n_cams, center_cam_idx;
-
+    
+    std::string center_img_name;
     std::string dir_output, dir_cam_params, dir_corners, dir_outliers, dir_world_points, dir_ceres_output;
 };

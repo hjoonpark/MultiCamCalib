@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <array>
+#include <map>
 
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
@@ -74,7 +75,8 @@ namespace Parser {
         // center camera index
         const rapidjson::Value &calib_initial = doc["calib_initial"];
         config.center_cam_idx = calib_initial["center_cam_idx"].GetInt();
-        
+        config.center_img_name = calib_initial["center_img_name"].GetString();
+
         // parse bundle adjustment configs
         const rapidjson::Value &bund_info = doc["bundle_adjustment"];
         config.max_iter = bund_info["max_iter"].GetInt();
@@ -164,7 +166,7 @@ namespace Parser {
         std::sort(img_names2.begin(), img_names2.end());
     }
 
-    void loadInitialCheckerboardPoses(const char* json_path, const std::vector<Frame> &frames, std::vector<Checkerboard> &checkerboards) {
+    void loadInitialCheckerboardPoses(const char* json_path, const std::vector<Frame> &frames, std::vector<Checkerboard> &checkerboards, std::map<std::string, int> &imgname_to_frameidx) {
         rapidjson::Document doc = Parser::readJson(json_path);
 
         checkerboards.clear();
@@ -173,6 +175,7 @@ namespace Parser {
             Checkerboard *chb = new Checkerboard(frame_idx, frames[frame_idx].img_name);
 
             const char* img_name = frames[frame_idx].img_name.c_str();
+            imgname_to_frameidx.insert(std::pair<std::string, int>(std::string(img_name), frame_idx));
 
             const rapidjson::Value &frame = doc["frames"];
             const rapidjson::Value &chb_data = frame[img_name];
