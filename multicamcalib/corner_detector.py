@@ -17,6 +17,9 @@ def __corner_detector(g_logger, lock, cam_idx, n_cols, n_rows, paths, output_fol
         # load image
         img_original = load_img(path)
         
+        if img_original is None:
+            g_logger.critical("No image at: {}".format(path))
+            assert(0)
         # if image is too large, corner detection takes too long
         h, w = img_original.shape
         if min(h, w) > 1080:

@@ -16,6 +16,31 @@ from calibrator import calib_initial_params, estimate_initial_world_points
 from analyzer import reproject_world_points, render_reprojection_results
 
 
+def print_manual():
+    print()
+    print("#######################################################################################")
+    print(":: WELCOME TO Multi-camera Calibration ::")
+    print('(example usuage: "python ./multicamcalib.py 1 2 3 4 5 6 7")')
+    print()
+    print(":: Number menu ::")
+    print(">> Corner detection")
+    print("  1: run corner detection (multi-threaded)")
+    print("  2: generate detection results")
+    print(">> VAE outlier corner detection")
+    print("  3: generate 15x15 crop images around the detected corners")
+    print("  4: train VAE outlier detector")
+    print("  5: forward-run VAE outlier detector")
+    print("  6: determine outlier corners")
+    print(">> Initial calibration")
+    print("  7: calibrate initial camera parameters & checkerboard poses")
+    print(">> After running bundle adjustment (C++)")
+    print("  8: render final camera & checkerboard configurations")
+    print("  9: reproject world (checkerboard) points")
+    print("  10: analyze reprojection results (render histogram & reprojected images)")
+    print("#######################################################################################")
+    print()
+
+
 if __name__ == "__main__":
     # load user-defined config
     config = load_config("config.json")
@@ -26,19 +51,30 @@ if __name__ == "__main__":
     logger.info("### APPLICATION START ###")
 
     # python ./multicamcalib.py 1 2 3 
-    argv = sorted(sys.argv[1:])
+    argv = sys.argv[1:]
+    if len(argv) < 1:
+        print_manual()
+        user_input = input("Type in the numbers(from the menu above) to run delimited by space (ex: 1 2 3 4 5 6 7): ")
+        argv = user_input.strip().split(" ")
+    
+    argv_sorted = sorted([int(x) for x in argv])
+    print("Running: ")
+    for a in argv_sorted:
+        print(">> {}".format(a))
+
 
     # load checkerboard configs
     chb_config = config["checkerboard"]
     chb = Checkerboard(chb_config["n_cols"], chb_config["n_rows"], chb_config["sqr_size"])
 
     # load image paths
-    img_paths = load_img_paths(paths["image_paths_file"])
+    img_paths = load_img_paths(paths["abs_image_paths_file"])
 
     # initialize cameras from img_paths
     cameras = init_cameras(img_paths)
 
     if "1" in argv:
+        logger.info(">> [1] DETECT CHECKERBOARD CORNERS <<")
         # detect corners
         lock = threading.Lock()
         os.makedirs(paths["corners"], exist_ok=True)
@@ -59,12 +95,12 @@ if __name__ == "__main__":
             time.sleep(1) # check every 1000 ms
     
     if "2" in argv:
-        logger.info(">> GENERATE DETECTION RESULTS <<")
+        logger.info(">> [2] GENERATE DETECTION RESULTS <<")
         # detection results
         generate_detection_results(logger, cameras, paths)
 
     if "3" in argv:
-        logger.info(">> GENERATE CROPS AROUND CORNERS <<")
+        logger.info(">> [3] GENERATE CROPS AROUND CORNERS <<")
         # generate corner crops
         generate_crops_around_corners(logger, img_paths, paths)
 
@@ -74,35 +110,35 @@ if __name__ == "__main__":
     outlier_path = os.path.join(paths["outliers"], "outliers.json")
 
     if "4" in argv:
-        logger.info(">> TRAIN VAE OUTLIER DETECTOR <<")
+        logger.info(">> [4] TRAIN VAE OUTLIER DETECTOR <<")
         # train vae
         train_vae_outlier_detector(logger, input_crop_paths, paths, vae_config)
 
     if "5" in argv:
-        logger.info(">> RUN VAE OUTLIER DETECTOR <<")
+        logger.info(">> [5] RUN VAE OUTLIER DETECTOR <<")
         # forward vae
         model_path = os.path.join(paths["vae_outlier_detector"], "vae_model.pt")
         run_vae_outlier_detector(logger, input_crop_paths, paths, model_path, vae_config)
 
     if "6" in argv:
-        logger.info(">> DETERMINE OUTLIERS <<")
+        logger.info(">> [6] DETERMINE OUTLIERS <<")
         # determine outliers
         save_imgs = True
         model_path = os.path.join(paths["vae_outlier_detector"], "vae_model.pt")
         determine_outliers(logger, vae_config, model_path, input_crop_paths, paths, save_path=outlier_path, outlier_thres_ratio=vae["outlier_thres_ratio"], save_imgs=save_imgs)
 
     if "7" in argv:
-        logger.info(">> CALIBRATE INITIAL CAMERA PARAMETERS & WORLD POINTS <<")
+        logger.info(">> [7a] CALIBRATE INITIAL CAMERA PARAMETERS & WORLD POINTS <<")
         # initial camera calibration (PnP)
         calib_done = calib_initial_params(logger, paths, config["calib_initial"], chb, outlier_path=outlier_path)
 
         if calib_done:
-            logger.info(">> ESTIMATE INITIAL WORLD POINTS <<")
+            logger.info(">> [7b] ESTIMATE INITIAL WORLD POINTS <<")
             # initial world points
             estimate_initial_world_points(logger, paths, chb, config)
 
     if "8" in argv:
-        logger.info(">> RENDER FINAL CONFIGURATIONS <<")
+        logger.info(">> [8] RENDER FINAL CONFIGURATIONS <<")
         # render final configurations after ceres bundle adjustment
         cam_param_path = os.path.join(paths["cam_params"], "cam_params_final.json")
         world_points_path = os.path.join(paths["world_points"], "world_points_final.json")
@@ -115,17 +151,18 @@ if __name__ == "__main__":
         logger.info("Plots saved:\n\t{}\n\t{}".format(save_path_cam_config, save_path_world_points))
 
     if "9" in argv:
-        logger.info(">> Reproject world points")
+        logger.info(">> [9] REPROJECT WORLD POINTS <<")
         cam_param_path = os.path.join(paths["cam_params"], "cam_params_final.json")
         world_points_path = os.path.join(paths["world_points"], "world_points_final.json")
-        outliers_path = os.path.join(paths["outliers"], "outliers.json")
         reprojection_save_path = os.path.join(paths["analysis"], "reprojections.json")
-        reproject_world_points(logger, cam_param_path, world_points_path, paths, reprojection_save_path=reprojection_save_path, outliers_path=outliers_path)
+        reproject_world_points(logger, cam_param_path, world_points_path, paths, reprojection_save_path=reprojection_save_path)
 
     if "10" in argv:
-        logger.info(">> Analyze reprojection results")
-        save_reproj_images = True
-        save_histogram = True
-        render_reprojection_results(logger, paths, save_histogram=save_histogram, save_reproj_images=save_reproj_images, error_thres=2)
+        logger.info(">> [10] ANALYZE REPROJECTION RESULTS <<")
+        analysis_config = config["analysis"]
+        save_reproj_images = analysis_config["save_reproj_images"]
+        save_reproj_err_histogram = analysis_config["save_reproj_err_histogram"]
+        error_thres = analysis_config["error_thres"]
+        render_reprojection_results(logger, paths, save_reproj_err_histogram=save_reproj_err_histogram, save_reproj_images=save_reproj_images, error_thres=error_thres)
 
     logger.info("* FINISHED RUNNING *")

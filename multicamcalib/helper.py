@@ -6,10 +6,10 @@ from camera import *
 def extract_paths(paths_dict):
     paths = {}
     for name, path in paths_dict.items():
-        if name != "output_dir" and name != "image_paths_file":
-            paths[name] = os.path.join(paths_dict["output_dir"], path)
+        if name != "abs_output_dir" and name != "abs_image_paths_file":
+            paths[name] = os.path.join(paths_dict["abs_output_dir"], path)
         else:
-            paths[name] = path
+            paths[name] = os.path.join(path)
     return paths
 
 def load_img_paths(file_path):
@@ -17,7 +17,7 @@ def load_img_paths(file_path):
     with open(file_path, 'r') as f:
             ls = f.readlines()
             for l in ls:
-                vs = l.split(" ")
+                vs = l.split("<><><>")
                 cam_idx = int(vs[0])
                 img_path = vs[1].split("\n")[0]
                 if cam_idx not in img_paths:

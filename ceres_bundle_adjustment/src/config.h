@@ -5,7 +5,7 @@
 
 #define ROOT_DIR "D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/ceres_bundle_adjustment"
 #define NUM_CAM_PARAMS 15
-#define TEST "@CERES_INCLUDE_DIRS"
+// #define CERES_INCLUDE_DIRS "@CERES_INCLUDE_DIRS"
 
 // check platform
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)

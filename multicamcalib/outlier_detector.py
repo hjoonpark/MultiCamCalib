@@ -154,7 +154,10 @@ def generate_crops_around_corners(logger, img_paths, paths, crop_size=15):
     for cam_idx in sorted(list(img_paths.keys())):
         crops_gray = None # (M, H, W): M images (H x W pixels)
         crops_binary = None
+
+        pbar = tqdm(total=len(img_paths[cam_idx]))
         for img_path in img_paths[cam_idx]:
+            pbar.update(1)
             fname = os.path.split(img_path)[-1].split(".")[0]
             corner_path = os.path.join(dir_corners, "cam_{}".format(cam_idx), "{}.txt".format(fname))
             corners, _ = load_corner_txt(corner_path)

@@ -28,25 +28,28 @@ def _reproject(param, world_pts):
 
     # camera to image frame
     x = x[:, 0:2] / x[:, 2][:, None]
-
+    xp = x[:,0]
+    yp = x[:,1]
 
     # lens distortions following opencv lens model
-    r2 = x[:, 0]**2 + x[:,1]**2
+    # 1. radial
+    r2 = xp**2 + yp**2
     radial = 1 + k1*r2 + k2*r2**2 + k3*r2**3
-    tan_u = (p2 * (r2 + 2*x[:,0]**2) + 2*p1*x[:,0]*x[:,1])
-    tan_v = (p1 * (r2 + 2*x[:,1]**2) + 2*p2*x[:,0]*x[:,1])
-    u = x[:,0]*radial + tan_u
-    v = x[:,1]*radial + tan_v
-    
+    xp = xp*radial
+    yp = yp*radial
+
+    # 2. tangential
+    r2 = xp**2 + yp**2
+    u = xp + (p2 * (r2 + 2*xp**2) + 2*p1*xp*yp)
+    v = yp + (p1 * (r2 + 2*yp**2) + 2*p2*xp*yp)
+
     # following pinhole camera model
     u = fx*u + cx
     v = fy*v + cy
     
     return np.vstack([u, v]).T
-    
 
-
-def reproject_world_points(logger, cam_param_path, world_points_path, paths, reprojection_save_path, outliers_path=None):
+def reproject_world_points(logger, cam_param_path, world_points_path, paths, reprojection_save_path):
     os.makedirs(paths["analysis"], exist_ok=True)
 
     # load camera parameters
@@ -63,17 +66,6 @@ def reproject_world_points(logger, cam_param_path, world_points_path, paths, rep
     with open(world_points_path, "r") as f:
         world_points = json.load(f)["frames"]
     
-    # load outliers
-    if outliers_path is not None:
-        with open(outliers_path, "r") as f:
-            outliers_json = json.load(f)
-            outliers = []
-            for _, v in outliers_json.items():
-                outliers.append(v["img_name"])
-            outliers = set(outliers)
-    else:
-        outliers = []
-
     # reproject each image points
     reprojections = {"config": {"cam_param_path": cam_param_path, "world_points_path": world_points_path}, "frames": {}}
     pbar = tqdm(total=len(world_points.keys()))
@@ -83,7 +75,9 @@ def reproject_world_points(logger, cam_param_path, world_points_path, paths, rep
         world_pts = np.float32(d["world_pts"])
         reprojections["frames"][img_name] = {}
         for cam_idx in cam_params.keys():
-            corner_path = os.path.join(paths["corners"], "cam_{}".format(cam_idx), "{}_{}.txt".format(cam_idx, img_name))
+            fname = "{}_{}".format(cam_idx, img_name)
+
+            corner_path = os.path.join(paths["corners"], "cam_{}".format(cam_idx), "{}.txt".format(fname))
             img_pts, _ = load_corner_txt(corner_path)
 
             if img_pts is None:
@@ -95,15 +89,13 @@ def reproject_world_points(logger, cam_param_path, world_points_path, paths, rep
             err_each = np.sqrt(np.sum(dudv**2, axis=1))
             err_sum = float(np.sum(err_each))
             reprojections["frames"][img_name][cam_idx] = {"error_sum": err_sum, "img_pts_pred": img_pts_pred.tolist()}
-
+    
     # save reprojections as json
     with open(reprojection_save_path, "w+") as f:
         json.dump(reprojections, f, indent=4)
         logger.info("Reprojections saved: {}".format(reprojection_save_path))
 
-                    
-        
-def render_reprojection_results(logger, paths, save_histogram=True, save_reproj_images=True, error_thres=5):
+def render_reprojection_results(logger, paths, save_reproj_err_histogram=True, save_reproj_images=True, error_thres=5):
     reprojection_path = os.path.join(paths["analysis"], "reprojections.json")
     with open(reprojection_path, "r") as f:
         reprojections = json.load(f)
@@ -111,17 +103,37 @@ def render_reprojection_results(logger, paths, save_histogram=True, save_reproj_
         with open(reprojections["config"]["cam_param_path"], "r") as f:
             cam_params = json.load(f)
 
+    # load outliers
+    outliers_path = os.path.join(paths["outliers"], "outliers.json")
+    if outliers_path is not None:
+        with open(outliers_path, "r") as f:
+            outliers_json = json.load(f)
+            outliers = []
+            for _, v in outliers_json.items():
+                outliers.append(v["img_name"])
+            outliers = set(outliers)
+    else:
+        outliers = []
+        
     corner_errors = []
     corner_errors_2d = []
     errors_for_lookup = {} # img_name: max_error
     img_pts_measured = {} # img_name: {cam_idx: np.array}
     pbar = tqdm(total=len(reprojections["frames"].keys()))
+    ceres_loss = 0.0
     for img_name, d in reprojections["frames"].items():
         errors_for_lookup[img_name] = -1
         img_pts_measured[img_name] = {}
         pbar.update(1)
+        ceres_loss_curr = 0.0
+        n_cams_used = 0
         for cam_idx, dd in d.items():
-            corner_path = os.path.join(paths["corners"], "cam_{}".format(cam_idx), "{}_{}.txt".format(cam_idx, img_name))
+            fname = "{}_{}".format(cam_idx, img_name)
+            if fname in outliers:
+                logger.debug("Skipping outlier image during reprojection result rendering: {}".format(fname))
+                continue
+
+            corner_path = os.path.join(paths["corners"], "cam_{}".format(cam_idx), "{}.txt".format(fname))
             img_pts, _ = load_corner_txt(corner_path)
 
             if img_pts is None:
@@ -134,14 +146,20 @@ def render_reprojection_results(logger, paths, save_histogram=True, save_reproj_
             corner_errors.extend(err_each)
             corner_errors_2d.extend(dudv)
 
+            ceres_loss_curr += 0.5 * np.sum(dudv**2)
+            n_cams_used += 1
             err_max = float(np.max(err_each))
             errors_for_lookup[img_name] = max(errors_for_lookup[img_name], err_max)
+        ceres_loss_curr /= (n_cams_used**2)
+        ceres_loss += ceres_loss_curr
+    
+    logger.info("(Cross-check) manually recalculated Ceres loss: {:,.2f} (excluding regularization loss)".format(ceres_loss))
 
     corner_errors = np.float32(corner_errors)
     corner_errors_2d = np.float32(corner_errors_2d)
 
     # plot historgrams
-    if save_histogram:
+    if save_reproj_err_histogram:
         fs = 16
         fig = plt.figure(figsize=(16, 5))
         gs = GridSpec(1, 10, figure=fig)
@@ -179,7 +197,7 @@ def render_reprojection_results(logger, paths, save_histogram=True, save_reproj_
         os.makedirs(save_dir, exist_ok=True)
         logger.info("Saving images to: {}".format(save_dir))
 
-        img_paths = load_img_paths(paths["image_paths_file"])
+        img_paths = load_img_paths(paths["abs_image_paths_file"])
         img_paths_lookup = {}
         for cam_idx, paths in img_paths.items():
             for p in paths:
@@ -187,12 +205,19 @@ def render_reprojection_results(logger, paths, save_histogram=True, save_reproj_
                 img_paths_lookup[img_name] = p
         
         fs = 12
-        pbar = tqdm(total=len(errors_for_lookup.keys()))
+
+        # for tqdm bar
+        n_total = 0
+        for img_name, err in errors_for_lookup.items():
+            if err > error_thres:
+                n_total += 1
+
+        pbar = tqdm(total=n_total)
         n_imgs = 0
 
         for img_name, err in errors_for_lookup.items():
-            pbar.update(1)
             if err > error_thres:
+                pbar.update(1)
                 N_sqrt = np.sqrt(len(cam_params.keys()))
                 c = math.floor(N_sqrt)
                 if N_sqrt > c**2:
@@ -206,7 +231,7 @@ def render_reprojection_results(logger, paths, save_histogram=True, save_reproj_
                 # 1st loop to compute errors
                 errs = []
                 for cam_idx in cam_params.keys():
-                    if cam_idx in reprojections["frames"][img_name]:
+                    if cam_idx in reprojections["frames"][img_name] and cam_idx in img_pts_measured[img_name]:
                         reproj = reprojections["frames"][img_name][cam_idx]
                         pred = np.float32(reproj["img_pts_pred"])
                         gt = img_pts_measured[img_name][cam_idx]
@@ -223,7 +248,7 @@ def render_reprojection_results(logger, paths, save_histogram=True, save_reproj_
                     img = load_img(img_path)
 
                     a = ax[int(cam_idx)]
-                    if cam_idx in reprojections["frames"][img_name]:
+                    if cam_idx in reprojections["frames"][img_name] and cam_idx in img_pts_measured[img_name]:
                         reproj = reprojections["frames"][img_name][cam_idx]
                         pred = np.float32(reproj["img_pts_pred"])
                         gt = img_pts_measured[img_name][cam_idx]

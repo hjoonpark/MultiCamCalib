@@ -86,16 +86,18 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
         rms_err, M, d, _, _ = cv2.calibrateCamera(_3d_pts, _2d_pts, imageSize=imageSize, cameraMatrix=cameraMatrix, distCoeffs=distCoeffs)
         logger.info("Intrinsics calibrated: camera {} | {} images | error={:.2f}".format(cam_idx, len(_3d_pts), rms_err))
 
+        # we assume the lens is not fisheye -> let's set lens distortion coefficients to zeros.
+        d_scaler = 0.0
         if rms_err:
             cam_params[cam_idx]["fx"] = M[0, 0]
             cam_params[cam_idx]["fy"] = M[1, 1]
             cam_params[cam_idx]["cx"] = M[0, 2]
             cam_params[cam_idx]["cy"] = M[1, 2]
-            cam_params[cam_idx]["k1"] = d[0, 0]
-            cam_params[cam_idx]["k2"] = d[0, 1]
-            cam_params[cam_idx]["p1"] = d[0, 2]
-            cam_params[cam_idx]["p2"] = d[0, 3]
-            cam_params[cam_idx]["k3"] = d[0, 4]
+            cam_params[cam_idx]["k1"] = d[0, 0]*d_scaler
+            cam_params[cam_idx]["k2"] = d[0, 1]*d_scaler
+            cam_params[cam_idx]["p1"] = d[0, 2]*d_scaler
+            cam_params[cam_idx]["p2"] = d[0, 3]*d_scaler
+            cam_params[cam_idx]["k3"] = d[0, 4]*d_scaler
         else:
             cam_params[cam_idx] = None
             

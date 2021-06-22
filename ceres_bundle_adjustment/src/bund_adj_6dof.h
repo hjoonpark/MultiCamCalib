@@ -145,7 +145,7 @@ public:
         }
         
         // regularization
-        double lens_coeffs_weights[5] = {0.1};
+        double lens_coeffs_weights[5] = {config.lens_coeffs_reg_weight};
         for (int cam_idx = 0; cam_idx < n_cams; cam_idx++) {
             ceres::CostFunction *reg_func = BundAdj6Dof::LensDistortionRegularization::Create(lens_coeffs_weights);
             ceres_prob.AddResidualBlock(reg_func, NULL, cameras[cam_idx].params);
@@ -303,15 +303,19 @@ public:
                 T xp = cam_point[0] / cam_point[2];
                 T yp = cam_point[1] / cam_point[2];
 
+                // ------------------
                 // lens distortions
-                T r2 = xp*xp + yp*yp;
+                // ------------------
+                // 1. radial
+                T r2 = xp * xp + yp * yp;
                 T rad_dist = T(1) + k[0]*r2 + k[1]*r2*r2 + k[2]*r2*r2*r2;
-                T tan_dist[2] ={ p[1]*(r2+2.0*xp*xp) + 2.0*p[0]*xp*yp, p[0]*(r2+2.0*yp*yp) + 2.0*p[1]*xp*yp };
+                xp = xp * rad_dist;
+                yp = yp * rad_dist;
 
-                T u = xp * rad_dist + tan_dist[0];
-                T v = yp * rad_dist + tan_dist[1];
-                //T u = xp;
-                //T v = yp;
+                // 2. tangential
+                r2 = xp * xp + yp * yp;
+                T u = xp + (p[1] * (r2 + 2.0 * xp * xp) + 2.0 * p[0] * xp * yp);
+                T v = yp + (p[0] * (r2 + 2.0 * yp * yp) + 2.0 * p[1] * xp * yp);
 
                 // projection to image
                 T x_pred = f[0]*u + c[0];

@@ -16,7 +16,7 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/filewritestream.h>
 
-#include "Config.h"
+#include "config.h"
 #include "camera.h"
 #include "frame.h"
 #include "checkerboard.h"
@@ -54,7 +54,7 @@ namespace Parser {
         // parse paths
         const rapidjson::Value &paths = doc["paths"];
 
-        config.dir_output = paths["output_dir"].GetString();
+        config.dir_output = paths["abs_output_dir"].GetString();
         config.dir_cam_params = config.dir_output + std::string(OS_SEP) + paths["cam_params"].GetString();
         config.dir_corners = config.dir_output + std::string(OS_SEP) + paths["corners"].GetString();
         config.dir_outliers = config.dir_output + std::string(OS_SEP) + paths["outliers"].GetString();
@@ -129,17 +129,21 @@ namespace Parser {
                 std::string cam_img_name = res["img_name"].GetString();
 
                 // push_back if not exists
-                if (std::find(outliers.begin(), outliers.end(), cam_img_name) == outliers.end()) outliers.push_back(cam_img_name);
+                if (std::find(outliers.begin(), outliers.end(), cam_img_name) == outliers.end()) {
+                    outliers.push_back(cam_img_name);
+                }
             }
         }
+
         // sort for fast look-up
         std::sort(outliers.begin(), outliers.end());
-        std::vector<std::string>img_names2;
         rapidjson::Document doc = Parser::readJson(detection_result_path);
         frames.clear();
         const rapidjson::Value& det = doc["detections"];
         int outlier_idx = 0;
         std::cout << ">> Skipping images with outlier corners:" << std::endl;
+        int n_all_images = 0;
+        int n_skipped_frames = 0;
         for (auto f = det.MemberBegin(); f != det.MemberEnd(); f++) {
             std::string img_name = f->name.GetString();
             
@@ -152,21 +156,24 @@ namespace Parser {
 
                 // mark as undetected if it's an outlier
                 bool is_outlier = std::binary_search(outliers.begin(), outliers.end(), cam_img_name);
+                n_all_images += 1;
                 if (is_outlier) {
                     outlier_idx += 1;
                     detected = 0;
-                    img_names2.push_back(cam_img_name);
                     std::cout << cam_img_name << "  ";
                 }
                 frame->setDetected(cam_idx, (bool) detected);
             }
 
-            if (frame->n_detected > 2) {
+            if (frame->n_detected >= 2) {
                 frames.push_back(*frame);
             }
+            else {
+                n_skipped_frames += 1;
+            }
         }
-        std::cout << std::endl << ">> " << outlier_idx << " images skipped." << std::endl << std::endl;
-        std::sort(img_names2.begin(), img_names2.end());
+        std::cout << std::endl << ">>> " << outlier_idx << "/" << n_all_images << " images containing outlier corners skipped." << std::endl;
+        std::cout <<              "<=> " << n_skipped_frames << "/" << frames.size() + n_skipped_frames << " frames skipped." << std::endl << std::endl;
     }
 
     void loadInitialCheckerboardPoses(const char* json_path, const std::vector<Frame> &frames, std::vector<Checkerboard> &checkerboards, std::map<std::string, int> &imgname_to_frameidx) {
