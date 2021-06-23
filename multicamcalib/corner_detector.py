@@ -19,17 +19,21 @@ def __corner_detector(g_logger, lock, cam_idx, n_cols, n_rows, paths, output_fol
         
         if img_original is None:
             g_logger.critical("No image at: {}".format(path))
-            assert(0)
+            assert 0, "Image path is wrong!"
+
         # if image is too large, corner detection takes too long
         h, w = img_original.shape
+        search_window_length = 5
         if min(h, w) > 1080:
             scale = 0.5
+            search_window_length = 7
             img = cv2.resize(img_original, dsize=(int(w*scale), int(h*scale)), interpolation=cv2.INTER_AREA)
         else:
             scale = 1.0
             img = img_original
 
-        log_str = "({}/{}) {}\t| ".format(i+1, len(paths), path)
+        basename = os.path.basename(path)
+        log_str = "({}/{}) {}\t| ".format(i+1, len(paths), basename)
 
         found, corners = cv2.findChessboardCorners(img, (n_cols, n_rows), cv2.CALIB_CB_FAST_CHECK)
 
@@ -42,7 +46,8 @@ def __corner_detector(g_logger, lock, cam_idx, n_cols, n_rows, paths, output_fol
 
             # refine corners
             corners /= scale
-            corners_refined = cv2.cornerSubPix(img_original, corners, (7, 7), (-1, -1), criteria)
+            half_search_window = (search_window_length, search_window_length)
+            corners_refined = cv2.cornerSubPix(img_original, corners, half_search_window, (-1, -1), criteria)
 
             for uv in corners_refined:
                 uv_str = "{} {}".format(uv[0][0], uv[0][1])

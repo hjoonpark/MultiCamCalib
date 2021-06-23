@@ -50,7 +50,6 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
     cam_params = {}
 
     cam_folders = [f.path for f in os.scandir(corners_dir) if f.is_dir()]
-    
     for cam_folder in cam_folders:
         cam_idx = int(cam_folder.split("_")[-1])
         cam_params[cam_idx] = {}
@@ -106,8 +105,8 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
     corner_path = os.path.join(corners_dir, "cam_{}".format(center_cam_idx), "{}_{}.txt".format(center_cam_idx, center_img_name))
     _2d_pts, _ = load_corner_txt(corner_path)
     if _2d_pts is None:
-        logger.error("No corner detected for: {}\nProvide a different image name!".format(corner_path))
-        assert(0)
+        logger.critical("No corner detected for: {}\nProvide a different image name!".format(corner_path))
+        assert 0, "No corner detection for the center image! Use a different image."
     
     _3d_pts = chb.chb_pts
     p = cam_params[center_cam_idx]

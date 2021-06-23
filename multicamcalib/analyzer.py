@@ -89,7 +89,8 @@ def reproject_world_points(logger, cam_param_path, world_points_path, paths, rep
             err_each = np.sqrt(np.sum(dudv**2, axis=1))
             err_sum = float(np.sum(err_each))
             reprojections["frames"][img_name][cam_idx] = {"error_sum": err_sum, "img_pts_pred": img_pts_pred.tolist()}
-    
+    pbar.close()
+
     # save reprojections as json
     with open(reprojection_save_path, "w+") as f:
         json.dump(reprojections, f, indent=4)
@@ -152,7 +153,8 @@ def render_reprojection_results(logger, paths, save_reproj_err_histogram=True, s
             errors_for_lookup[img_name] = max(errors_for_lookup[img_name], err_max)
         ceres_loss_curr /= (n_cams_used**2)
         ceres_loss += ceres_loss_curr
-    
+    pbar.close()
+
     logger.info("(Cross-check) manually recalculated Ceres loss: {:,.2f} (excluding regularization loss)".format(ceres_loss))
 
     corner_errors = np.float32(corner_errors)
@@ -278,5 +280,7 @@ def render_reprojection_results(logger, paths, save_reproj_err_histogram=True, s
                 plt.close()
                 n_imgs += 1
                 logger.debug("Image saved: {}".format(save_path))
+        pbar.close()
+        
         logger.info("Finished rendering: {} images".format(n_imgs))
         

@@ -3,7 +3,7 @@
 #define CeresMulticamCalib_VERSION_MAJOR 1
 #define CeresMulticamCalib_VERSION_MINOR 0
 
-#define ROOT_DIR "D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/ceres_bundle_adjustment"
+#define ROOT_DIR "C:/Users/hjoon/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/ceres_bundle_adjustment"
 #define NUM_CAM_PARAMS 15
 // #define CERES_INCLUDE_DIRS "@CERES_INCLUDE_DIRS"
 

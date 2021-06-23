@@ -17,7 +17,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_OUTPUT_DIR})
 #############################################
 if (WIN32)
     # copy dlls
-    set(CERES_ROOT_DIR "C:/Users/hjoon/ceres")
+    set(CERES_ROOT_DIR "C:/Users/hjoon/ceres-solver")
     set(SUITESPARSE_WIN_x64_DIR "${CERES_ROOT_DIR}/suitesparse/lapack_windows/x64")
     set(PROJECT_OUTPUT_DIR_RELEASE "${PROJECT_OUTPUT_DIR}/Release")
     set(DLL_PATHS 

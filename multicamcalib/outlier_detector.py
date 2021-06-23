@@ -189,7 +189,8 @@ def generate_crops_around_corners(logger, img_paths, paths, crop_size=15):
                 for corner_idx in range(len(crops_curr)):
                     crop_metadata[crop_idx] = {"img_name": fname, "camera_idx": cam_idx, "corner_idx": corner_idx, "idx_for_curr_cam": n_crops+corner_idx}
                     crop_idx += 1
-
+        pbar.close()
+        
         # save crop
         save_path1 = os.path.join(dir_cornercrops, "{}_gray.npy".format(cam_idx))
         np.save(save_path1, crops_gray)
@@ -294,7 +295,7 @@ def train_vae_outlier_detector(logger, input_paths, paths, vae_config):
         
         dt_elpased = convert_sec(time.time() - time_start)
         
-        if (e > 0 and e % 20 == 0) or e == n_epochs - 1:
+        if (e > 0 and (e+1) % 20 == 0) or e == n_epochs - 1:
             # save model
             model_save_path = os.path.join(dir_vae_outlier_detector, "vae_model.pt")
             torch.save(model, model_save_path)
@@ -372,6 +373,7 @@ def run_vae_outlier_detector(logger, input_paths, paths, model_path, vae_config,
 
         if i % batch_size == 0:
             pbar.update(batch_size)
+    pbar.close()
 
     with open(output_path, 'w+') as f:
         json.dump(result, f, indent=4)
@@ -505,6 +507,7 @@ def determine_outliers(logger, vae_config, model_path, input_paths, paths, save_
 
             crops_recon.append(recon)
             crops_for_plot.append(crop_gray.numpy())
+        pbar.close()
 
         n_crops = len(crops_for_plot)
         n_cols = 10

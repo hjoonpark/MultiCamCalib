@@ -1,0 +1,55 @@
+{
+    "paths": {
+        "abs_image_paths_file": "C:/Users/hjoon/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_images_katey/image_paths.txt",
+        "abs_output_dir": "C:/Users/hjoon/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_images_katey/output",
+        "logs": "logs",
+        "corners": "corners",
+        "vae_outlier_detector": "vae_outlier_detector",
+        "corner_crops": "vae_outlier_detector/corner_crops",
+        "outliers": "vae_outlier_detector/outliers",
+        "cam_params": "cam_params",
+        "world_points": "world_points",
+        "ceres_output": "bundle_adjustment",
+        "analysis": "analysis"
+    },
+    "checkerboard": {
+        "n_cols": 11,
+        "n_rows": 8,
+        "sqr_size": 60
+    },
+    "cameras": {
+        "n_cams": 16
+    },
+    "vae_outlier_detector": {
+        "z_dim": 2,
+        "kl_weight": 0.01,
+        "n_epochs": 500,
+        "lr": 0.001,
+        "batch_size": 1000,
+        "outlier_thres_ratio": 0.0005
+    },
+    "calib_initial": {
+        "center_cam_idx": 8,
+        "center_img_name": "0000",
+        "intrinsics": {
+            "n_max_imgs": 40
+        },
+        "extrinsics": {
+            "n_max_stereo_imgs": 3
+        }
+    },
+    "bundle_adjustment": {
+        "max_iter": 1000,
+        "num_thread": 4,
+        "lens_coeffs_reg_weight": 0.1,
+        "function_tolerance": 1e-12,
+        "parameter_tolerance": 1e-12,
+        "gradient_tolerance": 1e-12,
+        "inner_iteration_tolerance": 1e-12
+    },
+    "analysis": {
+        "save_reproj_images": 1,
+        "save_reproj_err_histogram": 1,
+        "error_thres": 5
+    }
+}
