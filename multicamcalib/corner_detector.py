@@ -29,20 +29,22 @@ def __corner_detector(g_logger, lock, cam_idx, n_cols, n_rows, paths, output_fol
             search_window_length = 7
             img = cv2.resize(img_original, dsize=(int(w*scale), int(h*scale)), interpolation=cv2.INTER_AREA)
         else:
-            scale = 1.0
+            scale = 1.0 
             img = img_original
 
         basename = os.path.basename(path)
         log_str = "({}/{}) {}\t| ".format(i+1, len(paths), basename)
 
-        found, corners = cv2.findChessboardCorners(img, (n_cols, n_rows), cv2.CALIB_CB_FAST_CHECK)
+        # flags = cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK + cv2.CALIB_CB_NORMALIZE_IMAGE
+        flags = cv2.CALIB_CB_FAST_CHECK
+        found, corners = cv2.findChessboardCorners(img, (n_cols, n_rows), flags=flags)
 
         output_str = []
         if found:
             output_str.append("1 {} {}".format(img_original.shape[0], img_original.shape[1]))
             log_str += "FOUND"
 
-            criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+            criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 60, 0.001)
 
             # refine corners
             corners /= scale
