@@ -190,7 +190,7 @@ public:
         std::stringstream world_points_out_path;
         world_points_out_path << config.dir_world_points << OS_SEP << "world_points_final.json";
         //world_points_out_path << config.dir_world_points << OS_SEP << "world_points_final_" << n_iter << ".json";
-        //Parser::saveFinalWorldPoints(world_points_out_path.str().c_str(), checkerboards, frames);
+        Parser::saveFinalWorldPoints(world_points_out_path.str().c_str(), checkerboards, frames);
         std::cout << ">> World points saved: " << world_points_out_path.str() << std::endl;
 
         // save bundle adjustment result
