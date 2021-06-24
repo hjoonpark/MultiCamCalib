@@ -50,8 +50,10 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
     cam_params = {}
 
     cam_folders = [f.path for f in os.scandir(corners_dir) if f.is_dir()]
-    for cam_folder in cam_folders:
-        cam_idx = int(cam_folder.split("_")[-1])
+    cam_indices = sorted([int(s.split("_")[-1]) for s in cam_folders])
+
+    for cam_idx in cam_indices:
+        cam_folder = os.path.join(corners_dir, "cam_{}".format(cam_idx))
         cam_params[cam_idx] = {}
 
         # (2D) load image points randomly

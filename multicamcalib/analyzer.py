@@ -186,8 +186,9 @@ def render_reprojection_results(logger, paths, save_reproj_err_histogram=True, s
 
         max_err = np.max(corner_errors_2d)
         min_err = np.min(corner_errors_2d)
-        ax2.set_xlim([min_err, max_err])
-        ax2.set_ylim([min_err, max_err])
+        L = max(abs(max_err), abs(min_err))
+        ax2.set_xlim([-L, L])
+        ax2.set_ylim([-L, L])
 
         cam_param_path = reprojections["config"]["cam_param_path"]
         world_points_path = reprojections["config"]["world_points_path"]
