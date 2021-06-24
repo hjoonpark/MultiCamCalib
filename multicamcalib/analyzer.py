@@ -162,21 +162,24 @@ def render_reprojection_results(logger, paths, save_reproj_err_histogram=True, s
 
     # plot historgrams
     if save_reproj_err_histogram:
-        fs = 16
-        fig = plt.figure(figsize=(16, 5))
+        fs = 28
+        fig = plt.figure(figsize=(22, 8))
+        
         gs = GridSpec(1, 10, figure=fig)
         ax1 = fig.add_subplot(gs[0, 0:6])
         ax2 = fig.add_subplot(gs[0, 7:])
 
         bins_scale = min(3, int(np.log10(len(corner_errors))))
+        ax1.grid(True)
         ax1.hist(corner_errors, bins=10**bins_scale)
         ax1.set_xlim(left=0)
         ax1.set_yscale('log')
         ax1.set_xlabel("Reprojection error [pixel]", fontsize=fs)
         ax1.set_ylabel("Bin count (log-scale)", fontsize=fs)
-        ax1.set_title("Reprojection errors: {:,} checkerboard points".format(len(corner_errors)), fontsize=fs)
+        ax1.set_title("Reprojection errors: {:,} points\n(mean={:.2f}, max={:.2f}, stdv={:.2f})".format(len(corner_errors), np.mean(corner_errors), np.max(corner_errors), np.std(corner_errors)), fontsize=fs)
         
-        ax2.scatter(corner_errors_2d[:,0], corner_errors_2d[:,1], s=0.5)
+        ax2.grid(True)
+        ax2.scatter(corner_errors_2d[:,0], corner_errors_2d[:,1], edgecolors="k", linewidth=0.5, s=10)
         ax2.set_xlabel("du [pixel]", fontsize=fs)
         ax2.set_ylabel("dv [pixel]", fontsize=fs)
         ax2.set_title("Reprojection errors in 2D", fontsize=fs)
@@ -189,8 +192,9 @@ def render_reprojection_results(logger, paths, save_reproj_err_histogram=True, s
         cam_param_path = reprojections["config"]["cam_param_path"]
         world_points_path = reprojections["config"]["world_points_path"]
         plt.suptitle("Camera parameters: {}\nWorld points: {}".format(cam_param_path, world_points_path), fontsize=fs/2.5)
+        fig.tight_layout()
         plot_save_path = os.path.join(paths["analysis"], "reproj_err_histograms.png")
-        plt.savefig(plot_save_path, dpi=150)
+        plt.savefig(plot_save_path, dpi=200)
         plt.close()
         logger.info("Plot saved: {}".format(plot_save_path))
 
@@ -206,7 +210,7 @@ def render_reprojection_results(logger, paths, save_reproj_err_histogram=True, s
                 img_name = os.path.basename(p).split(".")[0]
                 img_paths_lookup[img_name] = p
         
-        fs = 12
+        fs = 20
 
         # for tqdm bar
         n_total = 0
@@ -259,9 +263,9 @@ def render_reprojection_results(logger, paths, save_reproj_err_histogram=True, s
 
                         if img is not None:
                             a.imshow(img, cmap="gray")
-                        sc = a.scatter(pred[:,0], pred[:,1], c=err_curr, s=0.25, vmin=vmin, vmax=vmax, zorder=2)
-                        a.scatter(gt[:,0], gt[:,1], c="lime", s=0.25, vmin=vmin, vmax=vmax, zorder=1)
-                        a.set_title("Camera {}\nErrors: avg={:.2f}, min={:.2f}, max={:.2f}".format(cam_idx, np.mean(err_curr), np.min(err_curr), np.max(err_curr)))
+                        sc = a.scatter(pred[:,0], pred[:,1], c=err_curr, s=2, vmin=vmin, vmax=vmax, zorder=2)
+                        a.scatter(gt[:,0], gt[:,1], c="lime", s=2, vmin=vmin, vmax=vmax, zorder=1)
+                        a.set_title("Camera {}\nErrors: mean={:.2f}, min={:.2f}, max={:.2f}".format(cam_idx, np.mean(err_curr), np.min(err_curr), np.max(err_curr)))
                         idx += len(pred)
                     else:
                         a.axis(False)
@@ -273,7 +277,7 @@ def render_reprojection_results(logger, paths, save_reproj_err_histogram=True, s
                 # add colorbar ticks
                 cbar.ax.set_yticklabels(["{:.2f} (min.)".format(vmin), "{:.2f} (mean)".format(vmean), "{:.2f} (max)".format(vmax)], fontsize=fs)
 
-                plt.suptitle("Image: {}\nErrors: avg={:.2f}, min={:.2f}, max={:.2f}".format(img_name, vmean, vmin, vmax), fontsize=fs)
+                plt.suptitle("Image: {}\nErrors: mean={:.2f}, min={:.2f}, max={:.2f}".format(img_name, vmean, vmin, vmax), fontsize=fs)
 
                 save_path = os.path.join(save_dir, "{:.3f}_{}.png".format(vmax, img_name))
                 plt.savefig(save_path, dpi=300)
