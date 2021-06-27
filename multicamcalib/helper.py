@@ -17,7 +17,7 @@ def load_img_paths(file_path):
     with open(file_path, 'r') as f:
             ls = f.readlines()
             for l in ls:
-                vs = l.split("|=|")
+                vs = l.split("<<>>")
                 cam_idx = int(vs[0])
                 img_path = vs[1].split("\n")[0]
                 if cam_idx not in img_paths:

@@ -30,8 +30,7 @@ menu = {
     "4": "final calibration (bundle adjustment)",
     "5": "analysis",
     "5a": "render final camera & checkerboard configurations",
-    "5b": "reproject world points",
-    "5c": "analyze reprojection results (render histogram & reprojected images)"
+    "5b": "reproject world points (render histogram & reprojected images)"
 }
 
 
@@ -163,13 +162,13 @@ if __name__ == "__main__":
 
         if (code_number == "5b") or (code_number == "5"):
             reprojection_save_path = os.path.join(paths["analysis"], "reprojections.json")
-            reproject_world_points(logger, cam_param_path, world_points_path, paths, reprojection_save_path=reprojection_save_path)
+            is_finished = reproject_world_points(logger, cam_param_path, world_points_path, paths, reprojection_save_path=reprojection_save_path)
 
-        if (code_number == "5c") or (code_number == "5"):
-            analysis_config = config["analysis"]
-            save_reproj_images = analysis_config["save_reproj_images"]
-            save_reproj_err_histogram = analysis_config["save_reproj_err_histogram"]
-            error_thres = analysis_config["error_thres"]
-            render_reprojection_results(logger, paths, save_reproj_err_histogram=save_reproj_err_histogram, save_reproj_images=save_reproj_images, error_thres=error_thres)
+            if is_finished:
+                analysis_config = config["analysis"]
+                save_reproj_images = analysis_config["save_reproj_images"]
+                save_reproj_err_histogram = analysis_config["save_reproj_err_histogram"]
+                error_thres = analysis_config["error_thres"]
+                render_reprojection_results(logger, paths, save_reproj_err_histogram=save_reproj_err_histogram, save_reproj_images=save_reproj_images, error_thres=error_thres)
     
     logger.info("***** FINISHED *****\n")

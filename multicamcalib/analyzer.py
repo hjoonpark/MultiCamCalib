@@ -96,6 +96,8 @@ def reproject_world_points(logger, cam_param_path, world_points_path, paths, rep
         json.dump(reprojections, f, indent=4)
         logger.info("Reprojections saved: {}".format(reprojection_save_path))
 
+    return 1
+
 def render_reprojection_results(logger, paths, save_reproj_err_histogram=True, save_reproj_images=True, error_thres=5):
     reprojection_path = os.path.join(paths["analysis"], "reprojections.json")
     with open(reprojection_path, "r") as f:
