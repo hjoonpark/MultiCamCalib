@@ -52,7 +52,7 @@ Build:
 - Open Visual Studio (2019) **as administrator** and open the project: `build\glog.sln`
 - Set to *Release x64*, and build `ALL_BUILD` then `INSTALL`
 
-<img src="readme_assets/vs.png" width=60% style="border: 1px solid black; margin-left: 40px">
+<img src="assets/vs.png" width=60% style="border: 1px solid black; margin-left: 40px">
 
   - This should generate `include`, `lib`, and `bin` folders inside: `{root}\ceres\glog\install`
   
@@ -135,45 +135,45 @@ Build:
     - Set input source code to `{root}/ceres/ceres-solver`
     - Set output build directory to `{root}/ceres/ceres-solver/ceres-build`
 
-<!--<img src="readme_assets/1.png" width=90% style="border: 1px solid black; margin-left: 80px">-->
+<!--<img src="assets/1.png" width=90% style="border: 1px solid black; margin-left: 80px">-->
 
   - Click `Configure`, choose generator `Visual Studio 16 2019`, set platform to `x64`, then click `Finish`. This will initially generate many errors.
 
-<!--<img src="readme_assets/2.png" width=90% style="border: 1px solid black; margin-left: 70px">-->
+<!--<img src="assets/2.png" width=90% style="border: 1px solid black; margin-left: 70px">-->
   
   - Set output directory by setting `CMAKE_INSTALL_PREFIX` to `{root}\ceres\ceres-install`
 
 
-<!--<img src="readme_assets/3.png" width=90% style="border: 1px solid black; margin-left: 80px">-->
+<!--<img src="assets/3.png" width=90% style="border: 1px solid black; margin-left: 80px">-->
 
   - Uncheck `BUILD_EXAMPLES` and `BUILD_TESTING`
 
-<!--<img src="readme_assets/7.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
+<!--<img src="assets/7.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
 
 
   - Click `Add Entry`, and add `SUITESPARSE_CHECK_INCLUDE_DIRS` as `PATH` to `{root}/ceres/suitesparse/install/include`
 
-<!--<img src="readme_assets/4a.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
+<!--<img src="assets/4a.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
 
   - Click `Add Entry`, and add `SUITESPARSE_CHECK_LIBRARY_DIRS` as `PATH` to `{root}/ceres/suitesparse/install/lib`
 
-<!--<img src="readme_assets/4b.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
+<!--<img src="assets/4b.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
 
   - Check `SUITESPARSE` and `LAPACK`
 
-<!--<img src="readme_assets/7b.png" width=90% style="border: 1px solid black; margin-left: 80px">-->
+<!--<img src="assets/7b.png" width=90% style="border: 1px solid black; margin-left: 80px">-->
 
   - Click `Add Entry`, and add `BLAS_LIBRARIES` as `FILEPATH` to `{root}/ceres/suitesparse/lapack_windows/x64/libblas.lib`
 
-<!--<img src="readme_assets/6a.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
+<!--<img src="assets/6a.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
 
   - Click `Add Entry`, and add `LAPACK_LIBRARIES` as `FILEPATH` to `{root}/ceres/suitesparse/lapack_windows/x64/liblapack.lib`
 
-<!--<img src="readme_assets/6b.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
+<!--<img src="assets/6b.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
 
   - Set `Eigen3_DIR` to `{root}/ceres/eigen/build` (where `Eigen3Config.cmake` is located)
 
-<!--<img src="readme_assets/5.png" width=90% style="border: 1px solid black; margin-left: 80px">-->
+<!--<img src="assets/5.png" width=90% style="border: 1px solid black; margin-left: 80px">-->
 
   - Click `Configure` again then `Generate`.
 

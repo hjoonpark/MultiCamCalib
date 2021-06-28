@@ -9,8 +9,9 @@
 This project calibrates multiple cameras using a planar calibration checkerboard. The pipeline is comprised of five main steps: [(1)](#step_1) detect checkerboard corners, [(2)](#step_2) remove outlier corners from the previous step (*VAE, variational auto-encoder*), [(3)](#step_3) estimate initial camera parameters and world (checkerboard) points, [(4)](#step_4) refine the initial estimates (*bundle adjustment*), then *optionally* [(5)](#step_5) analyze the calibration result.
 
 
-<figure>
-<img src="./docs/readme_assets/bundle_adjustment.gif" width="600px"/>
+<figure style="display:inline-block; display:block;">
+<img src="./docs/assets/tutorial/studio.jpg" height="250px"/>
+<img src="./docs/assets/bundle_adjustment.gif" height="250px"/>
 <figcaption>Bundle adjustment jointly refining the initial parameters of 16 cameras (black) and world points (green).</figcaption>
 </figure>
 
@@ -22,7 +23,7 @@ This project calibrates multiple cameras using a planar calibration checkerboard
 
 The pipeline is as followed:
 
-<img src="./docs/readme_assets/pipeline.jpg" alt="pipeline" style="max-width:1000px;width:100%"/>
+<img src="./docs/assets/pipeline.jpg" alt="pipeline" style="max-width:1000px;width:100%"/>
 
 *(Input)* (0). **Multi-view images**: The input is a set of images capturing a freely moving checkerboard.
 
@@ -34,7 +35,7 @@ The pipeline is as followed:
 
 <label id="step_4">(4)</label>. **Bundle adjustment**: The camera parameters and frame-wise checkerboard poses are further refined using bundle adjustment.
 
-*(Optional)* (5). **Analyze the calibration result**: Compute reprojection errors and render corresponding histogram, reprojected images, etc. for analysis.
+*(Optional)* <label id="step_5">(5)</label>. **Analyze the calibration result**: Compute reprojection errors and render corresponding histogram, reprojected images, etc. for analysis.
 
 <h2 id="s_installation">3. Installation</h2>
 
