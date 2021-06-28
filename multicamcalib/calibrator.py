@@ -241,7 +241,7 @@ def calib_initial_params(logger, paths, calib_config, chb, outlier_path=None, sa
 
     if save_plot:
         cam_plot_save_path = os.path.join(save_dir, "initial_cameras.png")
-        render_config(cam_param_save_path, center_cam_idx, center_img_name, None, "Initial cameras", cam_plot_save_path)
+        render_config(paths, cam_param_save_path, center_cam_idx, center_img_name, None, "Initial cameras", compute_reproj_errs=False, save_path=cam_plot_save_path)
         logger.info("Plot saved: {}".format(cam_plot_save_path))
 
     return True
@@ -391,6 +391,6 @@ def estimate_initial_world_points(logger, paths, chb, config):
 
     center_cam_idx = config["calib_initial"]["center_cam_idx"]
     center_img_name = config["calib_initial"]["center_img_name"]
-    render_config(in_cam_param_path, center_cam_idx, center_img_name, world_points_save_path, "Initial configuration", wp_plot_save_path)
+    render_config(paths, in_cam_param_path, center_cam_idx, center_img_name, world_points_save_path, "Initial configuration", compute_reproj_errs=True, save_path=wp_plot_save_path)
     
     logger.info("Initial world points plot saved: {}".format(wp_plot_save_path))

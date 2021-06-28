@@ -26,7 +26,7 @@
         "n_epochs": 500,
         "lr": 0.001,
         "batch_size": 1000,
-        "outlier_thres_ratio": 0.0005
+        "outlier_thres_ratio": 0.001
     },
     "calib_initial": {
         "center_cam_idx": 0,

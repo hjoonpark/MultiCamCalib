@@ -120,13 +120,13 @@ if __name__ == "__main__":
             # detection results
             generate_detection_results(logger, cameras, paths)
 
+        input_crop_paths = sorted(list(glob.glob(os.path.join(paths["corner_crops"], "*_binary.npy"))))
         if (code_number == "2a") or (code_number == "2"):
             # generate corner crops
             generate_crops_around_corners(logger, img_paths, paths)
 
         if (code_number == "2b") or (code_number == "2"):
             # train vae
-            input_crop_paths = sorted(list(glob.glob(os.path.join(paths["corner_crops"], "*_binary.npy"))))
             train_vae_outlier_detector(logger, input_crop_paths, paths, vae_config)
 
         if (code_number == "2c") or (code_number == "2"):
@@ -156,7 +156,9 @@ if __name__ == "__main__":
 
         if (code_number == "5a") or (code_number == "5"):
             # render final configurations after ceres bundle adjustment
-            compute_reproj_errs = False
+            compute_reproj_errs = True
+            cam_param_path = os.path.join(paths["cam_params"], "cam_params_final.json")
+            world_points_path = os.path.join(paths["world_points"], "world_points_final.json")
             render_config(paths, cam_param_path, center_cam_idx, center_img_name, None, "Final cameras", compute_reproj_errs=compute_reproj_errs, save_path=save_path_cam_config)
             render_config(paths, cam_param_path, center_cam_idx, center_img_name, world_points_path, "Final configuration", compute_reproj_errs=compute_reproj_errs, save_path=save_path_world_points)
             logger.info("Two plots saved:\n\t{}\n\t{}".format(save_path_cam_config, save_path_world_points))

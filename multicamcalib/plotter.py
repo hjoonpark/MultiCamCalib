@@ -59,16 +59,16 @@ def render_config(paths, in_cam_param_path, center_cam_idx=None, center_img_name
     ax.plot([0, 0], [0, L], [0, 0], c="g", linewidth=4)
     ax.plot([0, 0], [0, 0], [0, L], c="b", linewidth=4)
 
-    if compute_reproj_errs:
-        mean_err = 0
-        n_errs = 0
-        if in_world_points_path is not None:
-            with open(in_world_points_path, "r") as f:
-                world_pts_json = json.load(f)
-                world_pts = world_pts_json["frames"]
-                chb = world_pts_json["checkerboard"]
+    mean_err = 0
+    n_errs = 0
+    if in_world_points_path is not None:
+        with open(in_world_points_path, "r") as f:
+            world_pts_json = json.load(f)
+            world_pts = world_pts_json["frames"]
+            chb = world_pts_json["checkerboard"]
 
-                # compute reprojection errors
+            # compute reprojection errors
+            if compute_reproj_errs:
                 pbar = tqdm(total=len(world_pts.keys()))
                 for img_name, d in world_pts.items():
                     pbar.update(1)

@@ -11,7 +11,7 @@ This project calibrates multiple cameras using a planar calibration checkerboard
 
 <figure style="display:inline-block; display:block;">
 <img src="./docs/assets/tutorial/studio.jpg" width="67%"/>
-<img src="./docs/assets/bundle_adjustment_v2.gif" width="28%"/>
+<img src="./docs/assets/bundle_adjustment_v2.gif" width="30%"/>
 <figcaption> Left: 16 synchronized cameras-setup. Right: Bundle adjustment jointly refining the initial parameters of 16 cameras (black) and world points (green).</figcaption>
 </figure>
 </br>
