@@ -10,9 +10,9 @@ This project calibrates multiple cameras using a planar calibration checkerboard
 
 
 <figure style="display:inline-block; display:block;">
-<img src="./docs/assets/tutorial/studio.jpg" width="69%"/>
-<img src="./docs/assets/bundle_adjustment.gif" width="30%"/>
-<figcaption>(Left) 16 synchronized cameras-setup. (Right) Bundle adjustment jointly refining the initial parameters of 16 cameras (black) and world points (green).</figcaption>
+<img src="./docs/assets/tutorial/studio.jpg" width="67%"/>
+<img src="./docs/assets/bundle_adjustment_v2.gif" width="28%"/>
+<figcaption> Left: 16 synchronized cameras-setup. Right: Bundle adjustment jointly refining the initial parameters of 16 cameras (black) and world points (green).</figcaption>
 </figure>
 </br>
 
@@ -46,20 +46,31 @@ The code execution follows the pipeline below:
 
     git clone https://github.com/hjoonpark/MultiCamCalib.git
 
-(2) 
+(2) Install Ceres
+* Click [here](docs/install_windows.md) for **Windows**
+* Click here for **Linux** (coming)
 
-### Ceres installation
-#### 1. [Windows](docs/install_windows.md)
-#### 2. [Linux](docs/install_linux.md) (coming)
+(3) Configure & compile CeresMultiCamCalib.exe
 
+(4) Install [Anaconda](https://docs.anaconda.com/anaconda/install/windows/) environment
+
+(5) Run the codes! → Follow [this tutorial](#s_example).
+
+
+<h2 id="s_example">4. Tutorial</h2>
 
 ---
-<h2 id="s_example">Example (Step-by-step tutorial)</h2>
 
-The best way to get familiarized is by running a simple example. Click [here](docs/tutorial.md) for a step-by-step tutoral.
+Follow [this quick start tutorial (a step-by-step example)](docs/tutorial.md)
 
-<h2 id="s_details">4. Academical details</h2>
+<h2 id="s_details">5. Academical details</h2>
 
 ---
 
 Click [here](docs/details.md).
+
+<h2 id="s_contact">6. Contact</h2>
+
+---
+
+For questions, please contact hjoonpark.us@gmail.com.

@@ -156,8 +156,9 @@ if __name__ == "__main__":
 
         if (code_number == "5a") or (code_number == "5"):
             # render final configurations after ceres bundle adjustment
-            render_config(cam_param_path, center_cam_idx, center_img_name, None, "Final cameras", save_path=save_path_cam_config)
-            render_config(cam_param_path, center_cam_idx, center_img_name, world_points_path, "Final configuration", save_path=save_path_world_points)
+            compute_reproj_errs = False
+            render_config(paths, cam_param_path, center_cam_idx, center_img_name, None, "Final cameras", compute_reproj_errs=compute_reproj_errs, save_path=save_path_cam_config)
+            render_config(paths, cam_param_path, center_cam_idx, center_img_name, world_points_path, "Final configuration", compute_reproj_errs=compute_reproj_errs, save_path=save_path_world_points)
             logger.info("Two plots saved:\n\t{}\n\t{}".format(save_path_cam_config, save_path_world_points))
 
         if (code_number == "5b") or (code_number == "5"):

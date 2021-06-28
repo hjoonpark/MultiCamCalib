@@ -1,4 +1,4 @@
-<h1>Example (step-by-step tutorial)</h1>
+<h1>Tutorial (a step-by-step example)</h1>
 
 An example dataset can be found inside *"/example_data/"* folder:
 
@@ -20,7 +20,7 @@ An example dataset can be found inside *"/example_data/"* folder:
 
 ---
 
-<h2 id="s_input_data">I. Prepare the input data</h2>
+<h2 id="s_input_data">I. Prepare input data</h2>
 
 **Two** files must be modifed to suit your environment: *"/example_data/images_paths.txt"* and *"/mlticamcalib/config.json"*.
 
@@ -28,7 +28,7 @@ First, modify the file *"/example_data/image_paths.txt"* which specifies input i
 
     {CAMERA INDEX}<<>>{PATH TO CORRESPONDING IMAGE}
 
-Inside *image_paths.txt*,
+Here, "<<>>" is used as a delimiter. Inside *image_paths.txt*,
 
     0<<>>{YOUR_ROOT}\MultiCamCalib\example_data\images\cam_0\0_0000.png
     ...
@@ -150,15 +150,16 @@ The codes will execute all the steps from [(1). Corner detection](../readme.md#s
     <img src="./assets/tutorial/final_world_points.png" width="40%"/>
 </figure>
 
+* Images with large reprojection errors *"{YOUR_ROOT}/example_data/output/analysis/images/"*:
+<figure style="display:inline-block; display:block;" id="fig_reprojerrors">
+    <img src="./assets/tutorial/reproj_err_img.jpg" width="80%"/>
+</figure>
+
 * Reprojection error historgram *"{YOUR_ROOT}/example_data/output/analysis/"*:
-<figure style="display:inline-block; display:block;">
+<figure style="display:inline-block; display:block;" id="fig_histogram">
     <img src="./assets/tutorial/reproj_err_histograms.png" width="80%"/>
 </figure>
 
-* Images with large reprojection errors *"{YOUR_ROOT}/example_data/output/analysis/images/"*:
-<figure style="display:inline-block; display:block;">
-    <img src="./assets/tutorial/reproj_err_img.jpg" width="80%"/>
-</figure>
 
 
 
@@ -166,9 +167,9 @@ The codes will execute all the steps from [(1). Corner detection](../readme.md#s
 Running code number 4 executes *"{YOUR_ROOT}/ceres_bundle_adjustment/build/bin/Release/CeresMulticamCalib.exe"*. If you do not see this folder, that means you have not compiled *"CeresMulticamCalib.exe"* yet. Follow this tutorial before moving on.
 
 ---
-<h2 id="s_config">config.json</h2>
+<h2 id="s_config">III. config.json</h2>
 
-This section explains the parameters defined inside *"{YOUR_ROOT}/multicamcalib/config.json"*:
+This section explains the parameters defined inside *"{YOUR_ROOT}/multicamcalib/config.json"*.
 
 ***paths***
 
@@ -192,7 +193,7 @@ As mentioned before, *"abs_image_paths_file"* and *"abs_output_dir"* must be *ab
 * *abs_output_dir*: absolute directory where all the output data will be saved.
 * *logs*, *corners*, ..., *analysis*: the output folder names saved to *abs_output_dir*. You don't need to change them unless different folder names are desired.
 
-***checkerboars***
+***checkerboard***
 
     "checkerboard": {
         "n_cols": 11,
@@ -212,7 +213,7 @@ Dimension of a planar calibration chekerboard. For the provided example dataset,
         "n_cams": 16
     },
 
-The number of cameras (integer greater than 0).
+The number of cameras (a natural number).
 
 ***vae_outlier_detector***
 
@@ -225,12 +226,12 @@ The number of cameras (integer greater than 0).
         "outlier_thres_ratio": 0.0005
     },
 
-For details on VAE outlier detector, see *3. VAE outlier corner detection* in [here](details.md#s_vae).
+For details on VAE outlier detector, see *3. VAE outlier corner detection* in [here](details.md#s_vae). These parameters are determined heuristically.
 
 * *z_dim*: dimensions of the latent space *z*
 
 <figure style="display:inline-block; display:block;">
-    <img src="./assets/eq/vae/vae_architecture.jpg" width="500px"/>
+    <img src="./assets/tutorial/vae_architecture_z.jpg" width="500px"/>
     <figcaption>VAE architecture</figcaption>
 </figure>
 
@@ -242,7 +243,7 @@ For details on VAE outlier detector, see *3. VAE outlier corner detection* in [h
 
 * *n_epochs*: number of epochs to train the VAE outlier detector.
 * *lr*: learning rate.
-* *batch_size*: number of corner crops for each batch during the training.
+* *batch_size*: number of corner crops for each batch during training.
 * *outlier_thres_ratio*: at which fraction the outlier corners should be given sorted reconstruction losses. For example, *0.0005* means "corner crops with the top 0.05% largest reconstruction errors are treated as outliers and will be unused during the calibration".
 
 ***calib_initial***
@@ -279,7 +280,7 @@ This center camera and checkerboard is colored *red* when the camera configurati
 ***bundle_adjustment***
 
     "bundle_adjustment": {
-        "max_iter": 11,
+        "max_iter": 1000,
         "num_thread": 4,
         "lens_coeffs_reg_weight": 0.1,
         "function_tolerance": 1e-12,
@@ -287,3 +288,22 @@ This center camera and checkerboard is colored *red* when the camera configurati
         "gradient_tolerance": 1e-12,
         "inner_iteration_tolerance": 1e-12
     },
+
+* *max_iter*: maximum number of iterations for solving non-linear least squares using Levenberg-Marquardt algorithm.
+* *num_thread*: number of threads used by Ceres to evaluate the Jacobian.
+* *lens_coeffs_reg_weight*: the regularization weight ![omega](./assets/eq/vae/omega.jpg) in the loss term for bundle adjustment defined as ![reprojection error + regularization](./assets/tutorial/bundle_loss.jpg), where ![L](./assets/tutorial/L.jpg) represents reprojection error, and ![R](./assets/tutorial/R.jpg) represents regularization terms on the lens distortion coefficients of every camera (i.e., ![k1k2](./assets/tutorial/k1k2k3.jpg), ![p1p2](./assets/tutorial/p1p2.jpg)).
+* *function_tolerance*, *parameter_tolerance*, *gradient_tolerance*, *inner_iteration_tolerance*: termination conditions of the Levenberg-Marquardt algorithm (see [here](http://ceres-solver.org/nnls_solving.html?highlight=tolerance#_CPPv4N5ceres6Solver7OptionsE) for more details).
+
+***analysis***
+
+    "analysis": {
+        "save_reproj_err_histogram": 1,
+        "save_reproj_images": 1,
+        "error_thres": 1
+    }
+
+* *save_reproj_err_histogram*: 0/1 - save a reprojection histogram like [this](#fig_histogram).
+
+* *save_reproj_images*: 0/1 - save plots showing captured input images, detected checkerboard corners, and reconstructed checkerboard corners like [this](#fig_reprojerrors).
+
+* *error_thres*: float value - save reprojection images (*save_reproj_images*) that have the maximum reprojection error above *this value*.

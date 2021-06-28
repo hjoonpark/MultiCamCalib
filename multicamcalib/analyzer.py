@@ -9,7 +9,7 @@ from matplotlib.gridspec import GridSpec
 
 from helper import load_corner_txt, load_img_paths, load_img
 
-def _reproject(param, world_pts):
+def reproject(param, world_pts):
     # world_pts: (N, 3)
     R = param["R"]
     t = param["t"]
@@ -84,7 +84,7 @@ def reproject_world_points(logger, cam_param_path, world_points_path, paths, rep
                 continue
 
             reprojections["frames"][img_name][cam_idx] = {}
-            img_pts_pred = _reproject(cam_params[cam_idx], world_pts)
+            img_pts_pred = reproject(cam_params[cam_idx], world_pts)
             dudv = img_pts - img_pts_pred
             err_each = np.sqrt(np.sum(dudv**2, axis=1))
             err_sum = float(np.sum(err_each))
