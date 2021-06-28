@@ -55,12 +55,12 @@ where ![$i$](./assets/eq/i.jpg) is frame index, ![$j$](./assets/eq/j.jpg) is cam
 
 ---
 
-We treat incorrectly or inaccurately detected corners as
+OpenCV/Matlab corner detectors are known to give incorrect or inaccurate corners especially when the checkerboard is tilted at a large angle w.r.t. the image plane, is under poor lighting, or other objects are present in the image <sup>[[6](#shu2003automatic), [7](#albarelli2009robust), [8](#wang2010recognition)]</sup>. Therefore, We treat incorrectly or inaccurately detected corners as
 outliers and identify them using VAE.
 
 <img src="./assets/corner_example.jpg" width="500px">
 
-<h3 id="vae-objective">Objective of VAE</h3>
+<h3 id="vae-objective">Objective of general VAE</h3>
 
 VAE deals with an unknown underlying probabilistic distribution ![$p^*(\bb{x})$](./assets/eq/vae/p_star.jpg) defined over the data points ![$\bb{x}$](./assets/eq/vae/x.jpg) in some potentially high-dimensional space ![$\mathcal{X}$](./assets/eq/vae/xx.jpg)<sup>[[3]](#kingma2013auto)</sup>. The aim of VAE is to approximate the underlying distribution with a chosen model ![$p_{\bb{\theta}}(\bb{x}) \approx p^*(\bb{x})$](./assets/eq/vae/p_theta_approx.jpg), parameterized by ![$\bb{\theta}$](./assets/eq/vae/theta.jpg) and marginalized over the latent variables ![$\bb{z}$](./assets/eq/vae/z.jpg):
 
@@ -186,3 +186,8 @@ The box plots of the obtained radiuses are shown in [Figure 9](#exp-real). The r
 
 <a id="davis2006relationship">[5]</a> Davis J, Goadrich M. The relationship between Precision-Recall and ROC curves. InProceedings of the 23rd international conference on Machine learning 2006 Jun 25 (pp. 233-240).
 
+<a id="shu2003automatic">[6]</a> Shu C, Brunton A, Fiala M. Automatic grid finding in calibration patterns using Delaunay triangulation. National Research Council of Canada; 2003 Aug.
+
+<a id="albarelli2009robust">[7]</a> Albarelli A, Rodolà E, Torsello A. Robust camera calibration using inaccurate targets. IEEE Trans. Pattern Anal. Mach. Intell.. 2009;31:376-83.
+
+<a id="wang2010recognition">[8]</a> Wang Z, Wang Z, Wu Y. Recognition of corners of planar checkboard calibration pattern image. In2010 Chinese Control and Decision Conference 2010 May 26 (pp. 3224-3228). IEEE.
