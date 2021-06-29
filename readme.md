@@ -10,11 +10,11 @@ This project calibrates multiple cameras using a planar calibration checkerboard
 
 
 <figure style="display:inline-block; display:block;">
-<img src="./docs/assets/tutorial/studio.jpg" width="67%"/>
+<img src="./docs/assets/tutorial/studio.jpg" width="65%"/>
 <img src="./docs/assets/bundle_adjustment_v2.gif" width="30%"/>
 <figcaption> Left: 16 synchronized cameras-setup. Right: Bundle adjustment jointly refining the initial parameters of 16 cameras (black) and world points (green).</figcaption>
 </figure>
-</br>
+<br>
 
 * This project is focused on being simple and scalable, applicable to different calibration checkerboards and different number of cameras.
 * The steps (1)-(3)/(5) are implemented using *python 3* and the step (4) using *C/C++*.
@@ -42,19 +42,32 @@ The code execution follows the pipeline below:
 
 ---
 
-(1) Download the project
+(1) Download the project. In a command prompt (Windows) or terminal (Linux):
 
     git clone https://github.com/hjoonpark/MultiCamCalib.git
 
-(2) Install Ceres
+<label id="install_ceres">(2)</label> Install Ceres
 * Click [here](docs/install_windows.md) for **Windows**
 * Click here for **Linux** (coming)
 
-(3) Configure & compile CeresMultiCamCalib.exe
+(3) Build the bundle adjustment project (C/C++)
 
-(4) Install [Anaconda](https://docs.anaconda.com/anaconda/install/windows/) environment
+* Click [here](docs/compile_project.md)
 
-(5) Run the codes! → Follow [this tutorial](#s_example).
+(4) Create Anaconda environment for Python
+
+1. Windows
+
+    Assuming [Anaconda](https://docs.anaconda.com/anaconda/install/windows/) is already installed, navigate to *./multicamcalib/* where *requirements.txt* exists. Then in a Anaconda Powershell Prompt:
+
+        conda env create -n {ENV_NAME} -f requirements.txt
+
+    where *{ENV_NAME}* is whatever name you wish to use.
+
+2. Linux (*coming...*)
+
+
+(5) Run it on the example dataset provided (*/example_data/*) → Follow [this tutorial](docs/tutorial.md)
 
 
 <h2 id="s_example">4. Tutorial</h2>
@@ -67,7 +80,7 @@ Follow [this quick start tutorial (a step-by-step example)](docs/tutorial.md)
 
 ---
 
-Click [here](docs/details.md).
+Click [here](docs/details.md)
 
 <h2 id="s_contact">6. Contact</h2>
 

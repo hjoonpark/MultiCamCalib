@@ -1,7 +1,7 @@
 {
     "paths": {
-        "abs_image_paths_file": "D:/Pictures/2021_06_12_SynthCheckerboards/image_paths.txt",
-        "abs_output_dir": "D:/Pictures/2021_06_12_SynthCheckerboards/output",
+        "abs_image_paths_file": "D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/image_paths.txt",
+        "abs_output_dir": "D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output",
         "logs": "logs",
         "corners": "corners",
         "vae_outlier_detector": "vae_outlier_detector",
@@ -26,10 +26,10 @@
         "n_epochs": 500,
         "lr": 0.001,
         "batch_size": 1000,
-        "outlier_thres_ratio": 0.001
+        "outlier_thres_ratio": 0.0005
     },
     "calib_initial": {
-        "center_cam_idx": 0,
+        "center_cam_idx": 12,
         "center_img_name": "0000",
         "intrinsics": {
             "n_max_imgs": 40
@@ -39,7 +39,7 @@
         }
     },
     "bundle_adjustment": {
-        "max_iter": 34,
+        "max_iter": 1000,
         "num_thread": 4,
         "lens_coeffs_reg_weight": 0.1,
         "function_tolerance": 1e-12,

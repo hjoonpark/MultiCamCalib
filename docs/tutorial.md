@@ -30,25 +30,25 @@ First, modify the file *"/example_data/image_paths.txt"* which specifies input i
 
 Here, "<<>>" is used as a delimiter. Inside *image_paths.txt*,
 
-    0<<>>{YOUR_ROOT}\MultiCamCalib\example_data\images\cam_0\0_0000.png
+    0<<>>{YOUR_ROOT}\example_data\images\cam_0\0_0000.png
     ...
-    15<<>>{YOUR_ROOT}\MultiCamCalib\example_data\images\cam_15\15_0250.png
+    15<<>>{YOUR_ROOT}\example_data\images\cam_15\15_0250.png
 
-Replace *{YOUR_ROOT}* with your own *absolute* directory of the project. For me, *{YOUR_ROOT}* is *C:\Users\hjoon\Desktop*,
+Replace *{YOUR_ROOT}* with your own *absolute* directory of the project. For me, *{YOUR_ROOT}* is *C:\Users\hjoon\Desktop\MultiCamCalib*,
 
     0<<>>C:\Users\hjoon\Desktop\MultiCamCalib\example_data\images\cam_0\0_0000.png
     ...
     15<<>>C:\Users\hjoon\Desktop\MultiCamCalib\example_data\images\cam_15\15_0250.png
 
 ---
-Second, modify two paths (*"abs_image_paths_file"* and *"abs_output_dir"*) inside *"/multicamcalib/config.json"*:
+Second, modify two paths (*"abs_image_paths_file"* and *"abs_output_dir"*) inside *"/multicamcalib/config.json"*. (A copy of this pre-configured *config.json* file is also located at *"/example_data/"*).
 
 *config.json*:
 
     {
     "paths": {
-        "abs_image_paths_file": "{YOUR_ROOT}/MultiCamCalib/example_data/image_paths.txt",
-        "abs_output_dir": "{YOUR_ROOT}/MultiCamCalib/example_data/output",
+        "abs_image_paths_file": "{YOUR_ROOT}/example_data/image_paths.txt",
+        "abs_output_dir": "{YOUR_ROOT}/example_data/output",
         ...
     }
 
@@ -98,9 +98,9 @@ Here, the frame numbers must contain the same number of characters. The names of
 These are the only constraints required in this project.
 
 ---
-<h2>II. Run!</h2>
+<h2 id="s_run">II. Run!</h2>
 
-Open up a command prompt and navigate to *"{YOUR_ROOT}/MultiCamCalib/multicamcalib/"* where all the python codes reside and run *multicamcalib.py* with the installed Anaconda environment.
+Open up a command prompt and navigate to *"{YOUR_ROOT}/multicamcalib/"* where all the python codes reside and run *multicamcalib.py* with the installed Anaconda environment.
 
     cd "{YOUR_ROOT}/multicamcalib"
     conda activate {YOUR_ENV_NAME}
@@ -163,8 +163,8 @@ The codes will execute all the steps from [(1). Corner detection](../readme.md#s
 
 
 
-**<h3>Note on step ***[4] FINAL CALIBRATION (BUNDLE ADJUSTMENT)***</h3>**
-Running code number 4 executes *"{YOUR_ROOT}/ceres_bundle_adjustment/build/bin/Release/CeresMulticamCalib.exe"*. If you do not see this folder, that means you have not compiled *"CeresMulticamCalib.exe"* yet. Follow this tutorial before moving on.
+**<h3>!!! Note on step ***[4] FINAL CALIBRATION (BUNDLE ADJUSTMENT) !!!***</h3>**
+Running code number 4 executes *"{YOUR_ROOT}/ceres_bundle_adjustment/build/bin/Release/CeresMulticamCalib.exe"*. If you do not see this folder, that means you have not compiled *"CeresMulticamCalib.exe"* yet. Follow [this tutorial](compile_project.md) before moving on.
 
 ---
 <h2 id="s_config">III. config.json</h2>

@@ -39,7 +39,7 @@
         }
     },
     "bundle_adjustment": {
-        "max_iter": 11,
+        "max_iter": 1000,
         "num_thread": 4,
         "lens_coeffs_reg_weight": 0.1,
         "function_tolerance": 1e-12,

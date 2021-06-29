@@ -212,7 +212,7 @@ def __load_corner_crops(input_paths):
         if crops is None:
             crops = crop
         else:
-            crops = torch.vstack((crops, crop))
+            crops = torch.cat((crops, crop))
     return crops
 
 def train_vae_outlier_detector(logger, input_paths, paths, vae_config):
@@ -228,6 +228,9 @@ def train_vae_outlier_detector(logger, input_paths, paths, vae_config):
 
     # load corner crops
     crops = __load_corner_crops(input_paths)
+    if crops is None:
+        print("Check:", input_paths)
+        assert crops is not None, "input paths error!"
         
     # reproducibility
     torch.manual_seed(0)
