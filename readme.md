@@ -10,7 +10,6 @@
 
 <h2 id="s_intro">1. Introduction</h2>
 
----
 This project calibrates multiple cameras using a planar calibration checkerboard. The pipeline is comprised of *four* main steps: [(1)](#step_1) detect checkerboard corners, [(2)](#step_2) remove outlier corners from the previous step (using *VAE, variational auto-encoder*), [(3)](#step_3) estimate initial camera parameters and world (checkerboard) points, [(4)](#step_4) refine the initial estimates (using *bundle adjustment*), then *optionally* [(5)](#step_5) analyze the calibration result.
 <p style="text-align:center">
 <img src="./docs/assets/tutorial/studio.jpg" width="67%"/>
@@ -43,8 +42,6 @@ The code execution follows the pipeline below:
 
 <h2 id="s_installation">3. Installation</h2>
 
----
-
 (1) Download the project. In a command prompt (Windows) or terminal (Linux):
 
     git clone https://github.com/hjoonpark/MultiCamCalib.git
@@ -71,18 +68,12 @@ The code execution follows the pipeline below:
 
 <h2 id="s_example">4. Tutorial</h2>
 
----
-
 Follow [this quick start tutorial (a step-by-step example)](docs/tutorial.md)
 
 <h2 id="s_details">5. Academical details</h2>
 
----
-
 Click [here](docs/details.md)
 
 <h2 id="s_contact">6. Contact</h2>
-
----
 
 For questions, please contact hjoonpark.us@gmail.com.

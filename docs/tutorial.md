@@ -19,8 +19,6 @@ An example dataset can be found inside *"/example_data/"* folder:
 <img src="./assets/tutorial/studio.jpg" width="600px"/>
 </figure>
 
----
-
 <h2 id="s_input_data">I. Prepare input data</h2>
 
 **Two** files must be modifed to suit your environment: *"/example_data/images_paths.txt"* and *"/mlticamcalib/config.json"*.
@@ -41,7 +39,6 @@ Replace *{YOUR_ROOT}* with your own *absolute* directory of the project. For me,
     ...
     15<<>>C:\Users\hjoon\Desktop\MultiCamCalib\example_data\images\cam_15\15_0250.png
 
----
 Second, modify two paths (*"abs_image_paths_file"* and *"abs_output_dir"*) inside *"/multicamcalib/config.json"*. (A copy of this pre-configured *config.json* file is also located at *"/example_data/"*).
 
 *config.json*:
@@ -56,8 +53,6 @@ Second, modify two paths (*"abs_image_paths_file"* and *"abs_output_dir"*) insid
 Again, replace *{YOUR_ROOT}* with your own *absolute* directory.
 
 This *config.json* file contains all the parameters needed by the project. Each part is explained [here](#s_config), but for now you can leave everything else as it is.
-
----
 
 ***[IMPORTANT FOR OTHER DATASET]*** **Directory structure and naming convention**
 
@@ -98,7 +93,6 @@ Here, the frame numbers must contain the same number of characters. The names of
 
 These are the only constraints required in this project.
 
----
 <h2 id="s_run">II. Run!</h2>
 
 Open up a command prompt and navigate to *"{YOUR_ROOT}/multicamcalib/"* where all the python codes reside and run *multicamcalib.py* with the installed Anaconda environment.
@@ -170,13 +164,9 @@ The codes will execute all the steps from [(1). Corner detection](../readme.md#s
         <img src="./assets/tutorial/outliers_0.png" width="60%"/>
     </figure>
 
-
-
-
 **<h3>Note on step ***[4] FINAL CALIBRATION (BUNDLE ADJUSTMENT)***</h3>**
 Running code number 4 executes *"{YOUR_ROOT}/ceres_bundle_adjustment/build/bin/Release/CeresMulticamCalib.exe"*. If you do not see this folder, that means you have not compiled *"CeresMulticamCalib.exe"* yet. Follow [this tutorial](compile_project.md) before moving on.
 
----
 <h2 id="s_config">III. config.json</h2>
 
 This section explains the parameters defined inside *"{YOUR_ROOT}/multicamcalib/config.json"*.

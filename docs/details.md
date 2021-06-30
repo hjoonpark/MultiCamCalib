@@ -2,8 +2,6 @@
 
 <h2>Table of contents</h2>
 
----
-
 1. [Camera model](#camera-model)
 2. [Bundle adjustment with planar checkerboard](#bundle-adjustment)
 3. [VAE outlier corner detection](#s_vae)  
@@ -21,8 +19,6 @@
 
 <h2 id="camera-model">1. Camera model</h2>
 
----
-
 We model the cameras as the usual pinhole camera following Zhang's method<sup>[[1]](#zhang2000flexible)</sup>. A 3D world point is denoted as ![$p=[x, y, z]$](./assets/eq/world_point.jpg) and its projected image point as ![$q=[u, v]$](./assets/eq/image_point.jpg), related by:
 
 ![pinhole-model](./assets/eq/camera_model.jpg),
@@ -38,7 +34,6 @@ As a result, each camera is modeled with 15 parameters
 
 <h2 id="bundle-adjustment">2. Bundle adjustment with planar checkboard</h2>
 
----
 We denote the positions of checkerboard corners w.r.t. the body coordinate frame as a vectorized form ![$\bb{p}^b=[x_1, y_1, z_1, \dots, x_K, y_K, z_K]^T\in\mathbb{R}^{3K}$](./assets/eq/chb_pts.jpg) where ![$K$](./assets/eq/kk.jpg) is the number of corners on a checkerboard. To enforce the rigid planar assumption, we make ![$\bb{p}^b$](./assets/eq/pb.jpg) constant and set ![$z_k=0$](./assets/eq/z_k.jpg). Then, a rigid body transformation ![$\mathcal{Q}(\cdot)$](./assets/eq/QQ.jpg) is applied to each corner to obtain their world positions ![$\bb{p}^w$](./assets/eq/pw.jpg). The transformation is parameterized by the angle-axis vector ![$\bm{\omega}$](./assets/eq/omega.jpg) for rotation and translation vector ![$\bm{\tau}$](./assets/eq/tau.jpg):
 
 ![chb_pts](./assets/eq/chb_pts2.jpg),
@@ -52,8 +47,6 @@ Using this planar model, we minimize the following sum of mean reprojection erro
 where ![$i$](./assets/eq/i.jpg) is frame index, ![$j$](./assets/eq/j.jpg) is camera index with ![$V_i$](./assets/eq/Vi.jpg) encoding visibility information, ![$\bb{a}_j$](./assets/eq/aj.jpg) is a vector of 15 parameters of camera ![$j$](./assets/eq/j.jpg), ![$(\bm{\bb{\omega}}_i, \bm{\tau}_i)$](./assets/eq/omegatau.jpg) is the pose of the checkerboard, ![$\hat{\bb{q}}_{ij}\in \mathbb{R}^{3K}$](./assets/eq/qhat.jpg) are the vectorized positions of observed corners, ![$\mathcal{P}(\cdot)$](./assets/eq/PP.jpg) projects each of the ![$K$](./assets/eq/kk.jpg) world points ![$\mathcal{Q}(\cdot)$](./assets/eq/QQ.jpg) onto camera's image plane, and ![$\mathcal{N}$](./assets/eq/N.jpg) is for averaging.
 
 <h2 id="s_vae">3. VAE outlier corner detection</h2>
-
----
 
 OpenCV/Matlab corner detectors are known to give incorrect or inaccurate corners especially when the checkerboard is tilted at a large angle w.r.t. the image plane, is under poor lighting, or other objects are present in the image <sup>[[6](#shu2003automatic), [7](#albarelli2009robust), [8](#wang2010recognition)]</sup>. Therefore, We treat incorrectly or inaccurately detected corners as
 outliers and identify them using VAE.
@@ -86,8 +79,6 @@ For VAEs, ![$q_\phi(\bb{z}|\bb{x})$](./assets/eq/vae/q_phi_zx.jpg) refers to a p
 For input images, we first remove shading information through binarization using Otsu's method following Gaussian blurring. The last layer in the decoder is a sigmoid activation which returns pixel values in range [0,1].
 
 <h2 id="experimental">4. Experimental results</h2>
-
----
 
 <h3 id="exp-vae">a. VAE outlier corner detector</h3>
 
@@ -172,10 +163,8 @@ We capture images (~172 frames per camera) of a freely moving checkerboard and c
 
 The box plots of the obtained radiuses are shown in [Figure 9](#exp-real). The radiuses display smaller deviations with statistically significant difference (*p* < 0.05 from paired sample t-test) when images containing the outlier corners are removed.
 
-
 <h2 id="references">References</h2>
 
----
 <a id="zhang2000flexible">[1]</a> Zhang Z. A flexible new technique for camera calibration. IEEE Transactions on pattern analysis and machine intelligence. 2000 Nov;22(11):1330-4.
 
 <a id="szeliski2010computer">[2]</a> Szeliski R. Computer vision: algorithms and applications. Springer Science & Business Media; 2010 Sep 30.

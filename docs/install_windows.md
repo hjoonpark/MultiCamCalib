@@ -2,8 +2,6 @@
 
 <h1>Tested versions</h1>
 
----
-
 * [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/): 16.9.2
 * [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page): 3.5.0
 * [glog](https://github.com/google/glog): 0.5.0

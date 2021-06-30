@@ -2,8 +2,6 @@
 
 <h2>1. Windows</h2>
 
----
-
 1. Modify CMakeList.txt
 
     From *./ceres_bundle_adjustment/CMakeLists.txt*:
@@ -45,7 +43,5 @@
 You do not need to directly run *CeresMulticamCalib.exe*. Python codes will run it as explained in the *section II.* of [this tutorial](tutorial.md).
 
 <h2>2. Linux</h2>
-
----
 
 *Coming...*
