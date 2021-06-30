@@ -101,7 +101,7 @@ Open up a command prompt and navigate to *"{YOUR_ROOT}/multicamcalib/"* where al
     conda activate {YOUR_ENV_NAME}
     python multicamcalib.py
 
-A menu explaining each of the ten code numbers will pop up:
+A menu explaining each of the code number will pop up:
 
 <figure>
 <img src="./assets/tutorial/prompt1.png" width="100%"/>
