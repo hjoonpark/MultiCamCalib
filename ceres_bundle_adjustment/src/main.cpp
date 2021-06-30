@@ -1,4 +1,3 @@
-// A simple program that computes the square root of a number
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -40,7 +39,5 @@ int main(int argc, char* argv[])
     task.init(config);
     task.run(config);
 
-    std::cin.clear(); std::cin.ignore(INT_MAX, '\n');
-    std::cin.get();
     return 0;
 }

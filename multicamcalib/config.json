@@ -1,7 +1,7 @@
 {
     "paths": {
-        "abs_image_paths_file": "D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/image_paths.txt",
-        "abs_output_dir": "D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output",
+        "abs_image_paths_file": "{YOUR_ROOT}/example_data/image_paths.txt",
+        "abs_output_dir": "{YOUR_ROOT}/example_data/output",
         "logs": "logs",
         "corners": "corners",
         "vae_outlier_detector": "vae_outlier_detector",
@@ -29,7 +29,7 @@
         "outlier_thres_ratio": 0.0005
     },
     "calib_initial": {
-        "center_cam_idx": 12,
+        "center_cam_idx": 7,
         "center_img_name": "0000",
         "intrinsics": {
             "n_max_imgs": 40

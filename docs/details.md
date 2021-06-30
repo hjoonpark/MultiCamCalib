@@ -89,74 +89,74 @@ For input images, we first remove shading information through binarization using
 
 ---
 
-<h3 id="exp-vae">VAE outlier corner detector</h3>
+<h3 id="exp-vae">a. VAE outlier corner detector</h3>
 
-<h4 id="vae-effects">Effects of corner outliers on the calibration accuracy</h4>
+1. <label id="vae-effects">Effects of corner outliers on the calibration accuracy</label>
 
-<figure>
+    <figure>
     <img src="./assets/studio_setup.jpg" width="450px" id="studio-setup">
     <figcaption>Figure 1: (a) 16 camera studio setup and (b) its virtual counterpart with a randomly moving checkerboard visualized.</figcaption>
-</figure>
+    </figure>
 
-We generate four sets of synthetic image points of a virtual planar checkerboard ([Figure 1](#studio-setup)). We include different percentages of outlier corners (0%, 0.01%, 0.1%, and 1%) in each image set where each outlier corner is randomly offset from its ground-truth location by 10-15 pixels. Then, we estimate the parameters of 16 cameras using each of the four image sets and compare the root mean square error (RMSE) between the ground-truth.
+    We generate four sets of synthetic image points of a virtual planar checkerboard ([Figure 1](#studio-setup)). We include different percentages of outlier corners (0%, 0.01%, 0.1%, and 1%) in each image set where each outlier corner is randomly offset from its ground-truth location by 10-15 pixels. Then, we estimate the parameters of 16 cameras using each of the four image sets and compare the root mean square error (RMSE) between the ground-truth.
 
-<figure>
-    <img src="./assets/cam_param_compare_outlier.jpg" width="600px" id="rmse">
-    <figcaption>Figure 2: RMSE comparisons of estimated camera parameters, grouped by percentages of outlier corners.</figcaption>
-</figure>
+    <figure>
+        <img src="./assets/cam_param_compare_outlier.jpg" width="600px" id="rmse">
+        <figcaption>Figure 2: RMSE comparisons of estimated camera parameters, grouped by percentages of outlier corners.</figcaption>
+    </figure>
 
-The result is obtained as in [Figure 2](#rmse), where the geodesic distance on unit sphere is used for computing the error in camera orientations ![$\bb{R}'$](./assets/eq/exp/R_dash.jpg), and ![$\bm{t}'$](./assets/eq/exp/t_dash.jpg) denotes camera position. Since each calibration is obtained in an arbitrary coordinates system, we align them with the reference coordinates using Procrustes analysis before computing RMSE.
+    The result is obtained as in [Figure 2](#rmse), where the geodesic distance on unit sphere is used for computing the error in camera orientations ![$\bb{R}'$](./assets/eq/exp/R_dash.jpg), and ![$\bm{t}'$](./assets/eq/exp/t_dash.jpg) denotes camera position. Since each calibration is obtained in an arbitrary coordinates system, we align them with the reference coordinates using Procrustes analysis before computing RMSE.
 
-<h4 id="vae-performance">Performance evaluations</h4>
+2. <label id="vae-performance">Performance evaluations</label>
 
-<h4 id="performance-synth">Synthetic experiment</h4>
+    *<h4 id="performance-synth">Synthetic experiment</h4>*
 
-We generate 10k synthetic corner images with 1% outliers by cropping 15x15 pixels from the template corner after applying random affine transformations:
+    We generate 10k synthetic corner images with 1% outliers by cropping 15x15 pixels from the template corner after applying random affine transformations:
 
-<img src="./assets/corner_template.jpg" width="120px">
+    <img src="./assets/corner_template.jpg" width="120px">
 
-The outlier corners are offset from the center of crop by 2-4 pixels ([Figure 3b](#synth-crops)).
+    The outlier corners are offset from the center of crop by 2-4 pixels ([Figure 3b](#synth-crops)).
 
-We set the latent space of VAE and AE to 2 dimensional, and VAE's KL divergence weight to ![$\omega$](./assets/eq/vae/omega.jpg)=1. Then, VAE and AE are trained for 1k epochs using Adam optimizer with learning rate 1e-3. For PCA and kPCA (with a Gaussian kernel), we use 2 principal axes for reconstructions.
+    We set the latent space of VAE and AE to 2 dimensional, and VAE's KL divergence weight to ![$\omega$](./assets/eq/vae/omega.jpg)=1. Then, VAE and AE are trained for 1k epochs using Adam optimizer with learning rate 1e-3. For PCA and kPCA (with a Gaussian kernel), we use 2 principal axes for reconstructions.
 
-We use the same binarized inputs for both training and testing ([Figure 3](#synth-crops)) and compare the results using the area under the receiver operator characteristic curve (AUROC) and the precision recall curve (AUPRC). Note, when the data for binary classification is heavily imbalanced, AUPRC can be less misleading than AUROC<sup>[[5]](#davis2006relationship)</sup>.
+    We use the same binarized inputs for both training and testing ([Figure 3](#synth-crops)) and compare the results using the area under the receiver operator characteristic curve (AUROC) and the precision recall curve (AUPRC). Note, when the data for binary classification is heavily imbalanced, AUPRC can be less misleading than AUROC<sup>[[5]](#davis2006relationship)</sup>.
 
-<figure>
-    <img src="./assets/vae_synth_crops.jpg" width="600px" id="synth-crops">
-    <figcaption>Figure 3: Reconstructions and normalized losses of synthetic corners: (a) inliers and (b) outliers.</figcaption>
-</figure>
+    <figure>
+        <img src="./assets/vae_synth_crops.jpg" width="600px" id="synth-crops">
+        <figcaption>Figure 3: Reconstructions and normalized losses of synthetic corners: (a) inliers and (b) outliers.</figcaption>
+    </figure>
 
-From [Figure 4](#auroc-auprc), we observe AUPRC of VAE is the largest, outperforming the rest. For VAE, the precision ratio remains very close to 1 even as the recall ratio approaches 1, implying VAE can remove outliers without also removing the inliers.
+    From [Figure 4](#auroc-auprc), we observe AUPRC of VAE is the largest, outperforming the rest. For VAE, the precision ratio remains very close to 1 even as the recall ratio approaches 1, implying VAE can remove outliers without also removing the inliers.
 
-<figure>
-    <img src="./assets/auroc_auprc.jpg" width="600px" id="auroc-auprc">
-    <figcaption>Figure 4: Area under the receiver operator characteristic curve (AUROC) and the precision recall curve (AUPRC).</figcaption>
-</figure>
+    <figure>
+        <img src="./assets/auroc_auprc.jpg" width="600px" id="auroc-auprc">
+        <figcaption>Figure 4: Area under the receiver operator characteristic curve (AUROC) and the precision recall curve (AUPRC).</figcaption>
+    </figure>
 
-The performance differences are more pronounced in the normalized reconstruction losses plot of every data points in [Figure 5](#recon-loss). In contrast to AE, PCA, and kPCA, a clear classification margin is achieved by VAE which implies the outliers can be identified with high confidence.
+    The performance differences are more pronounced in the normalized reconstruction losses plot of every data points in [Figure 5](#recon-loss). In contrast to AE, PCA, and kPCA, a clear classification margin is achieved by VAE which implies the outliers can be identified with high confidence.
 
-<figure>
-    <img src="./assets/recon_loss.jpg" width="600px" id="recon-loss">
-    <figcaption>Figure 5: Normalized reconstruction losses of every corner crops by VAE, AE, PCA, and kPCA.</figcaption>
-</figure>
+    <figure>
+        <img src="./assets/recon_loss.jpg" width="600px" id="recon-loss">
+        <figcaption>Figure 5: Normalized reconstruction losses of every corner crops by VAE, AE, PCA, and kPCA.</figcaption>
+    </figure>
 
-<h4 id="performance-real">Real experiment</h4>
+    *<h4 id="performance-real">Real experiment</h4>*
 
-We capture images (~172 frames per camera) of a freely moving checkerboard and crop 15x15 pixels centered at detected corners. Similarly, we train VAE with heuristically determined KL divergence weight ![$\omega$](./assets/eq/vae/omega.jpg)=0.01 for 200 epochs.
+    We capture images (~172 frames per camera) of a freely moving checkerboard and crop 15x15 pixels centered at detected corners. Similarly, we train VAE with heuristically determined KL divergence weight ![$\omega$](./assets/eq/vae/omega.jpg)=0.01 for 200 epochs.
 
-<figure>
-    <img src="./assets/recons_real.jpg" width="600px" id="recons-real">
-    <figcaption>Figure 6: Original grayscale crops (above) and VAE reconstructions (below) sorted by normalized losses.</figcaption>
-</figure>
+    <figure>
+        <img src="./assets/recons_real.jpg" width="600px" id="recons-real">
+        <figcaption>Figure 6: Original grayscale crops (above) and VAE reconstructions (below) sorted by normalized losses.</figcaption>
+    </figure>
 
-The result in [Figure 6](#recons-real) shows that the outlier corners are reconstructed with large loss, and via visual inspection 37 outliers can be identified (~ 0.015% outliers). Similar to [Figure 5](#recon-loss), a clear classification margin can be observed in the reconstruction loss plot in [Figure 7](#recon-loss-real). Utilizing these, we can determine the outlier corners with high confidence from tens to thousands of images.
+    The result in [Figure 6](#recons-real) shows that the outlier corners are reconstructed with large loss, and via visual inspection 37 outliers can be identified (~ 0.015% outliers). Similar to [Figure 5](#recon-loss), a clear classification margin can be observed in the reconstruction loss plot in [Figure 7](#recon-loss-real). Utilizing these, we can determine the outlier corners with high confidence from tens to thousands of images.
 
-<figure>
-    <img src="./assets/recon_loss_real.jpg" width="600px" id="recon-loss-real">
-    <figcaption>Figure 7: Normalized VAE reconstruction losses of every corner crops displaying distinct classification margin.</figcaption>
-</figure>
+    <figure>
+        <img src="./assets/recon_loss_real.jpg" width="600px" id="recon-loss-real">
+        <figcaption>Figure 7: Normalized VAE reconstruction losses of every corner crops displaying distinct classification margin.</figcaption>
+    </figure>
 
-<h3 id="exp-recon">Improvements on 3D reconstructions accuracy</h3>
+b. <label id="exp-recon">Improvements on 3D reconstructions accuracy</label>
 
 <figure>
     <img src="./assets/bowlingballs.jpg" width="600px" id="ballingballs">

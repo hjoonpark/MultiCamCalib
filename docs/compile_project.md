@@ -1,4 +1,4 @@
-<h1>Compile bundle adjustment project (C/C++)</h1>
+<h1>Build bundle adjustment project (C/C++)</h1>
 
 <h2>Windows</h2>
 
@@ -16,9 +16,11 @@
         34 endif()
            ...
 
-    change *{root}* to your own ceres root directory as explained the [install guide](./install_windows.md) for Windows.
+    change *{root}* to your own (e.g., *C:/Users/hjoon*) ceres root directory as explained in the [installation guide](./install_windows.md).
 
 2. Run CMake
+
+    Install CMake if not already installed: https://cmake.org/install/
 
     Navigate to *./ceres_bundle_adjustment*, make *build* directory, and run cmake
 

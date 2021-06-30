@@ -1,10 +1,22 @@
 # Ceres installation - Windows 10 x64
+
+<h1>Tested versions</h1>
+
+---
+
+* [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/): 16.9.2
+* [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page): 3.5.0
+* [glog](https://github.com/google/glog): 0.5.0
+* [gflags](https://github.com/gflags/gflags): 3.0.2
+* [SuiteSparse](https://github.com/jlblancoc/suitesparse-metis-for-windows): 3.1
+* [Ceres Solver](http://ceres-solver.org/index.html): 2.0.0
+
 Install [CMake](https://cmake.org/) (3.5 or later) if you haven't.
 ## 1. Make directories following the [official guide](http://ceres-solver.org/installation.html).
 
     {root}/ceres
     
-<b>For my PC, `{root}` is `C:/Users/hjoon`.</b> Note, if `{root}` is too long, compiling `suitesparse` gives errors related to path lengths.
+<b>For my PC, `{root}` is `C:/Users/hjoon`.</b> Note, if `{root}` is too long, compiling `suitesparse` may give an error related to path lengths.
 
 ## 2. Prepare [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) (3.3 and later)
 
@@ -22,7 +34,7 @@ We need Eigen3 for Ceres.
     cd build
     cmake ..
 
-You should be see `Eigen3Config.cmake` inside `eigen/build`.
+You should see the needed `Eigen3Config.cmake` inside `eigen/build`.
 
 ## 3. Prepare [glog](https://github.com/google/glog) (0.3.1 or later)
 
@@ -37,7 +49,7 @@ In `{root}\ceres\glog\CMakeList.txt` line 20, make sure `BUILD_SHARED_LIBS` is s
 
     option (BUILD_SHARED_LIBS "Build shared libraries" ON)
 
-Set output directory by adding the following in `{root}\ceres\glog\CMakeList.txt` (e.g., line 13).
+Set output directory by *adding* the following in `{root}\ceres\glog\CMakeList.txt` (e.g., line 13).
 
     set (CMAKE_INSTALL_PREFIX "{root}/ceres/glog/install")
 
@@ -52,7 +64,7 @@ Build:
 - Open Visual Studio (2019) **as administrator** and open the project: `build\glog.sln`
 - Set to *Release x64*, and build `ALL_BUILD` then `INSTALL`
 
-<img src="assets/vs.png" width=60% style="border: 1px solid black; margin-left: 40px">
+<img src="assets/vs.png" width=90% style="border: 1px solid black; margin-left: 40px">
 
   - This should generate `include`, `lib`, and `bin` folders inside: `{root}\ceres\glog\install`
   
@@ -67,7 +79,7 @@ Build:
 
 ### b. Configure and build
 
-Set output directory by adding the following in `{root}\ceres\gflags\CMakeList.txt` (e.g., line 417).
+Set output directory by *adding* the following in `{root}\ceres\gflags\CMakeList.txt` (e.g., line 417).
 
     set (CMAKE_INSTALL_PREFIX "{root}/ceres/gflags/install")
 
@@ -88,7 +100,7 @@ Build:
 
 According to: https://www.jianshu.com/p/736e89aaf788, 
     
-<i>This is not a dependent library that must be installed. However, if installed, it will improve the computational performance of Ceres for sparse matrices, and provide more available optimization algorithms. So although the installation process of Ceres will be more complicated after adding this library, it is still recommended to install. </i>
+    This is not a dependent library that must be installed. However, if installed, it will improve the computational performance of Ceres for sparse matrices, and provide more available optimization algorithms. So although the installation process of Ceres will be more complicated after adding this library, it is still recommended to install.
 
 ### a. Download
 
@@ -119,7 +131,7 @@ Build:
 ### c. Install
 
 - Open Visual Studio (2019) **as administrator** and open the project: `build\SuiteSparseProject.sln`
-- Set to *Release x64*, and build `ALL_BUILD` then `INSTALL`
+- Set to *Release x64*, and build `ALL_BUILD` then `INSTALL` (may take a few minutes)
   - This should generate `include`, `lib` folders inside: `{root}\ceres\suitesparse\install`
 
 # 6. Build [Ceres](http://ceres.org/installation.html)
@@ -151,25 +163,28 @@ Build:
 <!--<img src="assets/7.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
 
 
-  - Click `Add Entry`, and add `SUITESPARSE_CHECK_INCLUDE_DIRS` as `PATH` to `{root}/ceres/suitesparse/install/include`
+  - Click `Add Entry`, and add the following four entries:
+    - `SUITESPARSE_CHECK_INCLUDE_DIRS` as `PATH` to `{root}/ceres/suitesparse/install/include`
+
+    - `SUITESPARSE_CHECK_LIBRARY_DIRS` as `PATH` to `{root}/ceres/suitesparse/install/lib`
+
+    - `BLAS_LIBRARIES` as `FILEPATH` to `{root}/ceres/suitesparse/lapack_windows/x64/libblas.lib`
+
+    - `LAPACK_LIBRARIES` as `FILEPATH` to `{root}/ceres/suitesparse/lapack_windows/x64/liblapack.lib`
+
 
 <!--<img src="assets/4a.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
 
-  - Click `Add Entry`, and add `SUITESPARSE_CHECK_LIBRARY_DIRS` as `PATH` to `{root}/ceres/suitesparse/install/lib`
-
 <!--<img src="assets/4b.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
+
+<!--<img src="assets/6a.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
+
+<!--<img src="assets/6b.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
 
   - Check `SUITESPARSE` and `LAPACK`
 
 <!--<img src="assets/7b.png" width=90% style="border: 1px solid black; margin-left: 80px">-->
 
-  - Click `Add Entry`, and add `BLAS_LIBRARIES` as `FILEPATH` to `{root}/ceres/suitesparse/lapack_windows/x64/libblas.lib`
-
-<!--<img src="assets/6a.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
-
-  - Click `Add Entry`, and add `LAPACK_LIBRARIES` as `FILEPATH` to `{root}/ceres/suitesparse/lapack_windows/x64/liblapack.lib`
-
-<!--<img src="assets/6b.png" width=60% style="border: 1px solid black; margin-left: 80px">-->
 
   - Set `Eigen3_DIR` to `{root}/ceres/eigen/build` (where `Eigen3Config.cmake` is located)
 
@@ -180,5 +195,5 @@ Build:
 ### c. Install
 
 - Open Visual Studio (2019) **as administrator** and open the project: `ceres-build\Ceres.sln`
-- Set to *Release x64*, and build `ALL_BUILD` then `INSTALL`. This should take several minutes.
+- Set to *Release x64*, and build `ALL_BUILD` then `INSTALL` (may take a few minutes)
     - This should generate `include`, `lib`, and `CMake` folders inside: `{root}\ceres\ceres-install`

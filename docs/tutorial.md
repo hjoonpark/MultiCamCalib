@@ -6,6 +6,7 @@ An example dataset can be found inside *"/example_data/"* folder:
     +-- example_data
     |   +-- images
     |   +-- image_paths.txt
+    |   +-- config.json         # a copy of it also exists in ./multicamcalib/
     +-- ceres_bundle_adjustment # contains C/C++ codes
     +-- docs                    
     +-- multicamcalib           # contains python codes
@@ -58,7 +59,7 @@ This *config.json* file contains all the parameters needed by the project. Each 
 
 ---
 
-***[IMPORTANT]*** **Directory structure and naming convention**
+***[IMPORTANT FOR OTHER DATASET]*** **Directory structure and naming convention**
 
 The example dataset are provides in the following structure and naming convention:
 
@@ -112,9 +113,7 @@ A menu explaining each of the ten code numbers will pop up:
 <img src="./assets/tutorial/prompt1.png" width="100%"/>
 </figure>
 
-As explained in [2. Overview](../readme.md#s_overview), each step in the pipeline is executed by running corresponding *code numbers*, each delimited by a whitespace.
-
-For this example dataset, everthing is configured accordingly inside */multicamcalib/config.json*. So let's run through all the steps (type in *1 2 3 4 5*):
+As explained in [2. Overview](../readme.md#s_overview), each step in the pipeline is executed by running its corresponding *code number*, delimited by a whitespace. Inside */multicamcalib/config.json* contains all the configurations needed for the dataset, but for this example everything is already configured. So let's run through all the steps (type in *1 2 3 4 5*):
 
 <figure>
 <img src="./assets/tutorial/prompt2.png" width="100%"/>
@@ -124,7 +123,7 @@ For this example dataset, everthing is configured accordingly inside */multicamc
 
     python multicamcalib.py 1 2 3 4 5
 
-or, if you wish to run only the corner detection part, run *1a*:
+or, (for example) if you wish to run only the corner detection part, run *1a*:
 
     python multicamcalib.py 1a
     
@@ -160,10 +159,21 @@ The codes will execute all the steps from [(1). Corner detection](../readme.md#s
     <img src="./assets/tutorial/reproj_err_histograms.png" width="80%"/>
 </figure>
 
+* VAE corner detector  
+  * train loss plot *"{YOUR_ROOT}/example_data/output/vae_outlier_detector/train_loss_plot.png"*:
+    <figure style="display:inline-block; display:block;" id="fig_histogram">
+        <img src="./assets/tutorial/train_loss_plot.png" width="80%"/>
+    </figure>
+
+  * outlier corners and their reconstructions *"{YOUR_ROOT}/example_data/output/vae_outlier_detector/outliers/"*:
+    <figure style="display:inline-block; display:block;" id="fig_histogram">
+        <img src="./assets/tutorial/outliers_0.png" width="80%"/>
+    </figure>
 
 
 
-**<h3>!!! Note on step ***[4] FINAL CALIBRATION (BUNDLE ADJUSTMENT) !!!***</h3>**
+
+**<h3>Note on step ***[4] FINAL CALIBRATION (BUNDLE ADJUSTMENT)***</h3>**
 Running code number 4 executes *"{YOUR_ROOT}/ceres_bundle_adjustment/build/bin/Release/CeresMulticamCalib.exe"*. If you do not see this folder, that means you have not compiled *"CeresMulticamCalib.exe"* yet. Follow [this tutorial](compile_project.md) before moving on.
 
 ---

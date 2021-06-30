@@ -10,9 +10,9 @@ This project calibrates multiple cameras using a planar calibration checkerboard
 
 
 <figure style="display:inline-block; display:block;">
-<img src="./docs/assets/tutorial/studio.jpg" width="65%"/>
+<img src="./docs/assets/tutorial/studio.jpg" width="60%"/>
 <img src="./docs/assets/bundle_adjustment_v2.gif" width="30%"/>
-<figcaption> Left: 16 synchronized cameras-setup. Right: Bundle adjustment jointly refining the initial parameters of 16 cameras (black) and world points (green).</figcaption>
+<figcaption> Left: 16 synchronized cameras. Right: Bundle adjustment in action.</figcaption>
 </figure>
 <br>
 
@@ -30,9 +30,9 @@ The code execution follows the pipeline below:
 
 <label id="step_1">(1)</label>. **Corner detection**: Checkerboard corners are detected and localized with sub-pixel precision using [OpenCV](https://docs.opencv.org/master/dc/dbb/tutorial_py_calibration.html).
 
-<label id="step_2">(2)</label>. **VAE outlier detector**: Outlier corners are identified using VAE (variational auto-encoder), and corresponding images are discarded. As expained [here](./docs/details.md#s_vae), open source corner detectors (e.g., OpenCV, MATLAB, etc.) are known to give incorrect or inaccurate (outlier) corners which may deteriorate the accuracy of camera caibration. Therefore, we identify and remove images containing the outlier corners.
+<label id="step_2">(2)</label>. **VAE outlier detector**: Outlier corners are identified using VAE (variational auto-encoder), and corresponding images are discarded. As expained [here](./docs/details.md#s_vae) (Section 3), open-source corner detectors (e.g., OpenCV, MATLAB, etc.) are known to give incorrect or inaccurate (i.e., outlier) corners which may deteriorate the accuracy of camera caibration. Therefore, we identify and remove such outliers by tranining a VAE outlier detector. Its effectiveness is explored more [here](./docs/details.md#experimental) (Section 4).
 
-<label id="step_3">(3)</label>. **Initial camera calibration**: Initial camera parameters and frame-wise checkerboard poses are first estimated from a subset of images.
+<label id="step_3">(3)</label>. **Initial camera calibration**: Initial camera parameters and frame-wise checkerboard poses are first estimated from a subset of images using OpenCV.
 
 <label id="step_4">(4)</label>. **Bundle adjustment**: The estimated camera parameters and frame-wise checkerboard poses are further refined using bundle adjustment.
 

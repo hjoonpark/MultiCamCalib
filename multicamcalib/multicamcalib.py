@@ -120,17 +120,18 @@ if __name__ == "__main__":
             # detection results
             generate_detection_results(logger, cameras, paths)
 
-        input_crop_paths = sorted(list(glob.glob(os.path.join(paths["corner_crops"], "*_binary.npy"))))
         if (code_number == "2a") or (code_number == "2"):
             # generate corner crops
             generate_crops_around_corners(logger, img_paths, paths)
 
         if (code_number == "2b") or (code_number == "2"):
             # train vae
+            input_crop_paths = sorted(list(glob.glob(os.path.join(paths["corner_crops"], "*_binary.npy"))))
             train_vae_outlier_detector(logger, input_crop_paths, paths, vae_config)
 
         if (code_number == "2c") or (code_number == "2"):
             # forward vae
+            input_crop_paths = sorted(list(glob.glob(os.path.join(paths["corner_crops"], "*_binary.npy"))))
             model_path = os.path.join(paths["vae_outlier_detector"], "vae_model.pt")
             run_vae_outlier_detector(logger, input_crop_paths, paths, model_path, vae_config)
 
