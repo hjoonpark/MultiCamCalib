@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "*.in": "cpp",
-        "cmath": "cpp",
-        "core": "cpp",
-        "array": "cpp"
-    }
-}
