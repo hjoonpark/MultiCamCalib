@@ -1,6 +1,6 @@
 # Ceres installation - Windows 10 x64
 
-<h1>Tested versions</h1>
+<h2>Tested versions</h2>
 
 * [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/): 16.9.2
 * [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page): 3.5.0
@@ -68,7 +68,7 @@ Build:
   
 
 
-# 4. Prepare [gflags](https://github.com/gflags/gflags)
+## 4. Prepare [gflags](https://github.com/gflags/gflags)
 
 ### a. Download
 
@@ -94,7 +94,7 @@ Build:
 - Set to *Release x64*, and build `ALL_BUILD` then `INSTALL`
   - This should generate `include`, `lib` folders inside: `{root}\ceres\gflags\install`
 
-# 5. Prepare [SuiteSparse](https://github.com/jlblancoc/suitesparse-metis-for-windows)
+## 5. Prepare [SuiteSparse](https://github.com/jlblancoc/suitesparse-metis-for-windows)
 
 According to: https://www.jianshu.com/p/736e89aaf788, 
     
@@ -132,7 +132,7 @@ Build:
 - Set to *Release x64*, and build `ALL_BUILD` then `INSTALL` (may take a few minutes)
   - This should generate `include`, `lib` folders inside: `{root}\ceres\suitesparse\install`
 
-# 6. Build [Ceres](http://ceres.org/installation.html)
+## 6. Build [Ceres](http://ceres.org/installation.html)
 
 ### a. Download
 
