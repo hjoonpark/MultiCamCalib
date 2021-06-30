@@ -1,6 +1,6 @@
 <h1>Build bundle adjustment project (C/C++)</h1>
 
-<h2>Windows</h2>
+<h2>1. Windows</h2>
 
 ---
 
@@ -44,7 +44,7 @@
 
 You do not need to directly run *CeresMulticamCalib.exe*. Python codes will run it as explained in the *section II.* of [this tutorial](tutorial.md).
 
-<h2>Linux</h2>
+<h2>2. Linux</h2>
 
 ---
 

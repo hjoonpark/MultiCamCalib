@@ -29,7 +29,7 @@
         "outlier_thres_ratio": 0.0005
     },
     "calib_initial": {
-        "center_cam_idx": 7,
+        "center_cam_idx": 12,
         "center_img_name": "0000",
         "intrinsics": {
             "n_max_imgs": 40

@@ -1,0 +1,254 @@
+2021-06-25 01:10:34,226 | cornerdetect_cam13 | INFO | Corner detection - START	: camera 13	| 251 images
+2021-06-25 01:11:09,508 | cornerdetect_cam13 | INFO | Corner detection - START	: camera 13	| 251 images
+2021-06-25 01:11:09,628 | cornerdetect_cam13 | INFO | (1/251) 13_0000.png	| NOT FOUND
+2021-06-25 01:11:09,762 | cornerdetect_cam13 | INFO | (2/251) 13_0001.png	| NOT FOUND
+2021-06-25 01:11:09,875 | cornerdetect_cam13 | INFO | (3/251) 13_0002.png	| NOT FOUND
+2021-06-25 01:11:09,958 | cornerdetect_cam13 | INFO | (4/251) 13_0003.png	| NOT FOUND
+2021-06-25 01:11:10,067 | cornerdetect_cam13 | INFO | (5/251) 13_0004.png	| NOT FOUND
+2021-06-25 01:11:10,256 | cornerdetect_cam13 | INFO | (6/251) 13_0005.png	| NOT FOUND
+2021-06-25 01:11:10,386 | cornerdetect_cam13 | INFO | (7/251) 13_0006.png	| NOT FOUND
+2021-06-25 01:11:10,506 | cornerdetect_cam13 | INFO | (8/251) 13_0007.png	| NOT FOUND
+2021-06-25 01:11:10,590 | cornerdetect_cam13 | INFO | (9/251) 13_0008.png	| NOT FOUND
+2021-06-25 01:11:10,710 | cornerdetect_cam13 | INFO | (10/251) 13_0009.png	| NOT FOUND
+2021-06-25 01:11:10,816 | cornerdetect_cam13 | INFO | (11/251) 13_0010.png	| NOT FOUND
+2021-06-25 01:11:10,986 | cornerdetect_cam13 | INFO | (12/251) 13_0011.png	| NOT FOUND
+2021-06-25 01:11:11,087 | cornerdetect_cam13 | INFO | (13/251) 13_0012.png	| NOT FOUND
+2021-06-25 01:11:11,181 | cornerdetect_cam13 | INFO | (14/251) 13_0013.png	| NOT FOUND
+2021-06-25 01:11:11,268 | cornerdetect_cam13 | INFO | (15/251) 13_0014.png	| NOT FOUND
+2021-06-25 01:11:11,347 | cornerdetect_cam13 | INFO | (16/251) 13_0015.png	| NOT FOUND
+2021-06-25 01:11:11,433 | cornerdetect_cam13 | INFO | (17/251) 13_0016.png	| NOT FOUND
+2021-06-25 01:11:11,521 | cornerdetect_cam13 | INFO | (18/251) 13_0017.png	| NOT FOUND
+2021-06-25 01:11:11,642 | cornerdetect_cam13 | INFO | (19/251) 13_0018.png	| NOT FOUND
+2021-06-25 01:11:11,764 | cornerdetect_cam13 | INFO | (20/251) 13_0019.png	| NOT FOUND
+2021-06-25 01:11:11,842 | cornerdetect_cam13 | INFO | (21/251) 13_0020.png	| NOT FOUND
+2021-06-25 01:11:11,936 | cornerdetect_cam13 | INFO | (22/251) 13_0021.png	| NOT FOUND
+2021-06-25 01:11:12,021 | cornerdetect_cam13 | INFO | (23/251) 13_0022.png	| NOT FOUND
+2021-06-25 01:11:12,121 | cornerdetect_cam13 | INFO | (24/251) 13_0023.png	| NOT FOUND
+2021-06-25 01:11:12,251 | cornerdetect_cam13 | INFO | (25/251) 13_0024.png	| NOT FOUND
+2021-06-25 01:11:12,382 | cornerdetect_cam13 | INFO | (26/251) 13_0025.png	| NOT FOUND
+2021-06-25 01:11:12,477 | cornerdetect_cam13 | INFO | (27/251) 13_0026.png	| NOT FOUND
+2021-06-25 01:11:12,606 | cornerdetect_cam13 | INFO | (28/251) 13_0027.png	| NOT FOUND
+2021-06-25 01:11:12,725 | cornerdetect_cam13 | INFO | (29/251) 13_0028.png	| NOT FOUND
+2021-06-25 01:11:12,848 | cornerdetect_cam13 | INFO | (30/251) 13_0029.png	| NOT FOUND
+2021-06-25 01:11:12,967 | cornerdetect_cam13 | INFO | (31/251) 13_0030.png	| NOT FOUND
+2021-06-25 01:11:13,068 | cornerdetect_cam13 | INFO | (32/251) 13_0031.png	| NOT FOUND
+2021-06-25 01:11:13,221 | cornerdetect_cam13 | INFO | (33/251) 13_0032.png	| NOT FOUND
+2021-06-25 01:11:13,305 | cornerdetect_cam13 | INFO | (34/251) 13_0033.png	| NOT FOUND
+2021-06-25 01:11:13,404 | cornerdetect_cam13 | INFO | (35/251) 13_0034.png	| NOT FOUND
+2021-06-25 01:11:13,494 | cornerdetect_cam13 | INFO | (36/251) 13_0035.png	| NOT FOUND
+2021-06-25 01:11:13,595 | cornerdetect_cam13 | INFO | (37/251) 13_0036.png	| NOT FOUND
+2021-06-25 01:11:13,688 | cornerdetect_cam13 | INFO | (38/251) 13_0037.png	| NOT FOUND
+2021-06-25 01:11:13,779 | cornerdetect_cam13 | INFO | (39/251) 13_0038.png	| NOT FOUND
+2021-06-25 01:11:13,865 | cornerdetect_cam13 | INFO | (40/251) 13_0039.png	| NOT FOUND
+2021-06-25 01:11:13,957 | cornerdetect_cam13 | INFO | (41/251) 13_0040.png	| NOT FOUND
+2021-06-25 01:11:14,085 | cornerdetect_cam13 | INFO | (42/251) 13_0041.png	| NOT FOUND
+2021-06-25 01:11:14,181 | cornerdetect_cam13 | INFO | (43/251) 13_0042.png	| NOT FOUND
+2021-06-25 01:11:14,287 | cornerdetect_cam13 | INFO | (44/251) 13_0043.png	| NOT FOUND
+2021-06-25 01:11:14,372 | cornerdetect_cam13 | INFO | (45/251) 13_0044.png	| NOT FOUND
+2021-06-25 01:11:14,475 | cornerdetect_cam13 | INFO | (46/251) 13_0045.png	| NOT FOUND
+2021-06-25 01:11:14,571 | cornerdetect_cam13 | INFO | (47/251) 13_0046.png	| NOT FOUND
+2021-06-25 01:11:14,664 | cornerdetect_cam13 | INFO | (48/251) 13_0047.png	| NOT FOUND
+2021-06-25 01:11:14,749 | cornerdetect_cam13 | INFO | (49/251) 13_0048.png	| NOT FOUND
+2021-06-25 01:11:14,846 | cornerdetect_cam13 | INFO | (50/251) 13_0049.png	| NOT FOUND
+2021-06-25 01:11:14,945 | cornerdetect_cam13 | INFO | (51/251) 13_0050.png	| NOT FOUND
+2021-06-25 01:11:15,021 | cornerdetect_cam13 | INFO | (52/251) 13_0051.png	| NOT FOUND
+2021-06-25 01:11:15,100 | cornerdetect_cam13 | INFO | (53/251) 13_0052.png	| NOT FOUND
+2021-06-25 01:11:15,182 | cornerdetect_cam13 | INFO | (54/251) 13_0053.png	| NOT FOUND
+2021-06-25 01:11:15,277 | cornerdetect_cam13 | INFO | (55/251) 13_0054.png	| NOT FOUND
+2021-06-25 01:11:15,366 | cornerdetect_cam13 | INFO | (56/251) 13_0055.png	| NOT FOUND
+2021-06-25 01:11:15,451 | cornerdetect_cam13 | INFO | (57/251) 13_0056.png	| NOT FOUND
+2021-06-25 01:11:15,535 | cornerdetect_cam13 | INFO | (58/251) 13_0057.png	| NOT FOUND
+2021-06-25 01:11:15,579 | cornerdetect_cam13 | INFO | (59/251) 13_0058.png	| FOUND
+2021-06-25 01:11:15,627 | cornerdetect_cam13 | INFO | (60/251) 13_0059.png	| FOUND
+2021-06-25 01:11:15,679 | cornerdetect_cam13 | INFO | (61/251) 13_0060.png	| FOUND
+2021-06-25 01:11:15,767 | cornerdetect_cam13 | INFO | (62/251) 13_0061.png	| NOT FOUND
+2021-06-25 01:11:15,855 | cornerdetect_cam13 | INFO | (63/251) 13_0062.png	| NOT FOUND
+2021-06-25 01:11:15,950 | cornerdetect_cam13 | INFO | (64/251) 13_0063.png	| NOT FOUND
+2021-06-25 01:11:16,046 | cornerdetect_cam13 | INFO | (65/251) 13_0064.png	| NOT FOUND
+2021-06-25 01:11:16,144 | cornerdetect_cam13 | INFO | (66/251) 13_0065.png	| NOT FOUND
+2021-06-25 01:11:16,230 | cornerdetect_cam13 | INFO | (67/251) 13_0066.png	| NOT FOUND
+2021-06-25 01:11:16,329 | cornerdetect_cam13 | INFO | (68/251) 13_0067.png	| NOT FOUND
+2021-06-25 01:11:16,436 | cornerdetect_cam13 | INFO | (69/251) 13_0068.png	| NOT FOUND
+2021-06-25 01:11:16,549 | cornerdetect_cam13 | INFO | (70/251) 13_0069.png	| NOT FOUND
+2021-06-25 01:11:16,649 | cornerdetect_cam13 | INFO | (71/251) 13_0070.png	| NOT FOUND
+2021-06-25 01:11:16,734 | cornerdetect_cam13 | INFO | (72/251) 13_0071.png	| NOT FOUND
+2021-06-25 01:11:16,831 | cornerdetect_cam13 | INFO | (73/251) 13_0072.png	| NOT FOUND
+2021-06-25 01:11:16,960 | cornerdetect_cam13 | INFO | (74/251) 13_0073.png	| FOUND
+2021-06-25 01:11:17,055 | cornerdetect_cam13 | INFO | (75/251) 13_0074.png	| FOUND
+2021-06-25 01:11:17,144 | cornerdetect_cam13 | INFO | (76/251) 13_0075.png	| FOUND
+2021-06-25 01:11:17,232 | cornerdetect_cam13 | INFO | (77/251) 13_0076.png	| NOT FOUND
+2021-06-25 01:11:17,326 | cornerdetect_cam13 | INFO | (78/251) 13_0077.png	| NOT FOUND
+2021-06-25 01:11:17,419 | cornerdetect_cam13 | INFO | (79/251) 13_0078.png	| NOT FOUND
+2021-06-25 01:11:18,060 | cornerdetect_cam13 | INFO | (80/251) 13_0079.png	| NOT FOUND
+2021-06-25 01:11:18,140 | cornerdetect_cam13 | INFO | (81/251) 13_0080.png	| NOT FOUND
+2021-06-25 01:11:18,229 | cornerdetect_cam13 | INFO | (82/251) 13_0081.png	| NOT FOUND
+2021-06-25 01:11:18,314 | cornerdetect_cam13 | INFO | (83/251) 13_0082.png	| NOT FOUND
+2021-06-25 01:11:18,397 | cornerdetect_cam13 | INFO | (84/251) 13_0083.png	| NOT FOUND
+2021-06-25 01:11:18,480 | cornerdetect_cam13 | INFO | (85/251) 13_0084.png	| NOT FOUND
+2021-06-25 01:11:18,554 | cornerdetect_cam13 | INFO | (86/251) 13_0085.png	| NOT FOUND
+2021-06-25 01:11:18,647 | cornerdetect_cam13 | INFO | (87/251) 13_0086.png	| NOT FOUND
+2021-06-25 01:11:18,767 | cornerdetect_cam13 | INFO | (88/251) 13_0087.png	| NOT FOUND
+2021-06-25 01:11:18,868 | cornerdetect_cam13 | INFO | (89/251) 13_0088.png	| FOUND
+2021-06-25 01:11:18,955 | cornerdetect_cam13 | INFO | (90/251) 13_0089.png	| FOUND
+2021-06-25 01:11:19,049 | cornerdetect_cam13 | INFO | (91/251) 13_0090.png	| FOUND
+2021-06-25 01:11:19,140 | cornerdetect_cam13 | INFO | (92/251) 13_0091.png	| FOUND
+2021-06-25 01:11:19,251 | cornerdetect_cam13 | INFO | (93/251) 13_0092.png	| NOT FOUND
+2021-06-25 01:11:19,332 | cornerdetect_cam13 | INFO | (94/251) 13_0093.png	| NOT FOUND
+2021-06-25 01:11:19,409 | cornerdetect_cam13 | INFO | (95/251) 13_0094.png	| NOT FOUND
+2021-06-25 01:11:19,500 | cornerdetect_cam13 | INFO | (96/251) 13_0095.png	| NOT FOUND
+2021-06-25 01:11:19,584 | cornerdetect_cam13 | INFO | (97/251) 13_0096.png	| NOT FOUND
+2021-06-25 01:11:19,665 | cornerdetect_cam13 | INFO | (98/251) 13_0097.png	| NOT FOUND
+2021-06-25 01:11:19,754 | cornerdetect_cam13 | INFO | (99/251) 13_0098.png	| NOT FOUND
+2021-06-25 01:11:19,838 | cornerdetect_cam13 | INFO | (100/251) 13_0099.png	| NOT FOUND
+2021-06-25 01:11:19,923 | cornerdetect_cam13 | INFO | (101/251) 13_0100.png	| NOT FOUND
+2021-06-25 01:11:20,010 | cornerdetect_cam13 | INFO | (102/251) 13_0101.png	| NOT FOUND
+2021-06-25 01:11:20,083 | cornerdetect_cam13 | INFO | (103/251) 13_0102.png	| NOT FOUND
+2021-06-25 01:11:20,168 | cornerdetect_cam13 | INFO | (104/251) 13_0103.png	| NOT FOUND
+2021-06-25 01:11:20,275 | cornerdetect_cam13 | INFO | (105/251) 13_0104.png	| NOT FOUND
+2021-06-25 01:11:20,363 | cornerdetect_cam13 | INFO | (106/251) 13_0105.png	| NOT FOUND
+2021-06-25 01:11:20,434 | cornerdetect_cam13 | INFO | (107/251) 13_0106.png	| NOT FOUND
+2021-06-25 01:11:20,510 | cornerdetect_cam13 | INFO | (108/251) 13_0107.png	| NOT FOUND
+2021-06-25 01:11:20,587 | cornerdetect_cam13 | INFO | (109/251) 13_0108.png	| NOT FOUND
+2021-06-25 01:11:20,717 | cornerdetect_cam13 | INFO | (110/251) 13_0109.png	| NOT FOUND
+2021-06-25 01:11:20,801 | cornerdetect_cam13 | INFO | (111/251) 13_0110.png	| NOT FOUND
+2021-06-25 01:11:20,877 | cornerdetect_cam13 | INFO | (112/251) 13_0111.png	| NOT FOUND
+2021-06-25 01:11:20,969 | cornerdetect_cam13 | INFO | (113/251) 13_0112.png	| NOT FOUND
+2021-06-25 01:11:21,046 | cornerdetect_cam13 | INFO | (114/251) 13_0113.png	| NOT FOUND
+2021-06-25 01:11:21,113 | cornerdetect_cam13 | INFO | (115/251) 13_0114.png	| NOT FOUND
+2021-06-25 01:11:21,182 | cornerdetect_cam13 | INFO | (116/251) 13_0115.png	| NOT FOUND
+2021-06-25 01:11:21,257 | cornerdetect_cam13 | INFO | (117/251) 13_0116.png	| NOT FOUND
+2021-06-25 01:11:21,347 | cornerdetect_cam13 | INFO | (118/251) 13_0117.png	| NOT FOUND
+2021-06-25 01:11:21,455 | cornerdetect_cam13 | INFO | (119/251) 13_0118.png	| NOT FOUND
+2021-06-25 01:11:21,543 | cornerdetect_cam13 | INFO | (120/251) 13_0119.png	| NOT FOUND
+2021-06-25 01:11:21,623 | cornerdetect_cam13 | INFO | (121/251) 13_0120.png	| NOT FOUND
+2021-06-25 01:11:21,667 | cornerdetect_cam13 | INFO | (122/251) 13_0121.png	| FOUND
+2021-06-25 01:11:21,773 | cornerdetect_cam13 | INFO | (123/251) 13_0122.png	| NOT FOUND
+2021-06-25 01:11:21,896 | cornerdetect_cam13 | INFO | (124/251) 13_0123.png	| FOUND
+2021-06-25 01:11:21,983 | cornerdetect_cam13 | INFO | (125/251) 13_0124.png	| NOT FOUND
+2021-06-25 01:11:22,073 | cornerdetect_cam13 | INFO | (126/251) 13_0125.png	| NOT FOUND
+2021-06-25 01:11:22,153 | cornerdetect_cam13 | INFO | (127/251) 13_0126.png	| FOUND
+2021-06-25 01:11:22,196 | cornerdetect_cam13 | INFO | (128/251) 13_0127.png	| FOUND
+2021-06-25 01:11:22,239 | cornerdetect_cam13 | INFO | (129/251) 13_0128.png	| FOUND
+2021-06-25 01:11:22,323 | cornerdetect_cam13 | INFO | (130/251) 13_0129.png	| NOT FOUND
+2021-06-25 01:11:22,411 | cornerdetect_cam13 | INFO | (131/251) 13_0130.png	| NOT FOUND
+2021-06-25 01:11:22,485 | cornerdetect_cam13 | INFO | (132/251) 13_0131.png	| NOT FOUND
+2021-06-25 01:11:22,530 | cornerdetect_cam13 | INFO | (133/251) 13_0132.png	| FOUND
+2021-06-25 01:11:22,570 | cornerdetect_cam13 | INFO | (134/251) 13_0133.png	| FOUND
+2021-06-25 01:11:22,608 | cornerdetect_cam13 | INFO | (135/251) 13_0134.png	| FOUND
+2021-06-25 01:11:22,651 | cornerdetect_cam13 | INFO | (136/251) 13_0135.png	| FOUND
+2021-06-25 01:11:22,695 | cornerdetect_cam13 | INFO | (137/251) 13_0136.png	| FOUND
+2021-06-25 01:11:22,738 | cornerdetect_cam13 | INFO | (138/251) 13_0137.png	| FOUND
+2021-06-25 01:11:22,789 | cornerdetect_cam13 | INFO | (139/251) 13_0138.png	| FOUND
+2021-06-25 01:11:22,830 | cornerdetect_cam13 | INFO | (140/251) 13_0139.png	| FOUND
+2021-06-25 01:11:22,884 | cornerdetect_cam13 | INFO | (141/251) 13_0140.png	| FOUND
+2021-06-25 01:11:22,926 | cornerdetect_cam13 | INFO | (142/251) 13_0141.png	| FOUND
+2021-06-25 01:11:23,034 | cornerdetect_cam13 | INFO | (143/251) 13_0142.png	| NOT FOUND
+2021-06-25 01:11:23,125 | cornerdetect_cam13 | INFO | (144/251) 13_0143.png	| NOT FOUND
+2021-06-25 01:11:23,206 | cornerdetect_cam13 | INFO | (145/251) 13_0144.png	| NOT FOUND
+2021-06-25 01:11:23,293 | cornerdetect_cam13 | INFO | (146/251) 13_0145.png	| NOT FOUND
+2021-06-25 01:11:23,334 | cornerdetect_cam13 | INFO | (147/251) 13_0146.png	| FOUND
+2021-06-25 01:11:23,376 | cornerdetect_cam13 | INFO | (148/251) 13_0147.png	| FOUND
+2021-06-25 01:11:23,474 | cornerdetect_cam13 | INFO | (149/251) 13_0148.png	| NOT FOUND
+2021-06-25 01:11:23,548 | cornerdetect_cam13 | INFO | (150/251) 13_0149.png	| NOT FOUND
+2021-06-25 01:11:23,645 | cornerdetect_cam13 | INFO | (151/251) 13_0150.png	| NOT FOUND
+2021-06-25 01:11:23,742 | cornerdetect_cam13 | INFO | (152/251) 13_0151.png	| NOT FOUND
+2021-06-25 01:11:23,822 | cornerdetect_cam13 | INFO | (153/251) 13_0152.png	| NOT FOUND
+2021-06-25 01:11:23,904 | cornerdetect_cam13 | INFO | (154/251) 13_0153.png	| NOT FOUND
+2021-06-25 01:11:24,029 | cornerdetect_cam13 | INFO | (155/251) 13_0154.png	| NOT FOUND
+2021-06-25 01:11:24,109 | cornerdetect_cam13 | INFO | (156/251) 13_0155.png	| NOT FOUND
+2021-06-25 01:11:24,197 | cornerdetect_cam13 | INFO | (157/251) 13_0156.png	| NOT FOUND
+2021-06-25 01:11:24,271 | cornerdetect_cam13 | INFO | (158/251) 13_0157.png	| NOT FOUND
+2021-06-25 01:11:24,341 | cornerdetect_cam13 | INFO | (159/251) 13_0158.png	| NOT FOUND
+2021-06-25 01:11:24,439 | cornerdetect_cam13 | INFO | (160/251) 13_0159.png	| NOT FOUND
+2021-06-25 01:11:24,536 | cornerdetect_cam13 | INFO | (161/251) 13_0160.png	| NOT FOUND
+2021-06-25 01:11:24,632 | cornerdetect_cam13 | INFO | (162/251) 13_0161.png	| NOT FOUND
+2021-06-25 01:11:24,726 | cornerdetect_cam13 | INFO | (163/251) 13_0162.png	| NOT FOUND
+2021-06-25 01:11:24,801 | cornerdetect_cam13 | INFO | (164/251) 13_0163.png	| NOT FOUND
+2021-06-25 01:11:24,884 | cornerdetect_cam13 | INFO | (165/251) 13_0164.png	| NOT FOUND
+2021-06-25 01:11:24,982 | cornerdetect_cam13 | INFO | (166/251) 13_0165.png	| NOT FOUND
+2021-06-25 01:11:25,086 | cornerdetect_cam13 | INFO | (167/251) 13_0166.png	| NOT FOUND
+2021-06-25 01:11:25,181 | cornerdetect_cam13 | INFO | (168/251) 13_0167.png	| NOT FOUND
+2021-06-25 01:11:25,283 | cornerdetect_cam13 | INFO | (169/251) 13_0168.png	| NOT FOUND
+2021-06-25 01:11:25,377 | cornerdetect_cam13 | INFO | (170/251) 13_0169.png	| NOT FOUND
+2021-06-25 01:11:25,460 | cornerdetect_cam13 | INFO | (171/251) 13_0170.png	| NOT FOUND
+2021-06-25 01:11:25,536 | cornerdetect_cam13 | INFO | (172/251) 13_0171.png	| NOT FOUND
+2021-06-25 01:11:25,613 | cornerdetect_cam13 | INFO | (173/251) 13_0172.png	| NOT FOUND
+2021-06-25 01:11:25,706 | cornerdetect_cam13 | INFO | (174/251) 13_0173.png	| NOT FOUND
+2021-06-25 01:11:25,788 | cornerdetect_cam13 | INFO | (175/251) 13_0174.png	| NOT FOUND
+2021-06-25 01:11:25,881 | cornerdetect_cam13 | INFO | (176/251) 13_0175.png	| NOT FOUND
+2021-06-25 01:11:25,989 | cornerdetect_cam13 | INFO | (177/251) 13_0176.png	| NOT FOUND
+2021-06-25 01:11:26,064 | cornerdetect_cam13 | INFO | (178/251) 13_0177.png	| NOT FOUND
+2021-06-25 01:11:26,171 | cornerdetect_cam13 | INFO | (179/251) 13_0178.png	| NOT FOUND
+2021-06-25 01:11:26,258 | cornerdetect_cam13 | INFO | (180/251) 13_0179.png	| NOT FOUND
+2021-06-25 01:11:26,342 | cornerdetect_cam13 | INFO | (181/251) 13_0180.png	| NOT FOUND
+2021-06-25 01:11:26,440 | cornerdetect_cam13 | INFO | (182/251) 13_0181.png	| NOT FOUND
+2021-06-25 01:11:26,530 | cornerdetect_cam13 | INFO | (183/251) 13_0182.png	| NOT FOUND
+2021-06-25 01:11:26,606 | cornerdetect_cam13 | INFO | (184/251) 13_0183.png	| NOT FOUND
+2021-06-25 01:11:26,683 | cornerdetect_cam13 | INFO | (185/251) 13_0184.png	| NOT FOUND
+2021-06-25 01:11:26,753 | cornerdetect_cam13 | INFO | (186/251) 13_0185.png	| NOT FOUND
+2021-06-25 01:11:26,831 | cornerdetect_cam13 | INFO | (187/251) 13_0186.png	| NOT FOUND
+2021-06-25 01:11:26,929 | cornerdetect_cam13 | INFO | (188/251) 13_0187.png	| NOT FOUND
+2021-06-25 01:11:27,010 | cornerdetect_cam13 | INFO | (189/251) 13_0188.png	| NOT FOUND
+2021-06-25 01:11:27,086 | cornerdetect_cam13 | INFO | (190/251) 13_0189.png	| NOT FOUND
+2021-06-25 01:11:27,168 | cornerdetect_cam13 | INFO | (191/251) 13_0190.png	| NOT FOUND
+2021-06-25 01:11:27,247 | cornerdetect_cam13 | INFO | (192/251) 13_0191.png	| NOT FOUND
+2021-06-25 01:11:27,339 | cornerdetect_cam13 | INFO | (193/251) 13_0192.png	| NOT FOUND
+2021-06-25 01:11:27,451 | cornerdetect_cam13 | INFO | (194/251) 13_0193.png	| NOT FOUND
+2021-06-25 01:11:27,555 | cornerdetect_cam13 | INFO | (195/251) 13_0194.png	| NOT FOUND
+2021-06-25 01:11:27,633 | cornerdetect_cam13 | INFO | (196/251) 13_0195.png	| NOT FOUND
+2021-06-25 01:11:27,706 | cornerdetect_cam13 | INFO | (197/251) 13_0196.png	| NOT FOUND
+2021-06-25 01:11:27,782 | cornerdetect_cam13 | INFO | (198/251) 13_0197.png	| NOT FOUND
+2021-06-25 01:11:27,859 | cornerdetect_cam13 | INFO | (199/251) 13_0198.png	| NOT FOUND
+2021-06-25 01:11:27,988 | cornerdetect_cam13 | INFO | (200/251) 13_0199.png	| NOT FOUND
+2021-06-25 01:11:28,071 | cornerdetect_cam13 | INFO | (201/251) 13_0200.png	| NOT FOUND
+2021-06-25 01:11:28,165 | cornerdetect_cam13 | INFO | (202/251) 13_0201.png	| NOT FOUND
+2021-06-25 01:11:28,227 | cornerdetect_cam13 | INFO | (203/251) 13_0202.png	| FOUND
+2021-06-25 01:11:28,268 | cornerdetect_cam13 | INFO | (204/251) 13_0203.png	| FOUND
+2021-06-25 01:11:28,396 | cornerdetect_cam13 | INFO | (205/251) 13_0204.png	| NOT FOUND
+2021-06-25 01:11:28,502 | cornerdetect_cam13 | INFO | (206/251) 13_0205.png	| NOT FOUND
+2021-06-25 01:11:28,608 | cornerdetect_cam13 | INFO | (207/251) 13_0206.png	| NOT FOUND
+2021-06-25 01:11:29,978 | cornerdetect_cam13 | INFO | (208/251) 13_0207.png	| NOT FOUND
+2021-06-25 01:11:30,090 | cornerdetect_cam13 | INFO | (209/251) 13_0208.png	| NOT FOUND
+2021-06-25 01:11:30,185 | cornerdetect_cam13 | INFO | (210/251) 13_0209.png	| NOT FOUND
+2021-06-25 01:11:30,266 | cornerdetect_cam13 | INFO | (211/251) 13_0210.png	| FOUND
+2021-06-25 01:11:30,373 | cornerdetect_cam13 | INFO | (212/251) 13_0211.png	| FOUND
+2021-06-25 01:11:30,511 | cornerdetect_cam13 | INFO | (213/251) 13_0212.png	| NOT FOUND
+2021-06-25 01:11:30,606 | cornerdetect_cam13 | INFO | (214/251) 13_0213.png	| NOT FOUND
+2021-06-25 01:11:30,714 | cornerdetect_cam13 | INFO | (215/251) 13_0214.png	| NOT FOUND
+2021-06-25 01:11:30,861 | cornerdetect_cam13 | INFO | (216/251) 13_0215.png	| NOT FOUND
+2021-06-25 01:11:31,018 | cornerdetect_cam13 | INFO | (217/251) 13_0216.png	| NOT FOUND
+2021-06-25 01:11:31,111 | cornerdetect_cam13 | INFO | (218/251) 13_0217.png	| NOT FOUND
+2021-06-25 01:11:31,194 | cornerdetect_cam13 | INFO | (219/251) 13_0218.png	| NOT FOUND
+2021-06-25 01:11:31,239 | cornerdetect_cam13 | INFO | (220/251) 13_0219.png	| FOUND
+2021-06-25 01:11:31,280 | cornerdetect_cam13 | INFO | (221/251) 13_0220.png	| FOUND
+2021-06-25 01:11:31,371 | cornerdetect_cam13 | INFO | (222/251) 13_0221.png	| NOT FOUND
+2021-06-25 01:11:31,453 | cornerdetect_cam13 | INFO | (223/251) 13_0222.png	| NOT FOUND
+2021-06-25 01:11:31,528 | cornerdetect_cam13 | INFO | (224/251) 13_0223.png	| NOT FOUND
+2021-06-25 01:11:31,609 | cornerdetect_cam13 | INFO | (225/251) 13_0224.png	| NOT FOUND
+2021-06-25 01:11:31,692 | cornerdetect_cam13 | INFO | (226/251) 13_0225.png	| NOT FOUND
+2021-06-25 01:11:31,772 | cornerdetect_cam13 | INFO | (227/251) 13_0226.png	| NOT FOUND
+2021-06-25 01:11:31,814 | cornerdetect_cam13 | INFO | (228/251) 13_0227.png	| FOUND
+2021-06-25 01:11:31,861 | cornerdetect_cam13 | INFO | (229/251) 13_0228.png	| FOUND
+2021-06-25 01:11:31,969 | cornerdetect_cam13 | INFO | (230/251) 13_0229.png	| NOT FOUND
+2021-06-25 01:11:32,069 | cornerdetect_cam13 | INFO | (231/251) 13_0230.png	| NOT FOUND
+2021-06-25 01:11:32,159 | cornerdetect_cam13 | INFO | (232/251) 13_0231.png	| FOUND
+2021-06-25 01:11:32,196 | cornerdetect_cam13 | INFO | (233/251) 13_0232.png	| FOUND
+2021-06-25 01:11:32,253 | cornerdetect_cam13 | INFO | (234/251) 13_0233.png	| FOUND
+2021-06-25 01:11:32,380 | cornerdetect_cam13 | INFO | (235/251) 13_0234.png	| FOUND
+2021-06-25 01:11:32,420 | cornerdetect_cam13 | INFO | (236/251) 13_0235.png	| FOUND
+2021-06-25 01:11:32,516 | cornerdetect_cam13 | INFO | (237/251) 13_0236.png	| FOUND
+2021-06-25 01:11:32,627 | cornerdetect_cam13 | INFO | (238/251) 13_0237.png	| FOUND
+2021-06-25 01:11:32,717 | cornerdetect_cam13 | INFO | (239/251) 13_0238.png	| NOT FOUND
+2021-06-25 01:11:32,793 | cornerdetect_cam13 | INFO | (240/251) 13_0239.png	| FOUND
+2021-06-25 01:11:32,865 | cornerdetect_cam13 | INFO | (241/251) 13_0240.png	| FOUND
+2021-06-25 01:11:32,905 | cornerdetect_cam13 | INFO | (242/251) 13_0241.png	| FOUND
+2021-06-25 01:11:32,941 | cornerdetect_cam13 | INFO | (243/251) 13_0242.png	| FOUND
+2021-06-25 01:11:33,036 | cornerdetect_cam13 | INFO | (244/251) 13_0243.png	| NOT FOUND
+2021-06-25 01:11:33,097 | cornerdetect_cam13 | INFO | (245/251) 13_0244.png	| NOT FOUND
+2021-06-25 01:11:33,166 | cornerdetect_cam13 | INFO | (246/251) 13_0245.png	| NOT FOUND
+2021-06-25 01:11:33,236 | cornerdetect_cam13 | INFO | (247/251) 13_0246.png	| NOT FOUND
+2021-06-25 01:11:33,302 | cornerdetect_cam13 | INFO | (248/251) 13_0247.png	| NOT FOUND
+2021-06-25 01:11:33,366 | cornerdetect_cam13 | INFO | (249/251) 13_0248.png	| NOT FOUND
+2021-06-25 01:11:33,468 | cornerdetect_cam13 | INFO | (250/251) 13_0249.png	| NOT FOUND
+2021-06-25 01:11:33,556 | cornerdetect_cam13 | INFO | (251/251) 13_0250.png	| NOT FOUND
+2021-06-25 01:11:33,557 | cornerdetect_cam13 | INFO | Corner detection - COMPLETE	: camera 13	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_13

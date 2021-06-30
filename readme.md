@@ -1,19 +1,22 @@
 
-##### Table of Contents  
-[Introduction](#s_intro)  
-[Installation](#s_overview)  
+<h1>Table of Contents</h1>
+
+1. [Introduction](#s_intro)  
+2. [Overview](#s_overview)  
+3. [Installation](#s_installation)
+4. [Tutorial](#s_example)
+5. [Academical details](#s_details)
+6. [Contact](#s_contact)
 
 <h2 id="s_intro">1. Introduction</h2>
 
 ---
 This project calibrates multiple cameras using a planar calibration checkerboard. The pipeline is comprised of *four* main steps: [(1)](#step_1) detect checkerboard corners, [(2)](#step_2) remove outlier corners from the previous step (using *VAE, variational auto-encoder*), [(3)](#step_3) estimate initial camera parameters and world (checkerboard) points, [(4)](#step_4) refine the initial estimates (using *bundle adjustment*), then *optionally* [(5)](#step_5) analyze the calibration result.
-
-
-<figure style="display:inline-block; display:block;">
-<img src="./docs/assets/tutorial/studio.jpg" width="60%"/>
+<p style="text-align:center">
+<img src="./docs/assets/tutorial/studio.jpg" width="67%"/>
 <img src="./docs/assets/bundle_adjustment_v2.gif" width="30%"/>
 <figcaption> Left: 16 synchronized cameras. Right: Bundle adjustment in action.</figcaption>
-</figure>
+</p>
 <br>
 
 * This project is focused on being simple and scalable, applicable to different calibration checkerboards and different number of cameras.
@@ -58,17 +61,13 @@ The code execution follows the pipeline below:
 
 1. Windows
 
-    Assuming [Anaconda](https://docs.anaconda.com/anaconda/install/windows/) is already installed, navigate to *./multicamcalib/* where *requirements.txt* exists. Then in a Anaconda Powershell Prompt:
+    Assuming [Anaconda](https://docs.anaconda.com/anaconda/install/windows/) is already installed, navigate to *./MultiCamCalib/* where *environment.yml* exists. Then in a Anaconda Powershell Prompt:
 
-        conda env create -n {ENV_NAME} -f requirements.txt
-
-    where *{ENV_NAME}* is whatever name you wish to use.
+        conda env create --file environment.yml
 
 2. Linux (*coming...*)
 
-
-(5) Run it on the example dataset provided (*/example_data/*) → Follow [this tutorial](docs/tutorial.md)
-
+(5) Run the codes → Follow [this tutorial](docs/tutorial.md)!
 
 <h2 id="s_example">4. Tutorial</h2>
 

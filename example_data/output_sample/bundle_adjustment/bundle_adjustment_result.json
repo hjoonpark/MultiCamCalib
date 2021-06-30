@@ -1,0 +1,7 @@
+{
+    "initial_cost": 28453970.13670797,
+    "final_cost": 25.87093672304742,
+    "n_iterations": 9,
+    "final_camera_parameters": "D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\\cam_params\\cam_params_final.json",
+    "final_world_points": "D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\\world_points\\world_points_final.json"
+}

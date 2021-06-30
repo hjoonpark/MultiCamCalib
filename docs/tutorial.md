@@ -162,12 +162,12 @@ The codes will execute all the steps from [(1). Corner detection](../readme.md#s
 * VAE corner detector  
   * train loss plot *"{YOUR_ROOT}/example_data/output/vae_outlier_detector/train_loss_plot.png"*:
     <figure style="display:inline-block; display:block;" id="fig_histogram">
-        <img src="./assets/tutorial/train_loss_plot.png" width="80%"/>
+        <img src="./assets/tutorial/train_loss_plot.png" width="60%"/>
     </figure>
 
   * outlier corners and their reconstructions *"{YOUR_ROOT}/example_data/output/vae_outlier_detector/outliers/"*:
     <figure style="display:inline-block; display:block;" id="fig_histogram">
-        <img src="./assets/tutorial/outliers_0.png" width="80%"/>
+        <img src="./assets/tutorial/outliers_0.png" width="60%"/>
     </figure>
 
 

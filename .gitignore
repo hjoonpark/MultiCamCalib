@@ -2,14 +2,5 @@ __pycache__/
 .vs/
 .vscode/
 build/
-.ceres_project2/
-.jpg
 notebooks/
-config_original.json
-example_images/
-example_images_katey/
 output/
-output_synth/
-output_/
-output_katey/
-output_example/

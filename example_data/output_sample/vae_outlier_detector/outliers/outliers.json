@@ -1,0 +1,290 @@
+{
+    "12375": {
+        "crop_idx": 12375,
+        "recon_loss": 30.120758056640625,
+        "img_name": "3_0162",
+        "camera_idx": 3,
+        "corner_idx": 55,
+        "idx_for_curr_cam": 1815
+    },
+    "12199": {
+        "crop_idx": 12199,
+        "recon_loss": 30.120758056640625,
+        "img_name": "3_0158",
+        "camera_idx": 3,
+        "corner_idx": 55,
+        "idx_for_curr_cam": 1639
+    },
+    "12287": {
+        "crop_idx": 12287,
+        "recon_loss": 30.120758056640625,
+        "img_name": "3_0161",
+        "camera_idx": 3,
+        "corner_idx": 55,
+        "idx_for_curr_cam": 1727
+    },
+    "12232": {
+        "crop_idx": 12232,
+        "recon_loss": 28.72085952758789,
+        "img_name": "3_0161",
+        "camera_idx": 3,
+        "corner_idx": 0,
+        "idx_for_curr_cam": 1672
+    },
+    "65208": {
+        "crop_idx": 65208,
+        "recon_loss": 22.359783172607422,
+        "img_name": "14_0133",
+        "camera_idx": 14,
+        "corner_idx": 0,
+        "idx_for_curr_cam": 1320
+    },
+    "12321": {
+        "crop_idx": 12321,
+        "recon_loss": 22.11145782470703,
+        "img_name": "3_0162",
+        "camera_idx": 3,
+        "corner_idx": 1,
+        "idx_for_curr_cam": 1761
+    },
+    "12145": {
+        "crop_idx": 12145,
+        "recon_loss": 22.11145782470703,
+        "img_name": "3_0158",
+        "camera_idx": 3,
+        "corner_idx": 1,
+        "idx_for_curr_cam": 1585
+    },
+    "55461": {
+        "crop_idx": 55461,
+        "recon_loss": 21.638559341430664,
+        "img_name": "11_0227",
+        "camera_idx": 11,
+        "corner_idx": 21,
+        "idx_for_curr_cam": 3277
+    },
+    "12233": {
+        "crop_idx": 12233,
+        "recon_loss": 20.996849060058594,
+        "img_name": "3_0161",
+        "camera_idx": 3,
+        "corner_idx": 1,
+        "idx_for_curr_cam": 1673
+    },
+    "2684": {
+        "crop_idx": 2684,
+        "recon_loss": 19.98389434814453,
+        "img_name": "0_0160",
+        "camera_idx": 0,
+        "corner_idx": 44,
+        "idx_for_curr_cam": 2684
+    },
+    "65274": {
+        "crop_idx": 65274,
+        "recon_loss": 19.495803833007812,
+        "img_name": "14_0133",
+        "camera_idx": 14,
+        "corner_idx": 66,
+        "idx_for_curr_cam": 1386
+    },
+    "55516": {
+        "crop_idx": 55516,
+        "recon_loss": 18.263185501098633,
+        "img_name": "11_0227",
+        "camera_idx": 11,
+        "corner_idx": 76,
+        "idx_for_curr_cam": 3332
+    },
+    "12254": {
+        "crop_idx": 12254,
+        "recon_loss": 17.776411056518555,
+        "img_name": "3_0161",
+        "camera_idx": 3,
+        "corner_idx": 22,
+        "idx_for_curr_cam": 1694
+    },
+    "55494": {
+        "crop_idx": 55494,
+        "recon_loss": 17.749401092529297,
+        "img_name": "11_0227",
+        "camera_idx": 11,
+        "corner_idx": 54,
+        "idx_for_curr_cam": 3310
+    },
+    "2702": {
+        "crop_idx": 2702,
+        "recon_loss": 17.693851470947266,
+        "img_name": "0_0160",
+        "camera_idx": 0,
+        "corner_idx": 62,
+        "idx_for_curr_cam": 2702
+    },
+    "55482": {
+        "crop_idx": 55482,
+        "recon_loss": 17.501548767089844,
+        "img_name": "11_0227",
+        "camera_idx": 11,
+        "corner_idx": 42,
+        "idx_for_curr_cam": 3298
+    },
+    "20229": {
+        "crop_idx": 20229,
+        "recon_loss": 17.393211364746094,
+        "img_name": "5_0183",
+        "camera_idx": 5,
+        "corner_idx": 77,
+        "idx_for_curr_cam": 3157
+    },
+    "3648": {
+        "crop_idx": 3648,
+        "recon_loss": 17.244626998901367,
+        "img_name": "0_0237",
+        "camera_idx": 0,
+        "corner_idx": 40,
+        "idx_for_curr_cam": 3648
+    },
+    "55483": {
+        "crop_idx": 55483,
+        "recon_loss": 16.975330352783203,
+        "img_name": "11_0227",
+        "camera_idx": 11,
+        "corner_idx": 43,
+        "idx_for_curr_cam": 3299
+    },
+    "12342": {
+        "crop_idx": 12342,
+        "recon_loss": 16.783164978027344,
+        "img_name": "3_0162",
+        "camera_idx": 3,
+        "corner_idx": 22,
+        "idx_for_curr_cam": 1782
+    },
+    "19999": {
+        "crop_idx": 19999,
+        "recon_loss": 16.781696319580078,
+        "img_name": "5_0178",
+        "camera_idx": 5,
+        "corner_idx": 23,
+        "idx_for_curr_cam": 2927
+    },
+    "12166": {
+        "crop_idx": 12166,
+        "recon_loss": 16.631160736083984,
+        "img_name": "3_0158",
+        "camera_idx": 3,
+        "corner_idx": 22,
+        "idx_for_curr_cam": 1606
+    },
+    "44304": {
+        "crop_idx": 44304,
+        "recon_loss": 16.482833862304688,
+        "img_name": "9_0118",
+        "camera_idx": 9,
+        "corner_idx": 40,
+        "idx_for_curr_cam": 3824
+    },
+    "24365": {
+        "crop_idx": 24365,
+        "recon_loss": 16.386951446533203,
+        "img_name": "6_0172",
+        "camera_idx": 6,
+        "corner_idx": 77,
+        "idx_for_curr_cam": 3509
+    },
+    "16952": {
+        "crop_idx": 16952,
+        "recon_loss": 16.310911178588867,
+        "img_name": "4_0216",
+        "camera_idx": 4,
+        "corner_idx": 56,
+        "idx_for_curr_cam": 3400
+    },
+    "13662": {
+        "crop_idx": 13662,
+        "recon_loss": 16.268075942993164,
+        "img_name": "4_0054",
+        "camera_idx": 4,
+        "corner_idx": 22,
+        "idx_for_curr_cam": 110
+    },
+    "22841": {
+        "crop_idx": 22841,
+        "recon_loss": 16.18407440185547,
+        "img_name": "6_0094",
+        "camera_idx": 6,
+        "corner_idx": 49,
+        "idx_for_curr_cam": 1985
+    },
+    "36541": {
+        "crop_idx": 36541,
+        "recon_loss": 16.173362731933594,
+        "img_name": "8_0108",
+        "camera_idx": 8,
+        "corner_idx": 21,
+        "idx_for_curr_cam": 3101
+    },
+    "21298": {
+        "crop_idx": 21298,
+        "recon_loss": 16.124725341796875,
+        "img_name": "6_0039",
+        "camera_idx": 6,
+        "corner_idx": 2,
+        "idx_for_curr_cam": 442
+    },
+    "55527": {
+        "crop_idx": 55527,
+        "recon_loss": 16.022811889648438,
+        "img_name": "11_0227",
+        "camera_idx": 11,
+        "corner_idx": 87,
+        "idx_for_curr_cam": 3343
+    },
+    "43113": {
+        "crop_idx": 43113,
+        "recon_loss": 16.011945724487305,
+        "img_name": "9_0104",
+        "camera_idx": 9,
+        "corner_idx": 81,
+        "idx_for_curr_cam": 2633
+    },
+    "49038": {
+        "crop_idx": 49038,
+        "recon_loss": 16.011945724487305,
+        "img_name": "10_0107",
+        "camera_idx": 10,
+        "corner_idx": 22,
+        "idx_for_curr_cam": 1342
+    },
+    "18353": {
+        "crop_idx": 18353,
+        "recon_loss": 15.862064361572266,
+        "img_name": "5_0098",
+        "camera_idx": 5,
+        "corner_idx": 49,
+        "idx_for_curr_cam": 1281
+    },
+    "65231": {
+        "crop_idx": 65231,
+        "recon_loss": 15.820146560668945,
+        "img_name": "14_0133",
+        "camera_idx": 14,
+        "corner_idx": 23,
+        "idx_for_curr_cam": 1343
+    },
+    "2531": {
+        "crop_idx": 2531,
+        "recon_loss": 15.819015502929688,
+        "img_name": "0_0158",
+        "camera_idx": 0,
+        "corner_idx": 67,
+        "idx_for_curr_cam": 2531
+    },
+    "24226": {
+        "crop_idx": 24226,
+        "recon_loss": 15.798917770385742,
+        "img_name": "6_0171",
+        "camera_idx": 6,
+        "corner_idx": 26,
+        "idx_for_curr_cam": 3370
+    }
+}

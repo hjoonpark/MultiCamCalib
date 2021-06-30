@@ -1,0 +1,8 @@
+{
+    "z_dim": 2,
+    "kld_weight": 0.01,
+    "epochs": 500,
+    "n_batch": 72,
+    "batch_size": 1000,
+    "lr": 0.001
+}

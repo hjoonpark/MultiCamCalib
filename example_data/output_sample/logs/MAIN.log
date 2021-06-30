@@ -1,0 +1,324 @@
+2021-06-25 01:10:02,033 | MAIN | INFO | ### APPLICATION START ###
+2021-06-25 01:10:32,220 | MAIN | INFO | ### APPLICATION START ###
+2021-06-25 01:10:33,943 | MAIN | INFO | >>>>> [1] corner detection <<<<<
+2021-06-25 01:10:34,026 | MAIN | INFO | Corner detection - START	: camera 0	| 251 images
+2021-06-25 01:10:34,042 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_0\0_0000.png
+2021-06-25 01:10:34,046 | MAIN | INFO | Corner detection - START	: camera 1	| 251 images
+2021-06-25 01:10:34,048 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_1\1_0000.png
+2021-06-25 01:10:34,063 | MAIN | INFO | Corner detection - START	: camera 2	| 251 images
+2021-06-25 01:10:34,063 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_2\2_0000.png
+2021-06-25 01:10:34,077 | MAIN | INFO | Corner detection - START	: camera 3	| 251 images
+2021-06-25 01:10:34,078 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_3\3_0000.png
+2021-06-25 01:10:34,093 | MAIN | INFO | Corner detection - START	: camera 4	| 251 images
+2021-06-25 01:10:34,093 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_4\4_0000.png
+2021-06-25 01:10:34,108 | MAIN | INFO | Corner detection - START	: camera 5	| 251 images
+2021-06-25 01:10:34,108 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_5\5_0000.png
+2021-06-25 01:10:34,122 | MAIN | INFO | Corner detection - START	: camera 6	| 251 images
+2021-06-25 01:10:34,123 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_6\6_0000.png
+2021-06-25 01:10:34,137 | MAIN | INFO | Corner detection - START	: camera 7	| 251 images
+2021-06-25 01:10:34,137 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_7\7_0000.png
+2021-06-25 01:10:34,151 | MAIN | INFO | Corner detection - START	: camera 8	| 251 images
+2021-06-25 01:10:34,152 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_8\8_0000.png
+2021-06-25 01:10:34,167 | MAIN | INFO | Corner detection - START	: camera 9	| 251 images
+2021-06-25 01:10:34,168 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_9\9_0000.png
+2021-06-25 01:10:34,181 | MAIN | INFO | Corner detection - START	: camera 10	| 251 images
+2021-06-25 01:10:34,182 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_10\10_0000.png
+2021-06-25 01:10:34,196 | MAIN | INFO | Corner detection - START	: camera 11	| 251 images
+2021-06-25 01:10:34,196 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_11\11_0000.png
+2021-06-25 01:10:34,211 | MAIN | INFO | Corner detection - START	: camera 12	| 251 images
+2021-06-25 01:10:34,211 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_12\12_0000.png
+2021-06-25 01:10:34,227 | MAIN | INFO | Corner detection - START	: camera 13	| 251 images
+2021-06-25 01:10:34,227 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_13\13_0000.png
+2021-06-25 01:10:34,241 | MAIN | INFO | Corner detection - START	: camera 14	| 251 images
+2021-06-25 01:10:34,242 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_14\14_0000.png
+2021-06-25 01:10:34,256 | MAIN | INFO | Corner detection - START	: camera 15	| 251 images
+2021-06-25 01:10:34,256 | MAIN | CRITICAL | No image at: D:\OneDrive - University of Utah\HJ\PhD\Research\190817_FullBodyCapture\Codes\210410_MultiCamCalib\python\example_images_katey_third\images\cam_15\15_0000.png
+2021-06-25 01:10:47,861 | MAIN | INFO | ### APPLICATION START ###
+2021-06-25 01:11:09,286 | MAIN | INFO | >>>>> [1] corner detection <<<<<
+2021-06-25 01:11:09,303 | MAIN | INFO | Corner detection - START	: camera 0	| 251 images
+2021-06-25 01:11:09,324 | MAIN | INFO | Corner detection - START	: camera 1	| 251 images
+2021-06-25 01:11:09,340 | MAIN | INFO | Corner detection - START	: camera 2	| 251 images
+2021-06-25 01:11:09,355 | MAIN | INFO | Corner detection - START	: camera 3	| 251 images
+2021-06-25 01:11:09,370 | MAIN | INFO | Corner detection - START	: camera 4	| 251 images
+2021-06-25 01:11:09,385 | MAIN | INFO | Corner detection - START	: camera 5	| 251 images
+2021-06-25 01:11:09,401 | MAIN | INFO | Corner detection - START	: camera 6	| 251 images
+2021-06-25 01:11:09,415 | MAIN | INFO | Corner detection - START	: camera 7	| 251 images
+2021-06-25 01:11:09,430 | MAIN | INFO | Corner detection - START	: camera 8	| 251 images
+2021-06-25 01:11:09,446 | MAIN | INFO | Corner detection - START	: camera 9	| 251 images
+2021-06-25 01:11:09,464 | MAIN | INFO | Corner detection - START	: camera 10	| 251 images
+2021-06-25 01:11:09,477 | MAIN | INFO | Corner detection - START	: camera 11	| 251 images
+2021-06-25 01:11:09,494 | MAIN | INFO | Corner detection - START	: camera 12	| 251 images
+2021-06-25 01:11:09,509 | MAIN | INFO | Corner detection - START	: camera 13	| 251 images
+2021-06-25 01:11:09,522 | MAIN | INFO | Corner detection - START	: camera 14	| 251 images
+2021-06-25 01:11:09,554 | MAIN | INFO | Corner detection - START	: camera 15	| 251 images
+2021-06-25 01:11:31,300 | MAIN | INFO | Corner detection - COMPLETE	: camera 12	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_12
+2021-06-25 01:11:31,854 | MAIN | INFO | Corner detection - COMPLETE	: camera 4	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_4
+2021-06-25 01:11:32,662 | MAIN | INFO | Corner detection - COMPLETE	: camera 9	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_9
+2021-06-25 01:11:32,700 | MAIN | INFO | Corner detection - COMPLETE	: camera 11	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_11
+2021-06-25 01:11:32,735 | MAIN | INFO | Corner detection - COMPLETE	: camera 8	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_8
+2021-06-25 01:11:33,317 | MAIN | INFO | Corner detection - COMPLETE	: camera 5	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_5
+2021-06-25 01:11:33,511 | MAIN | INFO | Corner detection - COMPLETE	: camera 14	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_14
+2021-06-25 01:11:33,564 | MAIN | INFO | Corner detection - COMPLETE	: camera 13	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_13
+2021-06-25 01:11:33,862 | MAIN | INFO | Corner detection - COMPLETE	: camera 0	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_0
+2021-06-25 01:11:33,959 | MAIN | INFO | Corner detection - COMPLETE	: camera 6	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_6
+2021-06-25 01:11:34,045 | MAIN | INFO | Corner detection - COMPLETE	: camera 15	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_15
+2021-06-25 01:11:34,187 | MAIN | INFO | Corner detection - COMPLETE	: camera 7	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_7
+2021-06-25 01:11:34,546 | MAIN | INFO | Corner detection - COMPLETE	: camera 1	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_1
+2021-06-25 01:11:34,593 | MAIN | INFO | Corner detection - COMPLETE	: camera 2	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_2
+2021-06-25 01:11:34,664 | MAIN | INFO | Corner detection - COMPLETE	: camera 3	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_3
+2021-06-25 01:11:36,074 | MAIN | INFO | Corner detection - COMPLETE	: camera 10	| Corners saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\cam_10
+2021-06-25 01:11:41,317 | MAIN | INFO | Detection result saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\corners\detection_result.json
+2021-06-25 01:11:41,317 | MAIN | INFO | >>>>> [2] vae outlier corner detection <<<<<
+2021-06-25 01:11:41,854 | MAIN | INFO | Crops saved (camera 0): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\0_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\0_binary.npy
+2021-06-25 01:11:42,296 | MAIN | INFO | Crops saved (camera 1): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\1_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\1_binary.npy
+2021-06-25 01:11:42,762 | MAIN | INFO | Crops saved (camera 2): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\2_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\2_binary.npy
+2021-06-25 01:11:43,166 | MAIN | INFO | Crops saved (camera 3): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\3_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\3_binary.npy
+2021-06-25 01:11:43,630 | MAIN | INFO | Crops saved (camera 4): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\4_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\4_binary.npy
+2021-06-25 01:11:44,130 | MAIN | INFO | Crops saved (camera 5): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\5_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\5_binary.npy
+2021-06-25 01:11:44,971 | MAIN | INFO | Crops saved (camera 6): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\6_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\6_binary.npy
+2021-06-25 01:11:45,838 | MAIN | INFO | Crops saved (camera 7): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\7_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\7_binary.npy
+2021-06-25 01:11:46,779 | MAIN | INFO | Crops saved (camera 8): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\8_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\8_binary.npy
+2021-06-25 01:11:47,742 | MAIN | INFO | Crops saved (camera 9): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\9_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\9_binary.npy
+2021-06-25 01:11:48,337 | MAIN | INFO | Crops saved (camera 10): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\10_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\10_binary.npy
+2021-06-25 01:11:48,825 | MAIN | INFO | Crops saved (camera 11): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\11_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\11_binary.npy
+2021-06-25 01:11:49,360 | MAIN | INFO | Crops saved (camera 12): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\12_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\12_binary.npy
+2021-06-25 01:11:49,893 | MAIN | INFO | Crops saved (camera 13): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\13_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\13_binary.npy
+2021-06-25 01:11:50,462 | MAIN | INFO | Crops saved (camera 14): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\14_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\14_binary.npy
+2021-06-25 01:11:51,058 | MAIN | INFO | Crops saved (camera 15): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\15_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\15_binary.npy
+2021-06-25 01:11:52,382 | MAIN | INFO | Crops metadata saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\crop_metadata.json
+2021-06-25 01:13:34,512 | MAIN | INFO | ### APPLICATION START ###
+2021-06-25 01:13:38,846 | MAIN | INFO | >>>>> [2] Vae outlier corner detection <<<<<
+2021-06-25 01:13:39,367 | MAIN | INFO | Crops saved (camera 0): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\0_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\0_binary.npy
+2021-06-25 01:13:39,793 | MAIN | INFO | Crops saved (camera 1): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\1_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\1_binary.npy
+2021-06-25 01:13:40,234 | MAIN | INFO | Crops saved (camera 2): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\2_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\2_binary.npy
+2021-06-25 01:13:40,630 | MAIN | INFO | Crops saved (camera 3): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\3_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\3_binary.npy
+2021-06-25 01:13:41,085 | MAIN | INFO | Crops saved (camera 4): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\4_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\4_binary.npy
+2021-06-25 01:13:41,578 | MAIN | INFO | Crops saved (camera 5): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\5_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\5_binary.npy
+2021-06-25 01:13:42,390 | MAIN | INFO | Crops saved (camera 6): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\6_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\6_binary.npy
+2021-06-25 01:13:43,244 | MAIN | INFO | Crops saved (camera 7): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\7_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\7_binary.npy
+2021-06-25 01:13:44,173 | MAIN | INFO | Crops saved (camera 8): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\8_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\8_binary.npy
+2021-06-25 01:13:45,136 | MAIN | INFO | Crops saved (camera 9): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\9_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\9_binary.npy
+2021-06-25 01:13:45,724 | MAIN | INFO | Crops saved (camera 10): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\10_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\10_binary.npy
+2021-06-25 01:13:46,207 | MAIN | INFO | Crops saved (camera 11): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\11_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\11_binary.npy
+2021-06-25 01:13:46,728 | MAIN | INFO | Crops saved (camera 12): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\12_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\12_binary.npy
+2021-06-25 01:13:47,251 | MAIN | INFO | Crops saved (camera 13): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\13_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\13_binary.npy
+2021-06-25 01:13:47,794 | MAIN | INFO | Crops saved (camera 14): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\14_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\14_binary.npy
+2021-06-25 01:13:48,364 | MAIN | INFO | Crops saved (camera 15): (gray) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\15_gray.npy	(binary) D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\15_binary.npy
+2021-06-25 01:13:49,649 | MAIN | INFO | Crops metadata saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/corner_crops\crop_metadata.json
+2021-06-25 01:13:49,842 | MAIN | INFO | Train input: 72336 crops | batch_size=1000 | n_batch=72 | trunc=72000 | unused=336
+2021-06-25 01:13:53,251 | MAIN | INFO | Hyperparameters saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector\train_hyper_params.json
+2021-06-25 01:18:49,252 | MAIN | INFO | Train plot saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector\train_loss_plot.png
+2021-06-25 01:18:49,257 | MAIN | INFO | Model saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector\vae_model.pt
+2021-06-25 01:19:47,008 | MAIN | INFO | VAE forward result saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector\vae_forward_result.json
+2021-06-25 01:19:47,419 | MAIN | INFO | Outliers saved to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/outliers\outliers.json
+2021-06-25 01:19:50,543 | MAIN | INFO | Outlier plot saved [1/1]: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\vae_outlier_detector/outliers\outliers_0.png
+2021-06-25 01:19:50,554 | MAIN | INFO | >>>>> [3] Initial calibration <<<<<
+2021-06-25 01:19:50,579 | MAIN | DEBUG | Skipping outlier image for intrinsics: 0_0237
+2021-06-25 01:19:50,581 | MAIN | DEBUG | Skipping outlier image for intrinsics: 0_0160
+2021-06-25 01:19:50,585 | MAIN | DEBUG | Skipping outlier image for intrinsics: 0_0158
+2021-06-25 01:19:51,057 | MAIN | INFO | Intrinsics calibrated: camera 0 | 40 images | error=0.49
+2021-06-25 01:19:51,465 | MAIN | INFO | Intrinsics calibrated: camera 1 | 37 images | error=0.54
+2021-06-25 01:19:51,872 | MAIN | INFO | Intrinsics calibrated: camera 2 | 38 images | error=0.48
+2021-06-25 01:19:51,884 | MAIN | DEBUG | Skipping outlier image for intrinsics: 3_0162
+2021-06-25 01:19:51,892 | MAIN | DEBUG | Skipping outlier image for intrinsics: 3_0158
+2021-06-25 01:19:51,896 | MAIN | DEBUG | Skipping outlier image for intrinsics: 3_0161
+2021-06-25 01:19:52,162 | MAIN | INFO | Intrinsics calibrated: camera 3 | 31 images | error=0.28
+2021-06-25 01:19:52,172 | MAIN | DEBUG | Skipping outlier image for intrinsics: 4_0216
+2021-06-25 01:19:52,181 | MAIN | DEBUG | Skipping outlier image for intrinsics: 4_0054
+2021-06-25 01:19:52,550 | MAIN | INFO | Intrinsics calibrated: camera 4 | 38 images | error=0.50
+2021-06-25 01:19:52,555 | MAIN | DEBUG | Skipping outlier image for intrinsics: 5_0098
+2021-06-25 01:19:52,556 | MAIN | DEBUG | Skipping outlier image for intrinsics: 5_0183
+2021-06-25 01:19:52,571 | MAIN | DEBUG | Skipping outlier image for intrinsics: 5_0178
+2021-06-25 01:19:52,952 | MAIN | INFO | Intrinsics calibrated: camera 5 | 40 images | error=0.07
+2021-06-25 01:19:52,963 | MAIN | DEBUG | Skipping outlier image for intrinsics: 6_0094
+2021-06-25 01:19:52,973 | MAIN | DEBUG | Skipping outlier image for intrinsics: 6_0039
+2021-06-25 01:19:53,403 | MAIN | INFO | Intrinsics calibrated: camera 6 | 40 images | error=1.35
+2021-06-25 01:19:53,843 | MAIN | INFO | Intrinsics calibrated: camera 7 | 40 images | error=1.27
+2021-06-25 01:19:54,258 | MAIN | INFO | Intrinsics calibrated: camera 8 | 40 images | error=0.42
+2021-06-25 01:19:54,273 | MAIN | DEBUG | Skipping outlier image for intrinsics: 9_0104
+2021-06-25 01:19:54,276 | MAIN | DEBUG | Skipping outlier image for intrinsics: 9_0118
+2021-06-25 01:19:54,670 | MAIN | INFO | Intrinsics calibrated: camera 9 | 40 images | error=0.74
+2021-06-25 01:19:54,688 | MAIN | DEBUG | Skipping outlier image for intrinsics: 10_0107
+2021-06-25 01:19:55,092 | MAIN | INFO | Intrinsics calibrated: camera 10 | 40 images | error=0.28
+2021-06-25 01:19:55,111 | MAIN | DEBUG | Skipping outlier image for intrinsics: 11_0227
+2021-06-25 01:19:55,523 | MAIN | INFO | Intrinsics calibrated: camera 11 | 40 images | error=0.48
+2021-06-25 01:19:55,941 | MAIN | INFO | Intrinsics calibrated: camera 12 | 40 images | error=0.79
+2021-06-25 01:19:56,386 | MAIN | INFO | Intrinsics calibrated: camera 13 | 40 images | error=0.66
+2021-06-25 01:19:56,407 | MAIN | DEBUG | Skipping outlier image for intrinsics: 14_0133
+2021-06-25 01:19:56,809 | MAIN | INFO | Intrinsics calibrated: camera 14 | 40 images | error=0.33
+2021-06-25 01:19:57,212 | MAIN | INFO | Intrinsics calibrated: camera 15 | 40 images | error=0.48
+2021-06-25 01:19:58,881 | MAIN | INFO | Stereo-calibrated: camera 12 & 11 | 3 images | error=0.49
+2021-06-25 01:20:00,556 | MAIN | INFO | Stereo-calibrated: camera 11 & 10 | 3 images | error=0.45
+2021-06-25 01:20:02,203 | MAIN | INFO | Stereo-calibrated: camera 10 & 9 | 3 images | error=0.47
+2021-06-25 01:20:03,809 | MAIN | INFO | Stereo-calibrated: camera 9 & 8 | 3 images | error=0.46
+2021-06-25 01:20:05,424 | MAIN | INFO | Stereo-calibrated: camera 8 & 7 | 3 images | error=0.45
+2021-06-25 01:20:07,038 | MAIN | INFO | Stereo-calibrated: camera 7 & 6 | 3 images | error=0.94
+2021-06-25 01:20:07,046 | MAIN | DEBUG | Skipping outlier image for extrinsics: 6_0039, 5_0039
+2021-06-25 01:20:08,653 | MAIN | INFO | Stereo-calibrated: camera 6 & 5 | 3 images | error=0.84
+2021-06-25 01:20:08,662 | MAIN | DEBUG | Skipping outlier image for extrinsics: 5_0054, 4_0054
+2021-06-25 01:20:10,091 | MAIN | INFO | Stereo-calibrated: camera 5 & 4 | 3 images | error=0.17
+2021-06-25 01:20:10,100 | MAIN | DEBUG | Skipping outlier image for extrinsics: 4_0054, 3_0054
+2021-06-25 01:20:11,729 | MAIN | INFO | Stereo-calibrated: camera 4 & 3 | 3 images | error=0.40
+2021-06-25 01:20:13,359 | MAIN | INFO | Stereo-calibrated: camera 3 & 2 | 3 images | error=0.20
+2021-06-25 01:20:14,975 | MAIN | INFO | Stereo-calibrated: camera 2 & 1 | 3 images | error=0.50
+2021-06-25 01:20:15,140 | MAIN | INFO | Stereo-calibrated: camera 1 & 0 | 3 images | error=0.55
+2021-06-25 01:20:16,772 | MAIN | INFO | Stereo-calibrated: camera 12 & 13 | 3 images | error=0.57
+2021-06-25 01:20:18,449 | MAIN | INFO | Stereo-calibrated: camera 13 & 14 | 3 images | error=0.24
+2021-06-25 01:20:18,481 | MAIN | INFO | Stereo-calibrated: camera 14 & 15 | 3 images | error=0.11
+2021-06-25 01:20:18,484 | MAIN | INFO | Initial camera parameters saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\cam_params\cam_params_initial.json
+2021-06-25 01:20:18,819 | MAIN | INFO | Plot saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\cam_params\initial_cameras.png
+2021-06-25 01:20:18,841 | MAIN | DEBUG | [4/251] No detection for image 0003
+2021-06-25 01:20:18,841 | MAIN | DEBUG | [5/251] No detection for image 0004
+2021-06-25 01:20:18,841 | MAIN | DEBUG | [6/251] No detection for image 0005
+2021-06-25 01:20:18,842 | MAIN | DEBUG | [7/251] No detection for image 0006
+2021-06-25 01:20:18,842 | MAIN | DEBUG | [9/251] No detection for image 0008
+2021-06-25 01:20:18,843 | MAIN | DEBUG | [11/251] No detection for image 0010
+2021-06-25 01:20:18,844 | MAIN | DEBUG | [12/251] No detection for image 0011
+2021-06-25 01:20:18,844 | MAIN | DEBUG | [13/251] No detection for image 0012
+2021-06-25 01:20:18,847 | MAIN | DEBUG | [17/251] No detection for image 0016
+2021-06-25 01:20:18,847 | MAIN | DEBUG | [18/251] No detection for image 0017
+2021-06-25 01:20:18,848 | MAIN | DEBUG | [20/251] No detection for image 0019
+2021-06-25 01:20:18,848 | MAIN | DEBUG | [22/251] No detection for image 0021
+2021-06-25 01:20:18,848 | MAIN | DEBUG | [23/251] No detection for image 0022
+2021-06-25 01:20:18,848 | MAIN | DEBUG | [24/251] No detection for image 0023
+2021-06-25 01:20:18,849 | MAIN | DEBUG | [25/251] No detection for image 0024
+2021-06-25 01:20:18,849 | MAIN | DEBUG | [26/251] No detection for image 0025
+2021-06-25 01:20:18,853 | MAIN | DEBUG | [31/251] No detection for image 0030
+2021-06-25 01:20:18,853 | MAIN | DEBUG | [32/251] No detection for image 0031
+2021-06-25 01:20:18,854 | MAIN | DEBUG | [34/251] No detection for image 0033
+2021-06-25 01:20:18,854 | MAIN | DEBUG | [35/251] No detection for image 0034
+2021-06-25 01:20:18,854 | MAIN | DEBUG | [36/251] No detection for image 0035
+2021-06-25 01:20:18,885 | MAIN | DEBUG | [50/251] No detection for image 0049
+2021-06-25 01:20:19,084 | MAIN | DEBUG | [132/251] No detection for image 0131
+2021-06-25 01:20:19,619 | MAIN | INFO | Initial world points saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\world_points\world_points_initial.json
+2021-06-25 01:20:21,168 | MAIN | INFO | Initial world points plot saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\world_points\initial_world_points.png
+2021-06-25 01:20:21,170 | MAIN | INFO | >>>>> [4] Final calibration (bundle adjustment) <<<<<
+2021-06-25 01:20:23,190 | MAIN | INFO | >>>>> [5] Analysis <<<<<
+2021-06-25 01:22:11,922 | MAIN | INFO | ### APPLICATION START ###
+2021-06-25 01:22:11,930 | MAIN | INFO | >>>>> [4] Final calibration (bundle adjustment) <<<<<
+2021-06-25 01:22:14,224 | MAIN | INFO | ***** FINISHED *****
+2021-06-25 01:22:18,800 | MAIN | INFO | ### APPLICATION START ###
+2021-06-25 01:22:18,808 | MAIN | INFO | >>>>> [5] Analysis <<<<<
+2021-06-25 01:22:45,769 | MAIN | INFO | ### APPLICATION START ###
+2021-06-25 01:22:45,779 | MAIN | INFO | >>>>> [4] Final calibration (bundle adjustment) <<<<<
+2021-06-25 01:22:47,951 | MAIN | INFO | >>>>> [5] Analysis <<<<<
+2021-06-25 01:22:49,794 | MAIN | INFO | Two plots saved:
+	D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\cam_params\final_cameras.png
+	D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\world_points\final_world_points.png
+2021-06-25 01:22:51,086 | MAIN | INFO | Reprojections saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\reprojections.json
+2021-06-25 01:22:51,211 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 6_0039
+2021-06-25 01:22:51,228 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 4_0054
+2021-06-25 01:22:51,278 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 6_0094
+2021-06-25 01:22:51,284 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 5_0098
+2021-06-25 01:22:51,292 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 9_0104
+2021-06-25 01:22:51,296 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 10_0107
+2021-06-25 01:22:51,296 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 8_0108
+2021-06-25 01:22:51,308 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 9_0118
+2021-06-25 01:22:51,326 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 14_0133
+2021-06-25 01:22:51,352 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 0_0158
+2021-06-25 01:22:51,353 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 3_0158
+2021-06-25 01:22:51,354 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 0_0160
+2021-06-25 01:22:51,355 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 3_0161
+2021-06-25 01:22:51,356 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 3_0162
+2021-06-25 01:22:51,367 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 6_0171
+2021-06-25 01:22:51,368 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 6_0172
+2021-06-25 01:22:51,374 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 5_0178
+2021-06-25 01:22:51,379 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 5_0183
+2021-06-25 01:22:51,420 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 4_0216
+2021-06-25 01:22:51,430 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 11_0227
+2021-06-25 01:22:51,444 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 0_0237
+2021-06-25 01:22:51,461 | MAIN | INFO | (Cross-check) manually recalculated Ceres loss: 25.87 (excluding regularization loss)
+2021-06-25 01:22:53,398 | MAIN | INFO | Plot saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\reproj_err_histograms.png
+2021-06-25 01:22:53,398 | MAIN | INFO | Saving images to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\images
+2021-06-25 01:22:59,037 | MAIN | DEBUG | Image saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\images\1.018_0123.png
+2021-06-25 01:23:04,037 | MAIN | DEBUG | Image saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\images\1.120_0134.png
+2021-06-25 01:23:09,100 | MAIN | DEBUG | Image saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\images\1.174_0146.png
+2021-06-25 01:23:09,101 | MAIN | INFO | Finished rendering: 3 images
+2021-06-25 01:23:09,106 | MAIN | INFO | ***** FINISHED *****
+2021-06-25 01:24:13,601 | MAIN | INFO | ### APPLICATION START ###
+2021-06-25 01:24:16,123 | MAIN | INFO | >>>>> [5c] Analyze reprojection results (render histogram & reprojected images) <<<<<
+2021-06-25 01:24:16,225 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 6_0039
+2021-06-25 01:24:16,241 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 4_0054
+2021-06-25 01:24:16,290 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 6_0094
+2021-06-25 01:24:16,296 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 5_0098
+2021-06-25 01:24:16,305 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 9_0104
+2021-06-25 01:24:16,309 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 10_0107
+2021-06-25 01:24:16,310 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 8_0108
+2021-06-25 01:24:16,321 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 9_0118
+2021-06-25 01:24:16,339 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 14_0133
+2021-06-25 01:24:16,366 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 0_0158
+2021-06-25 01:24:16,367 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 3_0158
+2021-06-25 01:24:16,368 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 0_0160
+2021-06-25 01:24:16,369 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 3_0161
+2021-06-25 01:24:16,370 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 3_0162
+2021-06-25 01:24:16,382 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 6_0171
+2021-06-25 01:24:16,383 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 6_0172
+2021-06-25 01:24:16,388 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 5_0178
+2021-06-25 01:24:16,394 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 5_0183
+2021-06-25 01:24:16,436 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 4_0216
+2021-06-25 01:24:16,446 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 11_0227
+2021-06-25 01:24:16,459 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 0_0237
+2021-06-25 01:24:16,477 | MAIN | INFO | (Cross-check) manually recalculated Ceres loss: 25.87 (excluding regularization loss)
+2021-06-25 01:24:18,525 | MAIN | INFO | Plot saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\reproj_err_histograms.png
+2021-06-25 01:24:18,525 | MAIN | INFO | Saving images to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\images
+2021-06-25 01:24:24,164 | MAIN | DEBUG | Image saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\images\1.018_0123.png
+2021-06-25 01:24:29,218 | MAIN | DEBUG | Image saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\images\1.120_0134.png
+2021-06-25 01:24:34,307 | MAIN | DEBUG | Image saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\images\1.174_0146.png
+2021-06-25 01:24:34,309 | MAIN | INFO | Finished rendering: 3 images
+2021-06-25 01:24:34,313 | MAIN | INFO | 
+***** FINISHED *****
+
+2021-06-25 01:24:37,871 | MAIN | INFO | ### APPLICATION START ###
+2021-06-25 01:24:37,878 | MAIN | INFO | >>>>>>>>>> [5a] Render final camera & checkerboard configurations <<<<<<<<<<
+2021-06-25 01:24:39,674 | MAIN | INFO | Two plots saved:
+	D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\cam_params\final_cameras.png
+	D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\world_points\final_world_points.png
+2021-06-25 01:24:39,675 | MAIN | INFO | 
+***** FINISHED *****
+
+2021-06-25 01:24:56,231 | MAIN | INFO | ### APPLICATION START ###
+2021-06-25 01:24:56,237 | MAIN | INFO | >>>>>>>>>> [5a] Render final camera & checkerboard configurations <<<<<<<<<<
+2021-06-25 01:24:58,053 | MAIN | INFO | Two plots saved:
+	D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\cam_params\final_cameras.png
+	D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\world_points\final_world_points.png
+2021-06-25 01:24:58,053 | MAIN | INFO | ***** FINISHED *****
+
+2021-06-27 23:51:20,518 | MAIN | INFO | ### APPLICATION START ###
+2021-06-27 23:57:55,859 | MAIN | INFO | ### APPLICATION START ###
+2021-06-29 23:32:08,958 | MAIN | INFO | ### APPLICATION START ###
+2021-06-29 23:32:14,854 | MAIN | INFO | >>>>>>>>>> [4] Final calibration (bundle adjustment) <<<<<<<<<<
+2021-06-29 23:32:27,545 | MAIN | INFO | >>>>>>>>>> [5] Analysis <<<<<<<<<<
+2021-06-29 23:32:30,084 | MAIN | INFO | Two plots saved:
+	D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\cam_params\final_cameras.png
+	D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\world_points\final_world_points.png
+2021-06-29 23:32:31,298 | MAIN | INFO | Reprojections saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\reprojections.json
+2021-06-29 23:32:31,427 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 6_0039
+2021-06-29 23:32:31,445 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 4_0054
+2021-06-29 23:32:31,500 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 6_0094
+2021-06-29 23:32:31,507 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 5_0098
+2021-06-29 23:32:31,516 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 9_0104
+2021-06-29 23:32:31,519 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 10_0107
+2021-06-29 23:32:31,520 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 8_0108
+2021-06-29 23:32:31,533 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 9_0118
+2021-06-29 23:32:31,552 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 14_0133
+2021-06-29 23:32:31,581 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 0_0158
+2021-06-29 23:32:31,582 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 3_0158
+2021-06-29 23:32:31,583 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 0_0160
+2021-06-29 23:32:31,584 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 3_0161
+2021-06-29 23:32:31,585 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 3_0162
+2021-06-29 23:32:31,598 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 6_0171
+2021-06-29 23:32:31,599 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 6_0172
+2021-06-29 23:32:31,605 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 5_0178
+2021-06-29 23:32:31,611 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 5_0183
+2021-06-29 23:32:31,654 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 4_0216
+2021-06-29 23:32:31,665 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 11_0227
+2021-06-29 23:32:31,680 | MAIN | DEBUG | Skipping outlier image during reprojection result rendering: 0_0237
+2021-06-29 23:32:31,699 | MAIN | INFO | (Cross-check) manually recalculated Ceres loss: 25.87 (excluding regularization loss)
+2021-06-29 23:32:33,417 | MAIN | INFO | Plot saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\reproj_err_histograms.png
+2021-06-29 23:32:33,417 | MAIN | INFO | Saving images to: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\images
+2021-06-29 23:32:39,289 | MAIN | DEBUG | Image saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\images\1.018_0123.png
+2021-06-29 23:32:44,624 | MAIN | DEBUG | Image saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\images\1.120_0134.png
+2021-06-29 23:32:49,953 | MAIN | DEBUG | Image saved: D:/OneDrive - University of Utah/HJ/PhD/Research/190817_FullBodyCapture/Codes/210410_MultiCamCalib/python/example_data/output\analysis\images\1.174_0146.png
+2021-06-29 23:32:49,954 | MAIN | INFO | Finished rendering: 3 images
+2021-06-29 23:32:49,960 | MAIN | INFO | ***** FINISHED *****
+
