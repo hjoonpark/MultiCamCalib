@@ -137,17 +137,17 @@ The codes will execute all the steps from [(1). Corner detection](../readme.md#s
 
 * Initial/final camera configurations *"{YOUR_ROOT}/example_data/output/cam_params/"*:
 
-<figure style="display:inline-block; display:block;">
+<p style="text-align:left">
     <img src="./assets/tutorial/initial_cameras.png" width="40%"/>
     <img src="./assets/tutorial/final_cameras.png" width="40%"/>
-</figure>
+</p>
 
 * Initial/final camera configurations with the estimated checkerboard points *"{YOUR_ROOT}/example_data/output/world_points/"*:
 
-<figure style="display:inline-block; display:block;">
+<p style="text-align:left">
     <img src="./assets/tutorial/initial_world_points.png" width="40%"/>
     <img src="./assets/tutorial/final_world_points.png" width="40%"/>
-</figure>
+</p>
 
 * Images with large reprojection errors *"{YOUR_ROOT}/example_data/output/analysis/images/"*:
 <figure style="display:inline-block; display:block;" id="fig_reprojerrors">
@@ -271,18 +271,18 @@ For details on VAE outlier detector, see *3. VAE outlier corner detection* in [h
 
 * *center_cam_idx*, *center_img_name*: Bundle adjustment results in an arbitrary coordinates system. Therefore, choose a camera and a frame in which the origin of the coordinates system should be defined. For example, *"center_cam_idx": 12, "center_img_name": "0000"* is this frame:
 
-<figure style="display:inline-block; display:block;">
+<p style="text-align:left">
     <img src="./assets/tutorial/12_0000.png" height="300px"/>
     <img src="./assets/tutorial/12_0000_origin.png" height="300px"/>
     <figcaption>Camera 12's 0-th frame is used to define the origin of a coordiates system.</figcaption>
-</figure>
+</p>
 
 This center camera and checkerboard is colored *red* when the camera configuration and world points are rendered:
 
-<figure style="display:inline-block; display:block;">
+<p style="text-align:left">
     <img src="./assets/tutorial/initial_world_points.png" width="40%"/>
     <img src="./assets/tutorial/final_world_points.png" width="40%"/>
-</figure>
+</p>
 
 * *intrinsics* - *n_max_imgs*: number of images to use when calibrating intrinsics parameters of each camera using *cv2.calibrateCamera()*.
 * *extrinsics* - *n_max_stereo_imgs*: number of images to use when stereo-calibrating two cameras using *cv2.stereoCalibrate()*.
