@@ -77,4 +77,4 @@ Click [here](docs/details.md)
 
 <h2 id="s_contact">6. Contact</h2>
 
-For questions, please contact hjoonpark.us@gmail.com.
+For questions, please contact Hyojoon Park: hjoonpark.us@gmail.com
