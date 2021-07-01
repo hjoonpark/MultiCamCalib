@@ -18,6 +18,7 @@ This project calibrates multiple cameras using a planar calibration checkerboard
 </p>
 <br>
 
+* This calibration method has been used for [*"Capturing Detailed Deformations of Moving Human Bodies". Chen He, Hyojoon Park, Kutay Macit, and Ladislav Kavan. SIGGRAPH 2021*](https://ankachan.github.io/Projects/MocapCheckerboard/MocapCheckerboard.html).
 * This project is focused on being simple and scalable, applicable to different calibration checkerboards and different number of cameras.
 * The steps (1)-(3)/(5) are implemented using *python 3* and the step (4) using *C/C++*.
 * On the example dataset provided (./example_data/), this project achieves *mean reprojection error 0.08 pixels* with standard deviation 0.05.
