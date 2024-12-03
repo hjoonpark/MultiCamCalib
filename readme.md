@@ -49,7 +49,7 @@ The code execution follows the pipeline below:
 
 <label id="install_ceres">(2)</label> Install Ceres
 * Click [here](docs/install_windows.md) for **Windows**
-* Click here for **Linux** (coming)
+* Click [here](https://github.com/hongsukchoi/MultiCamCalib) for **Linux**. Great thanks to *Hongsuk Benjamin Choi*.
 
 (3) Build the bundle adjustment project (C/C++)
 
@@ -63,7 +63,7 @@ The code execution follows the pipeline below:
 
         conda env create --file environment.yml
 
-2. Linux (*coming...*)
+2. Linux: Great thanks to *Hongsuk Benjamin Choi* for the Linux version: [https://github.com/hongsukchoi/MultiCamCalib](https://github.com/hongsukchoi/MultiCamCalib)
 
 (5) Run the codes → Follow [this tutorial](docs/tutorial.md)!
 
